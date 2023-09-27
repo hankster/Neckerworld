@@ -12,7 +12,7 @@ LDLIBS=$(EXTRA_LDLIBS)
 EXTRA_LDLIBS?=-lGL -lGLEW -lglfw -lpng -lz -lm -lrt -ldl -lX11 -lpthread 
 DEPS=cube.h cube_client.h
 OBJ=cube_objects.o cube_engine.o cube_data.o cube_simulation.o shader_utils.o base64.o
-OBJS=server/mtserver/server.o server/tcpsockets/tcpacceptor.o server/tcpsockets/tcpconnector.o server/tcpsockets/tcpstream.o server/threads/thread.o
+OBJS=mtserver/mtserver/server.o mtserver/tcpsockets/tcpacceptor.o mtserver/tcpsockets/tcpconnector.o mtserver/tcpsockets/tcpstream.o mtserver/threads/thread.o
 all: cube
 
 %.o: %.cpp $(DEPS)
