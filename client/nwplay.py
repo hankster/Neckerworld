@@ -99,8 +99,8 @@ filename = ""
 address = "127.0.0.1"
 port = 2020
 
-username = "hankm"
-password = "123456"
+username = "example.user"
+password = "pw"
 groundview = -1
 image_snapshot = False
 jsonfile = ""
