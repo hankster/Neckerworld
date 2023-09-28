@@ -38,8 +38,7 @@ import tensorflow as tf
 debug = False
 precision_test = False
 
-filename = "/home/hankm/cube/training/trainers-set2-jpg/females/training-female-1f31d-hd-0.5986-512x512.jpg"
-filename = "/home/hankm/nwmodel/test.png"
+filename = "test.png"
 
 def Usage():
     print("Usage: nwvision.py -d -f filename -h -v --debug --file=filename --help --version")
@@ -49,8 +48,8 @@ def p_test():
 
     print("nweffdet.py: Calculating precision")
     
-    bbcsv = "/home/hankm/cube/training/training-bounding-box-set2.csv"
-    dir = "/home/hankm/cube/training/trainers-set2-jpg"
+    bbcsv = "../training/training-bounding-box-set2.csv"
+    dir = "../training/trainers-set2-jpg"
     threshold = 0.5
     samples = 0.0
     p = 0.0
@@ -90,7 +89,7 @@ def p_test():
           
     return
 
-GRAPH_PB_PATH = 'nw_model'
+GRAPH_PB_PATH = '../nw_model'
 
 model = tf.saved_model.load(GRAPH_PB_PATH, tags=None, options=None)
 
@@ -110,7 +109,7 @@ for key, value  in so.items():
 
 def predict(image_filename):
     
-    export_path = "/home/hankm/nwmodel/nw_model"
+    export_path = "../nwmodel/nw_model"
 
     # Loads the image into memory
     #with open(image_filename, "rb") as content_file:

@@ -75,9 +75,9 @@ bounding_box_colors = {"females": "white", "males": "blue", "enbys": "purple", "
                        "females_front": "white", "females_back": "white", "males_front": "blue", "males_back": "blue", "enbys_front": "purple", "enbys_back": "purple",
                        "predators_front": "red", "predators_back": "red", "resources_front": "green", "resources_back": "green"}
 
-# filename = "/home/hankm/cube/training/trainers-set2-jpg/females/training-female-1f31d-hd-0.5986-512x512.jpg"
-# filename = "/home/hankm/nwmodel/test.png"
-filename = "/home/hankm/cube-training/Neckerworld-test-1280x720.jpg"
+# filename = "../training/trainers-set2-jpg/females/training-female-1f31d-hd-0.5986-512x512.jpg"
+# filename = "../nwmodel/test.png"
+filename = "/../training/Neckerworld-test-1280x720.jpg"
 
 def Usage():
     print("Usage: nweffdet.py -d -f filename -h -p -s -v --debug --file=filename --help --precision --show --version")
@@ -153,8 +153,8 @@ def p_test():
 
     print("nweffdet.py: Calculating precision")
     
-    bbcsv = "/home/hankm/cube/training/training-bounding-box-set2.csv"
-    dir = "/home/hankm/cube/training/trainers-set2-jpg"
+    bbcsv = "../training/training-bounding-box-set2.csv"
+    dir = "../training/trainers-set2-jpg"
     threshold = 0.45
     samples = 0.0
     p = 0.0
@@ -205,7 +205,7 @@ def p_test():
           
     return
 
-GRAPH_PB_PATH = '/home/hankm/cube-training/models/efficientdet-d0/saved_cube_model/saved_model'
+GRAPH_PB_PATH = '../models/efficientdet-d0/saved_cube_model/saved_model'
 
 model = tf.saved_model.load(GRAPH_PB_PATH, tags=None, options=None)
 
