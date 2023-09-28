@@ -1,0 +1,26 @@
+https://vichargrave.github.io/programming/multithreaded-work-queue-based-server-in-cpp/
+
+https://github.com/vichargrave/mtserver
+
+Example code from my Multithreaded Work Queue Based Server in C++ blog.
+
+Build
+Get the threads code.
+Get the work queue code.
+Get the TCP sockets code.
+Place the mtserver, threads, wqueue and tcpsockets directories at the same directory level, e.g. ${HOME}/src/mtserver, ${HOME}/src/threads, ${HOME}/src/wqueue and ${HOME}/src/tcpsockets.
+cd to ${HOME}/src/mtserver.
+Build the test client and server applications by running make.
+
+RunPermalink
+First run the server listening on TCP port 9999 and with 5 consumer threads like this:
+
+$ ./server 5 9999 localhost
+thread 4426719232, loop 0 - waiting for item...
+thread 4430274560, loop 0 - waiting for item...
+thread 4429737984, loop 0 - waiting for item...
+thread 4428664832, loop 0 - waiting for item...
+thread 4429201408, loop 0 - waiting for item...
+Next run a series of clients like this:
+
+$ client 9999 localhost; client 9999 localhost; client 9999 localhost
