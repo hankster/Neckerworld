@@ -41,7 +41,7 @@ dataset = "NW 001"
 res = 512
 
 # Location of all our graphical assets
-assets = "assets"
+assets = "../assets"
 emoticons = "tw-emoticons-%d" % res
 patches = "patches"
 patches_assets = assets + '/' + patches

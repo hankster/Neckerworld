@@ -41,7 +41,7 @@ dataset = "NW Standard"
 res = 512
 
 # Location of all our graphical assets
-assets = "assets"
+assets = "../assets"
 emoticons = "tw-emoticons-%d" % res
 patches = "patches"
 patches_assets = assets + '/' + patches
@@ -327,7 +327,7 @@ def new_texture(texture_index):
     cube_emoticon = cubeList[t]['cube_emoticon'] 
     cube_surface = cubeList[t]['cube_surface']
     if cube_player == "enby" :
-        texture_filename = "assets/texture-1f633-3072x512.png"
+        texture_filename = assets + "/texture-1f633-3072x512.png"
     else :
         cube_color_filename = cube_color_patch(cube_color, cube_surface)
         texture_filename = cube_color_texture(cube_emoticon, cube_player, cube_color_filename)
