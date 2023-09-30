@@ -117,7 +117,7 @@ window_image_length = window_width * window_height * window_channels
 # imagea we are retrieving from the server
 image = []
 
-# probabbility density function weighting
+# probability density function weighting
 
 pdf_filter = False
 u_mean = 0.0
