@@ -119,7 +119,7 @@ image = []
 
 # probabbility density function weighting
 
-pdf_filter = True
+pdf_filter = False
 u_mean = 0.0
 std_dev = 0.6
 y_max = 0.665
