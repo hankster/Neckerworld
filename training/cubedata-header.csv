@@ -1,0 +1,2 @@
+dataset,cube_player,cube_uuid,cube_emoticon,cube_firstname,cube_scale_factor,cube_type,cube_color_class,cube_color[0],cube_color[1],cube_color[2],cube_material,cube_surface,spatial_position[0],spatial_position[1],spatial_position[2],spatial_radius,resource_energy,texture_filename
+female-1f31d,female,9c220cfb-e22e-40ac-bfc4-09fd40bd5fa8,1f31d,Mary,0.53965,3,w,0.63137,0.63137,0.63137,0,,0.00000,0.54065,0.00000,0.76318,100.00000,training/textures/1f31d-texture.png

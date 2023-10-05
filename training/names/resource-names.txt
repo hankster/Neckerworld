@@ -1,0 +1,81 @@
+Cheese
+Cupcake
+Juice
+Blue Squash
+Orange Squash
+Muffins
+Waffle
+Honeypot
+Mocha
+Hotdog
+Taco
+Corn
+Peach
+Lemon
+Banana
+Pineapple
+Apple
+Macintosh
+Rice
+Pancakes
+Rice Noodles
+Spaghetti
+Bread
+Fries
+Cookie
+Chocolate
+Peppermint
+Lollipop
+Custard
+Cream
+Beer
+Draft
+Formula
+Champagne
+Popcorn
+Cherries
+Egg
+Milk
+Peanut
+Kiwifruit
+Pancakes
+Empanada
+Sandwich
+Peas
+Lettuce
+Tomato
+Sesamecake
+Bagel
+Tomato Large
+Eggplant
+Grapes
+Melon
+Watermelon
+Pear
+Peach
+Cherries
+Strawberry
+Hamburger
+Pizza
+Kebab
+Drumstick
+Sweet Potato
+Candy
+Candystick
+Sushi
+Shrimp
+Custard Cone
+Rice Bowl
+Sundae
+Donut
+Cake
+Soup
+Eggs
+Tea
+Wine
+Martini
+Pina Colada
+Birthday Cake
+Naan
+Fondue
+British Tea
