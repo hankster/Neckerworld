@@ -8,7 +8,7 @@ Neckerworld is a computer vision game designed to teach students about human and
 
 All players and resources in the game are cubes.
 The cube players are guided solely through autonomous computer vision programs.
-No human manual control or input permitted.
+No human manual control or input is permitted during gameplay.
 
 To sucessfully play the game requires a competent program to do object detection and identification, playing field knowledge representation and strategic decision making.
 
@@ -57,23 +57,39 @@ The predators and resources are provided by and controlled by the gaming field s
 
 ## Game Architecture and Structure
 
+The Neckerworld consists of a playing field server and one or more remote client players.
+The server places predators and food resources on the field and controls their activity and movement.
+The client player programs exchange messages (JSON files) with the server:
+* Messages to the server request new field images to be returned and specify cube movement and rotation.
+* Messages from the server supply current cube status, location, speed, and the cube's-eye view of the playing field.
+
+The client players and programs can be on any computer running any operating system with any programming language.
+The server has only been tested on Ubuntu 20 and 22.
+
+![Neckerworld server diagram](images/Neckerworld-server.png)
+
 ## Installation
 
 Follow these steps to create and install the game server:
-...
-cd server/mtserver/mtserver
+```
+# Compile the multi-thread server code (has some errors)
+cd Neckerworld/server/mtserver/mtserver
 make
-cd ../..
+cd Neckerworld/server
 make
+# Start the server with a playing-field file
+cube Neckerworld/client/nwtest.json
 
-cd ../client
-../server/cube nwtest.json
+# In a separate window start the player program
+# Make sure port 2020 is open and not firewalled
+cd Neckerworld/client
+nwplay.py
 
-...
+```
 
 ## License
 
-All programs and materials are under the MIT License
+All programs and materials in this repository are under the MIT License.
 
 ## Acknowledgement and Credits
 
