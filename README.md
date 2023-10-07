@@ -52,7 +52,7 @@ There are five types of players in the game.
 
 ![Neckerworld players](images/Neckerworld-players.png)
 
-The male,female and enby players are controlled remotely and autonomously via programs created by the game participants.
+The male, female and enby players are controlled remotely and autonomously via programs created by the game participants.
 The predators and resources are provided by and controlled by the gaming field server.
 
 ## Game Architecture and Structure
@@ -64,7 +64,6 @@ The client player programs exchange messages (JSON files) with the server:
 * Messages from the server supply current cube status, location, speed, and the cube's-eye view of the playing field.
 
 The client players and programs can be on any computer running any operating system with any programming language.
-The server has only been tested on Ubuntu 20 and 22.
 
 ![Neckerworld server diagram](images/Neckerworld-server.png)
 
@@ -86,6 +85,15 @@ cd Neckerworld/client
 nwplay.py
 
 ```
+
+## Requirements
+
+The server has only been tested on Ubuntu Ubuntu 20.04.6 LTS and Ubuntu 22.04.3 LTS.
+
+The following packages are needed to compile and run these programs
+* python 3
+* opengl
+* glfw
 
 ## License
 
