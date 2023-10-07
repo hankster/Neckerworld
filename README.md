@@ -1,6 +1,6 @@
 # Neckerworld - A Computer Vision Game
 
-![The Neckerworld playing field](images/Neckerworld-test-1280x720.png)
+![The Neckerworld playing field](images/Neckerworld-Game.png)
 
 ## Overview
 
@@ -17,7 +17,7 @@ To sucessfully play the game requires a competent program to do object detection
 The Necker Cube Illusion is a well known example of a perceptual illusion where the orientation of the cube is unstable and easily flips between two states.
 Serious study and research into why we perceive multiple states leads to a set of questions about the very nature of our vision.
 
-![Necker Cube illusion example](images/Necker-Cube-Illusion.png)
+![Necker Cube illusion example](images/Necker-Cube-Illusion-300x300.png)
 
 Further, cubes are very simple objects which can be used to illustrate many other aspects of human and computer vision, such as the effects of contours, shading, texture, occlusion, size-constancy and more.
 
@@ -94,6 +94,9 @@ All programs and materials in this repository are under the MIT License.
 ## Acknowledgement and Credits
 
 The following repositories have provided code for this project
+* stb_image - v2.23 - public domain image loader - http://nothings.org/stb
+* rapidjson - THL A29 Limited, a Tencent company, and Milo Yip. All rights reserved.
+* mtserveer - https://github.com/vichargrave/threads.git and wqueue and tcpsockets
 
 ## Issues
 
