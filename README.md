@@ -86,14 +86,32 @@ nwplay.py
 
 ```
 
+## Object Identification and Training
+
+A crucial element of this game is the proper identification of cube objects and positions.
+Each client player needs to scan the environment and identify friends, foes, mates and energy (food) resources.
+This requires that each received cube's-eye image is run through an object detection and identification program to determine what's in the visua field.
+
+Current solutions for this type of problem use a neural network trained on the visual objects of interest.
+This repository provides two pre-trained neural network models that may be used for game play.
+The models run out-of-the-box with a Tensorflow-2 programming environment.
+
+Training a neural network on cube objects is a non-trivial undertaking and currently code to do that is not provided here.
+However, image samples and a label dataset suitable for training is contained within the training directory and provides an accelerated start to developing a preferred neural network model.
+More solutions for training will, hopefully, be forthcoming.
+
 ## Requirements
 
 The server has only been tested on Ubuntu Ubuntu 20.04.6 LTS and Ubuntu 22.04.3 LTS.
 
-The following packages are needed to compile and run these programs
+The following packages are needed to compile and run these programs (list details need to be reviewed and clarified):
 * python 3
 * opengl
 * glfw
+* make
+* C++
+* tensorflow
+* tkint
 
 ## License
 
@@ -108,6 +126,11 @@ The following repositories have provided code for this project
 
 ## Issues
 
-* Multi-thread context switching
-* Rendering synchronization
-* Cube intersection errors
+This game is still in an early stage of development and many aspects of the server and client need to be improved.
+The author is very interested in feedback and comments related to interest and applicability of this work.
+There is, to the author's knowledge, only one similar effort to build a game where programmed automata are the only players, and that is a racing car game.
+Future efforts to continue and enhance this game concept will, in part, depend on the feedback received.
+
+* Multi-thread context switching -- Messages can be received at the server in random order and at random times. Each messages that requests a cube's-eye view needs a proper context switch of the rendering engine. Right now this is done through a hack.
+* Rendering synchronization -- Code that insures that a proper render is sent back to the client is not well understood and not tested for a large numbber of clients.
+* Cube intersection errors -- The display of cubes that are in close proximity sometimes shows unwanted overlap and incorrect physical display.
