@@ -90,7 +90,7 @@ nwplay.py
 
 A crucial element of this game is the proper identification of cube objects and positions.
 Each client player needs to scan the environment and identify friends, foes, mates and energy (food) resources.
-This requires that each received cube's-eye image is run through an object detection and identification program to determine what's in the visua field.
+This requires that each received cube's-eye image is run through an object detection and identification program to determine what's in the visual field.
 
 Current solutions for this type of problem use a neural network trained on the visual objects of interest.
 This repository provides two pre-trained neural network models that may be used for game play.

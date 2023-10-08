@@ -1,0 +1,37 @@
+// This is a summary of function keys interpreted by the "cube" serveer.
+// The must be activated within the server's display window.
+// They are used to test and debug server code rendering and function.
+//
+// A -- Activate (set velocity non-zero)
+// B
+// C -- Clock delay on/off
+// D
+// E
+// F -- View target -x
+// G -- View target -y
+// H -- View target -z
+// I -- Camera Y up
+// J -- Camera X down
+// K -- Camera Y down
+// L -- Camera Z down
+// M -- Rotate cube right
+// N -- Rotate cube left
+// O -- Camera Z up
+// P -- Screenshot
+// Q -- Reset view position
+// R -- View target +x
+// S -- Strategy on/off
+// T -- View target +y
+// U -- Camera X up
+// V -- Start video recording on/off
+// W
+// X -- Change to cube view of cube_index
+// Y -- View target +z
+// Z -- Increment cube index
+// 0-8 -- Rotate-y n x pi/4
+// Left-Arrow -- Gaze left
+// Right-Arrow -- Gaze right
+// Up-Arrow  -- Gaze up
+// Down-Arrow -- Gaze down
+// ESC -- Exit
+
