@@ -8,7 +8,7 @@ Sample usage:
 
 Complete specification:
 
- nw.py -d -f filename -h -v --debug --file=filename --help --version
+ nw.py -d -f filename -h -s dataset -v --debug --file=filename --help --set=dataset --version
 
  where
 
@@ -181,7 +181,7 @@ ground_texture_map_reference_wide = [0.0, 0.0, 100.0, 0.0, 100.0, 100.0, 0.0, 10
 ground_texture_map_background = [0.875, 1.0, 0.125, 1.0, 0.125, 0.0, 0.875, 0.0]
 
 def Usage():
-    print("Usage: nw.py -d -f filename -h -v --debug --file=filename --help --version")
+    print("Usage: nw.py -d -f filename -h -s dataset -v --debug --file=filename --help --set=dataset --version")
 
 # Create a new cube
 def new_cube(cube_index, ground_scale_factor):
@@ -749,7 +749,7 @@ if __name__=='__main__':
         if o in ("-h", "--help"):
             Usage()
             sys.exit()
-        if o in ("-d", "--set"):
+        if o in ("-s", "--set"):
             dataset = a
         if o in ("-v", "--version"):
             print("nw.py Version 1.0")
