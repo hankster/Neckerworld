@@ -40,6 +40,20 @@ precision_test = False
 
 filename = "test.png"
 
+GRAPH_PB_PATH = '../nwmodel/gclmodel'
+
+model = tf.saved_model.load(GRAPH_PB_PATH, tags=None, options=None)
+
+print("nwvision.py: Tensorflow loaded model %s" % type(model))
+
+print("nwvision.py: Model signature keys: %s" % list(model.signatures.keys()))
+infer = model.signatures["serving_default"]
+
+so = infer.structured_outputs
+
+for key, value  in so.items():
+    print("nwvision.py:%28s: %s" % (key, value))
+
 def Usage():
     print("Usage: nwvision.py -d -f filename -h -v --debug --file=filename --help --version")
 
@@ -88,20 +102,6 @@ def p_test():
     print("nweffdet.py: Precision %0.3f using threshold %0.2f with %d samples" % (precision, threshold, int(samples)))
           
     return
-
-GRAPH_PB_PATH = '../nw_model'
-
-model = tf.saved_model.load(GRAPH_PB_PATH, tags=None, options=None)
-
-print("nwvision.py: Tensorflow loaded model %s" % type(model))
-
-print("nwvision.py: Model signature keys: %s" % list(model.signatures.keys()))
-infer = model.signatures["serving_default"]
-
-so = infer.structured_outputs
-
-for key, value  in so.items():
-    print("nwvision.py:%28s: %s" % (key, value))
 
 #
 # Make a prediction

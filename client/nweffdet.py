@@ -77,7 +77,21 @@ bounding_box_colors = {"females": "white", "males": "blue", "enbys": "purple", "
 
 # filename = "../training/trainers-set2-jpg/females/training-female-1f31d-hd-0.5986-512x512.jpg"
 # filename = "../nwmodel/test.png"
-filename = "/../training/Neckerworld-test-1280x720.jpg"
+filename = "../training/Neckerworld-test-1280x720.jpg"
+
+GRAPH_PB_PATH = '../nwmodel/efficientdet-d0/saved_cube_model/saved_model'
+
+model = tf.saved_model.load(GRAPH_PB_PATH, tags=None, options=None)
+
+print("nweffdet.py: Tensorflow loaded model %s" % type(model))
+
+print("nweffdet.py: Model signature keys: %s" % list(model.signatures.keys()))
+infer = model.signatures["serving_default"]
+
+so = infer.structured_outputs
+
+for key, value  in so.items():
+    print("nweffdet.py:%28s: %s" % (key, value))
 
 def Usage():
     print("Usage: nweffdet.py -d -f filename -h -p -s -v --debug --file=filename --help --precision --show --version")
@@ -204,20 +218,6 @@ def p_test():
     print("nweffdet.py: Precision %0.3f using threshold %0.2f with %d samples" % (precision, threshold, int(samples)))
           
     return
-
-GRAPH_PB_PATH = '../models/efficientdet-d0/saved_cube_model/saved_model'
-
-model = tf.saved_model.load(GRAPH_PB_PATH, tags=None, options=None)
-
-print("nweffdet.py: Tensorflow loaded model %s" % type(model))
-
-print("nweffdet.py: Model signature keys: %s" % list(model.signatures.keys()))
-infer = model.signatures["serving_default"]
-
-so = infer.structured_outputs
-
-for key, value  in so.items():
-    print("nweffdet.py:%28s: %s" % (key, value))
 
 #
 # Make a prediction

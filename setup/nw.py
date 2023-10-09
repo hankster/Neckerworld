@@ -129,7 +129,7 @@ light_025 = [0.25, 0.25, 0.25]
 light_050 = [0.5, 0.5, 0.5]
 light_075 = [0.75, 0.75, 0.75]
 light_100 = [1.0, 1.0, 1.0]
-light_ambient = [0.2, 0.2, 0.2]
+light_ambient = [0.3, 0.3, 0.3]
 light_diffuse = [0.8, 0.8, 0.8]
 light_specular = [0.2, 0.2, 0.2]
 
