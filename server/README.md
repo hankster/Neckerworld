@@ -49,3 +49,16 @@ An opengl shader program.
 
 An opengl shader program.
 
+## Installation
+
+Follow these steps to create and install the game server:
+```
+# Compile the multi-thread server code (has some errors)
+cd Neckerworld/server/mtserver/mtserver
+make
+cd Neckerworld/server
+make
+# Start the server with a playing-field file
+cube Neckerworld/client/nwtest.json
+
+
