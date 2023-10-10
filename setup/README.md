@@ -20,7 +20,7 @@ This is the main program to create a Neckerworld game space.
 A new JSON file "nw.json" is created as a result.
 
 ### nwtest.py
-A five-player game space used to test functions of the game
+A five-player game space used to test functions of the game.
 
 ### nwtest.json
 The json file created by running nwtest.py
