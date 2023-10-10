@@ -78,7 +78,9 @@ cd Neckerworld/server
 make
 # Start the server with a playing-field file
 cube Neckerworld/client/nwtest.json
-
+# To activate predators	on the playing field select the	server window and type "S"
+# This will enable the server's basic strategy (control of predators and resources).
+S
 # In a separate window start the player program
 # Make sure port 2020 is open and not firewalled
 cd Neckerworld/client
