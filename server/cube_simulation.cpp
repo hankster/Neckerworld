@@ -1146,3 +1146,14 @@ void strategy_predator(int me) {
   return;
 }
 
+void strategy_resource(int me) {
+
+  // The "strategy" for a resource is very simple. If there is no enrgy left, take it off the plaaying field.
+
+  if (cubes[me].resource_energy < 10.0) {
+    cubes[me].cube_active = 0;
+    cubes[me].cube_display = 0;
+  }
+
+  return;
+}

@@ -192,6 +192,8 @@ GLuint display_rotation_y = 0;
 GLuint display_rotation_z = 0;
 GLuint position = 0;
 GLuint strategy = false;
+GLuint strategy_basic = true;
+GLuint strategy_extended = false;
 GLuint transparency = 0;
 bool   video = false;
 bool   matrix_test = false;
@@ -842,20 +844,30 @@ int main(int argc, char* argv[]) {
 	  }
 	}
 
-	if (strategy == 1) {
+	if (strategy == true) {
 
 	  // Update the strategy for each cube
 	  string m = "male";
 	  string f = "female";
 	  string e = "enby";
 	  string p = "predator";
+	  string r = "resource";
 	
-	  for (int nc=0; nc < n_cubes; ++nc) {
-	    if (! cubes[nc].cube_active || cubes[nc].cube_remote) continue;
-	    if (cubes[nc].cube_player == m) strategy_male(nc);
-	    if (cubes[nc].cube_player == f) strategy_female(nc);
-	    if (cubes[nc].cube_player == e) strategy_enby(nc);
-	    if (cubes[nc].cube_player == p) strategy_predator(nc);
+	  if (strategy_basic == true) {
+	    for (int nc=0; nc < n_cubes; ++nc) {
+	      if (! cubes[nc].cube_active || cubes[nc].cube_remote) continue;
+	      if (cubes[nc].cube_player == p) strategy_predator(nc);
+	      if (cubes[nc].cube_player == p) strategy_resource(nc);
+	    }
+	  }
+	  
+	  if (strategy_extended == true) {
+	    for (int nc=0; nc < n_cubes; ++nc) {
+	      if (! cubes[nc].cube_active || cubes[nc].cube_remote) continue;
+	      if (cubes[nc].cube_player == m) strategy_male(nc);
+	      if (cubes[nc].cube_player == f) strategy_female(nc);
+	      if (cubes[nc].cube_player == e) strategy_enby(nc);
+	    }
 	  }
 	}
 
@@ -979,10 +991,10 @@ void processInput(GLFWwindow *window)
 
 // The callback function receives the keyboard key, platform-specific scancode, key action and modifier bits.
 // A -- Activate (set velocity non-zero)
-// B
+// B -- Basic strategy toggle (server controls predators resources)
 // C -- Clock delay on/off
-// D
-// E
+// D -- Debug toggle
+// E -- Extended strategy toggle (server controls males, females, enbys)
 // F -- View target -x
 // G -- View target -y
 // H -- View target -z
@@ -1002,17 +1014,34 @@ void processInput(GLFWwindow *window)
 // V -- Start video recording on/off
 // W
 // X -- Change to cube view of cube_index
-// Y -- VIEW Trget +z
+// Y -- VIEW Target +z
 // Z -- Increment cube index
 // 0-8 -- Rotate-y n x pi/4
 // Left-Arrow -- Gaze left
 // Right-Arrow -- Gaze right
 // Up-Arrow  -- Gaze up
 // Down-Arrow -- Gaze down
+// Left-Bracket -- Light X -= 1.0
+// Right-Bracket -- Light X += 1.0
+// Period -- Light Y -= 0.5
+// Slash -- Light Y += 0.5
+// Minus -- Light Z -= 1.0
+// Equal -- Light Z += 1.0
+// Semicolon -- Ambient -= 0.1
+// Apostrophe -- Ambient += 0.1
 // ESC -- Exit
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
+  // To detect upper/lower case the mode argument is needed
+  // if ( key == GLFW_KEY_A && action == GLFW_PRESS ) {
+  //   if (mode == GLFW_MOD_SHIFT) {
+  //     //uppercase
+  //   } else {
+  //     //lowercase
+  //   }
+  // }
+  
   // End the game
   if ((key == GLFW_KEY_ESCAPE || key == GLFW_KEY_GRAVE_ACCENT) && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
@@ -1066,6 +1095,28 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     } else {
       strategy = false;
       printf("cube.cpp: Strategy off!!\n");
+    }
+  }
+  
+  if (key == GLFW_KEY_B && action == GLFW_PRESS) {
+    /* Strategy - Basic (only control predators, resources) */
+    if (! strategy_basic) {
+      strategy_basic = true;
+      printf("cube.cpp: Basic strategy on!!\n");
+    } else {
+      strategy_basic = false;
+      printf("cube.cpp: Basic strategy off!!\n");
+    }
+  }
+  
+  if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+    /* Strategy - Extended (control males, females, enbys)*/
+    if (! strategy_extended) {
+      strategy_extended = true;
+      printf("cube.cpp: Extended strategy on!!\n");
+    } else {
+      strategy_extended = false;
+      printf("cube.cpp: Extended strategy off!!\n");
     }
   }
   

@@ -249,6 +249,8 @@ extern GLuint display_rotation_y;
 extern GLuint display_rotation_z;
 extern GLuint position;
 extern GLuint strategy;
+extern GLuint strategy_basic;
+extern GLuint strategy_extended;
 extern GLuint transparency;
 extern bool   video;
 
@@ -353,6 +355,7 @@ void strategy_male(int i);
 void strategy_female(int i);
 void strategy_enby(int i);
 void strategy_predator(int i);
+void strategy_resource(int i);
 
 /* Default window size */
 #define WINDOW_WIDTH 1280

@@ -3,10 +3,10 @@
 // They are used to test and debug server code rendering and function.
 //
 // A -- Activate (set velocity non-zero)
-// B
+// B -- Basic strategy toggle (server controls predators resources)
 // C -- Clock delay on/off
-// D
-// E
+// D -- Debug toggle
+// E -- Extended strategy toggle (server controls males, females, enbys)
 // F -- View target -x
 // G -- View target -y
 // H -- View target -z
@@ -33,5 +33,13 @@
 // Right-Arrow -- Gaze right
 // Up-Arrow  -- Gaze up
 // Down-Arrow -- Gaze down
+// Left-Bracket -- Light X -= 1.0
+// Right-Bracket -- Light X += 1.0
+// Period -- Light Y -= 0.5
+// Slash -- Light Y += 0.5
+// Minus -- Light Z -= 1.0
+// Equal -- Light Z += 1.0
+// Semicolon -- Ambient -= 0.1
+// Apostrophe -- Ambient += 0.1
 // ESC -- Exit
 
