@@ -66,7 +66,8 @@ string cube_decode_message(char* message, int message_length) {
   struct StatusRequest msgStatusRequest;
   struct ViewRequest msgViewRequest;
   struct GroundViewRequest msgGroundViewRequest;
-  struct ImportJSONRequest msgImportJSONRequest;
+  struct ImportJSONFileRequest msgImportJSONFileRequest;
+  struct ImportJSONObjectRequest msgImportJSONObjectRequest;
   struct LoginResponse msgLoginResponse;
   struct MoveResponse msgMoveResponse;
   struct StatusResponse msgStatusResponse;
@@ -120,13 +121,23 @@ string cube_decode_message(char* message, int message_length) {
     return rsp;
   }
 
-  if (mt == "ImportJSONRequest") {
-    msgImportJSONRequest.message_type = mt;
-    msgImportJSONRequest.sequence = sequence;
-    msgImportJSONRequest.timestamp = timestamp;
-    msgImportJSONRequest.JSONfilename = d["jsonfilename"].GetString();
-    msgImportJSONRequest.cube_uuid = cube_uuid;
-    string rsp = doImportJSONRequest(msgImportJSONRequest);
+  if (mt == "ImportJSONFileRequest") {
+    msgImportJSONFileRequest.message_type = mt;
+    msgImportJSONFileRequest.sequence = sequence;
+    msgImportJSONFileRequest.timestamp = timestamp;
+    msgImportJSONFileRequest.JSONFilename = d["jsonfilename"].GetString();
+    msgImportJSONFileRequest.cube_uuid = cube_uuid;
+    string rsp = doImportJSONFileRequest(msgImportJSONFileRequest);
+    return rsp;
+  }
+  
+  if (mt == "ImportJSONObjectRequest") {
+    msgImportJSONObjectRequest.message_type = mt;
+    msgImportJSONObjectRequest.sequence = sequence;
+    msgImportJSONObjectRequest.timestamp = timestamp;
+    msgImportJSONObjectRequest.JSONObject = d["jsonobject"].GetString();
+    msgImportJSONObjectRequest.cube_uuid = cube_uuid;
+    string rsp = doImportJSONObjectRequest(msgImportJSONObjectRequest);
     return rsp;
   }
   
@@ -525,15 +536,18 @@ string doGroundViewRequest(GroundViewRequest msgGroundViewRequest) {
   return response;
 }
 
-string doImportJSONRequest(ImportJSONRequest msgImportJSONRequest) {
+string doImportJSONFileRequest(ImportJSONFileRequest msgImportJSONFileRequest) {
 
-  json_import_file = msgImportJSONRequest.JSONfilename;
-  bool add_JSON = msgImportJSONRequest.add_JSON;
+  json_import_file = msgImportJSONFileRequest.JSONFilename;
+  bool add_JSON = msgImportJSONFileRequest.add_JSON;
 
-  // string jf = msgImportJSONRequest.JSONfilename;
+  // Can't use json_import() here as it's in the multi-thread context.
+  // So we save the filename and setup a flag and the import is called by cube.cpp in the main loop.
+  // string jf = msgImportJSONFileRequest.JSONFilename;
   // int status = json_import(&jf[0]);
   // if (status != 0) return error_j;
-  json_flag = true;
+
+  json_flag_file = true;
   
   // document is the root of a json message
   Document d;
@@ -543,15 +557,48 @@ string doImportJSONRequest(ImportJSONRequest msgImportJSONRequest) {
   // must pass an allocator when the object may need to allocate memory
   Document::AllocatorType& allocator = d.GetAllocator();
 
-  d.AddMember("message_type", "ImportJSONResponse", allocator);
-  d.AddMember("sequence", msgImportJSONRequest.sequence, allocator);
+  d.AddMember("message_type", "ImportJSONFileResponse", allocator);
+  d.AddMember("sequence", msgImportJSONFileRequest.sequence, allocator);
   d.AddMember("timestamp", frame_time, allocator);
   
   StringBuffer strbuf;
   Writer<StringBuffer> writer(strbuf);
   d.Accept(writer);
   string response = strbuf.GetString();
-  if (debug > 0) printf("cube_simulation.cpp: doImportJSONRequest - %d %s\n", (int)strbuf.GetLength(), &response[0]);
+  if (debug > 0) printf("cube_simulation.cpp: doImportJSONFileRequest - %d %s\n", (int)strbuf.GetLength(), &response[0]);
+  return response;
+}
+
+string doImportJSONObjectRequest(ImportJSONObjectRequest msgImportJSONObjectRequest) {
+
+  json_import_object = msgImportJSONObjectRequest.JSONObject;
+  bool add_JSON = msgImportJSONObjectRequest.add_JSON;
+
+  // Can't use json_import() here as it's in the multi-thread context.
+  // So we save the filename and setup a flag and the import is called by cube.cpp in the main loop.
+  // string jf = msgImportJSONObjectRequest.JSONObject;
+  // int status = json_import(&jf[0]);
+  // if (status != 0) return error_j;
+
+  json_flag_object = true;
+  
+  // document is the root of a json message
+  Document d;
+
+  // define the document as an object rather than an array
+  d.SetObject();
+  // must pass an allocator when the object may need to allocate memory
+  Document::AllocatorType& allocator = d.GetAllocator();
+
+  d.AddMember("message_type", "ImportJSONObjectResponse", allocator);
+  d.AddMember("sequence", msgImportJSONObjectRequest.sequence, allocator);
+  d.AddMember("timestamp", frame_time, allocator);
+  
+  StringBuffer strbuf;
+  Writer<StringBuffer> writer(strbuf);
+  d.Accept(writer);
+  string response = strbuf.GetString();
+  if (debug > 0) printf("cube_simulation.cpp: doImportJSONObjectRequest - %d %s\n", (int)strbuf.GetLength(), &response[0]);
   return response;
 }
 

@@ -65,13 +65,25 @@ struct GroundViewRequest {
   
 };
 
-struct ImportJSONRequest {
+struct ImportJSONFileRequest {
   
   string message_type;
   unsigned sequence;
   double timestamp;
   string cube_uuid;
-  string JSONfilename;
+  string JSONFilename;
+  bool add_JSON;
+  bool in_line;
+
+};
+
+struct ImportJSONObjectRequest {
+  
+  string message_type;
+  unsigned sequence;
+  double timestamp;
+  string cube_uuid;
+  string JSONObject;
   bool add_JSON;
   bool in_line;
 
@@ -189,7 +201,8 @@ string doMoveRequest(MoveRequest r);
 string doStatusRequest(StatusRequest r);
 string doViewRequest(ViewRequest r);
 string doGroundViewRequest(GroundViewRequest r);
-string doImportJSONRequest(ImportJSONRequest r);
+string doImportJSONFileRequest(ImportJSONFileRequest r);
+string doImportJSONObjectRequest(ImportJSONObjectRequest r);
 
 // Login credentials check
 bool check_login(LoginRequest msg);

@@ -44,6 +44,9 @@ using namespace rapidjson;
 # include "cube.h"
 # include "cube_client.h"
 
+int json_import_document();
+Document d;
+
 struct jsonHandler {
     bool Null() { cout << "Null()" << endl; return true; }
     bool Bool(bool b) { cout << "Bool(" << boolalpha << b << ")" << endl; return true; }
@@ -71,14 +74,32 @@ struct jsonHandler {
 };
 
 /* Import scene objects and parameters */
+
+// Argument is a filename of a JSON file
 int json_import(char* jsonfile) {
   fprintf(stdout, "cube_data.cpp: Importing JSON file %s\n", jsonfile);
 
-  Document d;
+  // Document d;
   ifstream jf(jsonfile);
   IStreamWrapper jfw(jf);
   d.ParseStream(jfw);
+  return json_import_document();
 
+}
+
+// Argument is a JSON charactrr string
+int json_import(string jsonobject) {
+  fprintf(stdout, "cube_data.cpp: Importing JSON object\n");
+
+  // Document d;
+  d.Parse(jsonobject);
+  return json_import_document();
+
+}
+
+/* Process a JSON document */
+int json_import_document() {
+    
   if (d.HasMember("dataset")) {
     const char* dataset = d["dataset"].GetString();
     fprintf(stdout, "cube_data.cpp: Dataset %s\n", dataset);

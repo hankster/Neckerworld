@@ -159,7 +159,9 @@ char* jsonfile;
 
 /* JSON remote import */
 string json_import_file;
-bool json_flag = false;
+string json_import_object;
+bool json_flag_file = false;
+bool json_flag_object = false;
 
 /* Frame counter and timestamp*/
 double frames_per_second = DEFAULT_FPS;
@@ -803,9 +805,13 @@ int main(int argc, char* argv[]) {
 
 	// JSON imports have to be done here due to opengl context switch constraints
 	// Should mutex this as well
-	if (json_flag) {
+	if (json_flag_file) {
 	  json_import(&json_import_file[0]);
-	  json_flag = false;
+	  json_flag_file = false;
+	}
+	if (json_flag_object) {
+	  json_import(json_import_object);
+	  json_flag_object = false;
 	}
 
 	// spin the cube

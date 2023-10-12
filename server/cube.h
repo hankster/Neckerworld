@@ -172,7 +172,9 @@ extern double frame_time;
 
 /* json import parameters */
 extern string json_import_file;
-extern bool json_flag;
+extern string json_import_object;
+extern bool json_flag_file;
+extern bool json_flag_object;
 extern int json_cube_id;
 extern string json_cube_uuid;
 
@@ -282,6 +284,7 @@ void server_stop();
 
 // Function located in cube_data.cpp
 int json_import(char* jsonfile);
+int json_import(string jsonobject);
 
 // Function located in cube_engine.cpp
 void display();
