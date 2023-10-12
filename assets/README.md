@@ -14,25 +14,16 @@ There are several different classes of assets used.
 
 ## Summary of assets
 
-### faces -- png images of all the faces in the game
-
-### patches -- png images of the teture maps needed to render a cube
-
-### predators -- png images of all the predators
-
-### resources -- png images of all the resources (food or energy cubes)
-
-### surfaces -- png images of surfaces (the skin) on predators
-
-### svg -- emoticon definition files
-
-### textures -- texture maps used by opengl to render the surfaces of the cubes
-
-### tw-emoticons -- png images of the emoticons, small scale
-
-### tw-emoticons-512 -- png images of the emoticons as a 512x512 pixel image
-
-### txt files -- final list of enbys, faces, females, male, predators, resources and  surfaces in the game
+* faces -- png images of all the faces in the game
+* patches -- png images of the teture maps needed to render a cube
+* predators -- png images of all the predators
+* resources -- png images of all the resources (food or energy cubes)
+* surfaces -- png images of surfaces (the skin) on predators
+* svg -- emoticon definition files
+* textures -- texture maps used by opengl to render the surfaces of the cubes
+* tw-emoticons -- png images of the emoticons, small scale
+* tw-emoticons-512 -- png images of the emoticons as a 512x512 pixel image
+* txt files -- final list of enbys, faces, females, male, predators, resources and  surfaces in the game
 
 ## The standard Neckerworld family
 
