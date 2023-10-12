@@ -33,3 +33,17 @@ There are several different classes of assets used.
 ### tw-emoticons-512 -- png images of the emoticons as a 512x512 pixel image
 
 ### txt files -- final list of enbys, faces, females, male, predators, resources and  surfaces in the game
+
+## The standard Neckerworld family
+
+The Neckerworld standard edition contains the followig objects:
+
+* 37 males
+* 36 females
+*  3 enbys
+* 17 predators
+* 81 resources
+
+Specifications for each one of these objects is in Meckerworld/training/cubedata.csv and includes details on the emoticon, size, color, surface and standard position of the object.
+The texture map, used for surface genertion in opengl, iss found in Neckerworld/training/textures.
+
