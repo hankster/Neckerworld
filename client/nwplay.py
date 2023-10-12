@@ -486,7 +486,7 @@ def execute_strategy(state):
                 FindResource = True
         if resource_energy > 1000.0:
                 FindResource = False
-        if cube_player == "male" or cube_player == female or cube_player == enby:
+        if cube_player == "male" or cube_player == "female" or cube_player == "enby":
             if FindMate or FindPredator or FindResource or GameOn:
                 scan_state_control = 0
                 # This is a hack, needs fixing.
