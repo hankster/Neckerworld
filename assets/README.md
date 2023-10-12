@@ -1,6 +1,6 @@
 # Neckerworld - A Computer Vision Game
 
-![Neckerworld Texture Example](textures/1f989-texture.png)
+![Neckerworld Texture Example](textures/1f63d-texture.png)
 
 ## Overview
 
@@ -15,7 +15,7 @@ There are several different classes of assets used.
 ## Summary of assets
 
 * faces -- png images of all the faces in the game
-* patches -- png images of the teture maps needed to render a cube
+* patches -- png images of the texture maps needed to render a cube
 * predators -- png images of all the predators
 * resources -- png images of all the resources (food or energy cubes)
 * surfaces -- png images of surfaces (the skin) on predators
@@ -23,7 +23,7 @@ There are several different classes of assets used.
 * textures -- texture maps used by opengl to render the surfaces of the cubes
 * tw-emoticons -- png images of the emoticons, small scale
 * tw-emoticons-512 -- png images of the emoticons as a 512x512 pixel image
-* txt files -- final list of enbys, faces, females, male, predators, resources and  surfaces in the game
+* txt files -- final list of enbys, faces, females, male, predators, resources and surfaces in the game
 
 ## The standard Neckerworld family
 
@@ -35,6 +35,6 @@ The Neckerworld standard edition contains the followig objects:
 * 17 predators
 * 81 resources
 
-Specifications for each one of these objects is in Meckerworld/training/cubedata.csv and includes details on the emoticon, size, color, surface and standard position of the object.
+Specifications for each one of these objects is in Neckerworld/training/cubedata.csv and includes details on the emoticon, size, color, surface and standard position of the object.
 The texture map, used for surface genertion in opengl, iss found in Neckerworld/training/textures.
 
