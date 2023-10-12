@@ -106,9 +106,9 @@ def logout_request(s, sequence, cube_uuid):
         return {"message_type": "Error", "error": e}
     return j
 
-def import_json(s, sequence, jsonfile, cube_uuid):
+def import_json_file(s, sequence, jsonfile, cube_uuid):
     
-    message_type = "ImportJSONRequest"
+    message_type = "ImportJSONFileRequest"
 
     timestamp = time.time()
     message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "jsonfilename": jsonfile, "cube_uuid": cube_uuid}
@@ -122,13 +122,44 @@ def import_json(s, sequence, jsonfile, cube_uuid):
         if debug:
             print("nwmessage.py: Receiving " + response)
     except socket.timeout as e:
-        print("nwmessage.py: import_json timeout %s" % e)
+        print("nwmessage.py: import_json_file timeout %s" % e)
         return {"message_type": "Error", "error": e}
     except socket.error as e:
-        print("nwmessage.py: import_json socket error %s" % e)
+        print("nwmessage.py: import_json_file socket error %s" % e)
         return {"message_type": "Error", "error": e}
     except IOError as e:
-        print("nwmessage.py: import_json %s" % e)
+        print("nwmessage.py: import_json_file %s" % e)
+        return {"message_type": "Error", "error": e}
+
+    try:
+        j = json.loads(response)
+    except json.JSONDecodeError as e:
+        return {"message_type": "Error", "error": e}
+    return j
+
+def import_json_object(s, sequence, jsonobject, cube_uuid):
+    
+    message_type = "ImportJSONObjectRequest"
+
+    timestamp = time.time()
+    message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "jsonobject": jsonobject, "cube_uuid": cube_uuid}
+    data = json.dumps(message)
+    if debug:
+        print("nwmessage.py: Sending   " + data)
+    bytes = data.encode(encoding='UTF-8')
+    try:
+        s.send(bytes)
+        response = str(s.recv(1024), 'utf-8')
+        if debug:
+            print("nwmessage.py: Receiving " + response)
+    except socket.timeout as e:
+        print("nwmessage.py: import_json_object timeout %s" % e)
+        return {"message_type": "Error", "error": e}
+    except socket.error as e:
+        print("nwmessage.py: import_json_object socket error %s" % e)
+        return {"message_type": "Error", "error": e}
+    except IOError as e:
+        print("nwmessage.py: import_json_object %s" % e)
         return {"message_type": "Error", "error": e}
 
     try:

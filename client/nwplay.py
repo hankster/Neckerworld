@@ -8,7 +8,7 @@ Sample usage:
 
 Complete specification:
 
- nwplay.py -a address -c cube_uuid -d -f filename -h -i -k -m -p password -r -s -u username -v --address address --cube cube_uuid --debug --file=filename --help --image --kill --mate --pswd=password --resource --sound --user=username --version
+ nwplay.py -a address -c cube_uuid -d -f filename -g -h -i -k -m -p password -r -s -u username -v --address address --cube cube_uuid --debug --file=filename --game --help --image --kill --mate --pswd=password --resource --sound --user=username --version
 
  where
 
@@ -16,6 +16,7 @@ Complete specification:
  -c, --cube           Cube UUID
  -d, --debug          Turn debug statements on
  -f, --file           Input filename
+ -g, --game           Game play
  -h, --help           Print usage information
  -i, --image          Image snapshot
  -k, --kill           Find a predator and kill it
@@ -27,7 +28,7 @@ Complete specification:
  -u, --user           Username
  -v, --version        Report program version
 
-Copyright (2021) H. S. Magnuski
+Copyright (2023) H. S. Magnuski
 All rights reserved
 
 """
@@ -62,7 +63,8 @@ from nwmessage import create_socket
 from nwmessage import shutdown_socket
 from nwmessage import login_request
 from nwmessage import logout_request
-from nwmessage import import_json
+from nwmessage import import_json_file
+from nwmessage import import_json_object
 from nwmessage import move_request
 from nwmessage import status_request
 from nwmessage import cube_view_request
@@ -74,7 +76,7 @@ from nwmessage import nwmessage_debug
 # def shutdown_socket(s)
 # def login_request(s, sequence, username, password, cube_uuid)
 # def logout_request(s, sequence, cube_uuid)
-# def import_json(s, sequence, jsonfile, cube_uuid)
+# def import_json_file(s, sequence, jsonfile, cube_uuid)
 # def move_request(s, sequence, cube_uuid, spatial_angle, spatial_direction, spatial_direction_active, distance, velocity, gaze)
 # def status_request(s, sequence, cube_uuid)
 # def cube_view_request(s, sequence, cube_uuid, spatial_angle, gaze)
@@ -131,6 +133,7 @@ sound = False
 FindPredator = False
 FindResource = False
 FindMate = False
+GameOn = False
 vrloop = False
 sequence = 0
 
@@ -177,7 +180,7 @@ class_colors = {"females": "white", "males": "blue", "enbys": "purple", "predato
 bounding_box__colors = {"females": "white", "males": "blue", "enbys": "purple", "predators": "red", "resources": "green"}
 
 def Usage():
-    print("Usage: nwplay.py -a addr -c cube_uuid -d -f filename -h -i -m -p password -s -u username -v --address addressess --cube cube_uuid --debug --file=filename --help --image --move --pswd password --sound --user username --version")
+    print("Usage: nwplay.py -a addr -c cube_uuid -d -f filename -g -h -i -m -p password -s -u username -v --address addressess --cube cube_uuid --debug --file=filename --game --help --image --move --pswd password --sound --user username --version")
 
 # probability density function
 
@@ -204,7 +207,7 @@ def display_window(cube_uuid):
     global resource_energy_field
     global total_points_field
     global cube_state_field
-    global btn_mate, btn_predator, btn_resource
+    global btn_mate, btn_predator, btn_resource, btn_game
     
     window_title = window_name + cube_uuid
     root = tkinter.Tk()
@@ -242,9 +245,11 @@ def display_window(cube_uuid):
     btn_predator.grid(column=2, row=4, sticky=W)
     btn_resource = ttk.Button(mainframe, text="Resource", command=find_resource, style="C.TButton")
     btn_resource.grid(column=3, row=4, sticky=W)
+    btn_game = ttk.Button(mainframe, text="Game", command=game_on, style="C.TButton")
+    btn_game.grid(column=4, row=4, sticky=W)
     option_values_field = StringVar()
     option_entry = ttk.Entry(mainframe, width=25, textvariable=option_values_field)
-    option_entry.grid(column=5, row=4, sticky=W)
+    option_entry.grid(column=6, row=4, sticky=W)
     option_entry.focus()
     ttk.Button(mainframe, text="Quit", command=quit_play, style="C.TButton").grid(column=7, row=4, sticky=E)
 
@@ -284,10 +289,15 @@ def find_resource(*args):
     global FindResource
     FindResource = not FindResource
 
+def game_on(*args):
+    global GameOn
+    GameOn = not GameOn
+
 def update_panel():
     btn_mate.config(text = "Mate %s" % FindMate)
     btn_predator.config(text = "Predator %s" % FindPredator)
     btn_resource.config(text = "Resource %s" % FindResource)
+    btn_game.config(text = "Game %s" % ("On" if GameOn else "Off"))
     cube_state_field.set(cube_state)
     
 # Create our detected bounding boxes
@@ -458,9 +468,9 @@ def execute_strategy(state):
     global starting_location
     global view_response
     global player_field_list
-    global FindMate, FindPredator, FindResource
+    global FindMate, FindPredator, FindResource, GameOn
     global target_class
-    global total_points, total_mates, total_resources, total_predators
+    global total_points, total_mates, total_resources, total_predators, resource_energy
     
     if state == "Idle":
         if spatial_position_blocked:
@@ -477,7 +487,7 @@ def execute_strategy(state):
         if resource_energy > 1000.0:
                 FindResource = False
         if cube_player == "male" or cube_player == female or cube_player == enby:
-            if FindMate or FindPredator or FindResource:
+            if FindMate or FindPredator or FindResource or GameOn:
                 scan_state_control = 0
                 # This is a hack, needs fixing.
                 scan_delay = 2
@@ -524,26 +534,40 @@ def execute_strategy(state):
             target_class = "females"
         if cube_player == "female" and FindMate:
             target_class = "males"
-        if cube_player == "enby" and FindMate:
-            return "NoTargets"
 
+        if GameOn and target_class == "":
+            for p in player_field_list:
+                if target_class == "" and p["classname"] == "males" and cube_player == "female":
+                    target_class = "males"
+                if target_class == "" and p["classname"] == "females" and cube_player == "male":
+                    target_class = "females"
+                if p["classname"] == "resources" and resource_energy < 1000.0:
+                    target_class = "resources"
+                if p["classname"] == "predators":
+                    target_class = "predators"
+                    break
+                
         # Find the nearest target
         return move_to_target(target_class)
 
     if state == "Moving":
 
         update_location()
-        print("nwplay.py: Current state %s, spatial_distance = %0.2f sdc %0.2f x %0.2f z %0.2f (%0.2f, %0.2f)"
+        if debug:
+            print("nwplay.py: Current state %s, spatial_distance = %0.2f sdc %0.2f x %0.2f z %0.2f (%0.2f, %0.2f)"
               % (state, spatial_distance, spatial_distance_control, current_location[0], current_location[2], starting_location[0], starting_location[2]))
 
         # Update states and cancel targets if reached. Use total points for the class as an indicator of objectives met.
-        if FindMate and total_points[1] > total_mates:
+        if (FindMate or target_class == "males" or target_class == "females") and total_points[1] > total_mates:
             total_mates = total_points[1]
             FindMate = False
             target_class = ""
         
         if FindResource and resource_energy > 1000.0:
             FindResource = False
+            target_class = ""
+
+        if GameOn and target_class == "resources" and resource_energy > 1000.0:
             target_class = ""
 
         if total_points[2] > total_resources:
@@ -871,7 +895,7 @@ def main():
     global view_response
     global image_snapshot
     global vrloop
-    global FindMate, FindResource, FindPredator
+    global FindMate, FindResource, FindPredator, GameOn
     global cube_state
     global scan_state_control
     global spatial_angle_control
@@ -992,7 +1016,7 @@ def main():
 
     # We're done. Goodbye.    
     shutdown_socket(s)
-    print("nwplay.py: game over")
+    print("nwplay.py: Game over")
 
         
 # ------- Could be removed -----------------------------------
@@ -1048,7 +1072,7 @@ if __name__=='__main__':
     #                                                                                            
 
     try:
-        options, args = getopt.getopt(sys.argv[1:], 'a:c:df:hikmp:rsu:v', ['address=','cube=','debug','file=','help', 'image', 'kill', 'mate', 'pswd=', 'resource', 'sound', 'user=', 'version'])
+        options, args = getopt.getopt(sys.argv[1:], 'a:c:df:ghikmp:rsu:v', ['address=','cube=','debug','file=','game','help','image','kill','mate','pswd=','resource','sound','user=','version'])
     except getopt.GetoptError:
         Usage()
         sys.exit(2)
@@ -1063,6 +1087,8 @@ if __name__=='__main__':
             nwmessage_debug(debug)
         if o in ("-f", "--file"):
             filename = a
+        if o in ("-g", "--game"):
+            GameOn = True
         if o in ("-h", "--help"):
             Usage()
             sys.exit()
