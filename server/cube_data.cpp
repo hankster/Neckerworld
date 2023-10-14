@@ -87,12 +87,13 @@ int json_import(char* jsonfile) {
 
 }
 
-// Argument is a JSON charactrr string
+// Argument is a JSON character string
 int json_import(string jsonobject) {
   fprintf(stdout, "cube_data.cpp: Importing JSON object\n");
+  fprintf(stdout, "%s\n", jsonobject.c_str());
 
   // Document d;
-  d.Parse(jsonobject);
+  d.Parse(jsonobject.c_str());
   return json_import_document();
 
 }
@@ -243,7 +244,7 @@ int json_import_document() {
       fprintf(stdout, "cube_data.cpp: Texture index %d processed using file %s\n", texture_index, texture_filename);
 
       // Increment our total texture count if needed
-      if (texture_index >= n_textures) n_textures = texture_index = 1;
+      if (texture_index >= n_textures) n_textures = texture_index + 1;
 
     }
   }
@@ -301,7 +302,23 @@ int json_import_document() {
     float cube_texture_map[6*4*2];
     for( SizeType i = 0; i < cc.Size(); ++i ) {
       const Value& c = cc[i];
+
       int cube_index = c["cube_index"].GetInt();
+      if (cube_index >= NC) {
+	fprintf(stderr, "cube_data.cpp: cube index (%d) exceeds allocation\n", cube_index);
+	return -1;
+      }
+
+      // Index will be -1 if we are adding a new cube on the fly
+      if (cube_index == -1) {
+	if (n_cubes == NC) {
+	  fprintf(stderr, "cube_data.cpp: maximum number of cubes (%d) already allocated\n", n_cubes);
+	  return -1;
+	}
+	cube_index = n_cubes;
+	n_cubes += 1;
+      }
+
       fprintf(stdout, "cube_data.cpp: Processing cubes, index %d\n", cube_index);
       string cube_player = c["cube_player"].GetString();
       string cube_uuid = c["cube_uuid"].GetString();
@@ -318,7 +335,7 @@ int json_import_document() {
       int cube_material = c["cube_material"].GetInt();
       string cube_surface = c["cube_surface"].GetString();
       int cube_texture_index = c["cube_texture_index"].GetInt();
-      for( int n = 0; n < 6*8; ++n) { cube_texture_map[n] = (float)c["cube_texture_map"][n].GetDouble(); }
+      for( int n = 0; n < 6*8; ++n) { cube_texture_map[n] = (float)c["cube_texture_map"][n].GetDouble();}
       float spatial_position_x = (float)c["spatial_position"][0].GetDouble();
       float spatial_position_y = (float)c["spatial_position"][1].GetDouble();
       float spatial_position_z = (float)c["spatial_position"][2].GetDouble();
@@ -326,9 +343,28 @@ int json_import_document() {
       float spatial_rotation_y = (float)c["spatial_rotation"][1].GetDouble();
       float spatial_rotation_z = (float)c["spatial_rotation"][2].GetDouble();
       float spatial_radius = (float)c["spatial_radius"].GetDouble();
-
       float resource_energy = (float)c["resource_energy"].GetDouble();
       
+      if (cube_texture_index == -1) {
+	string texture_filename = c["cube_texture_filename"].GetString();
+	if (n_textures == NT) {
+	  fprintf(stderr, "cube_data.cpp: maximum number of textures (%d) already installed\n", n_textures);
+	  return -1;
+	}
+
+	cube_texture_index = n_textures;
+	n_textures += 1;
+	
+	int status = new_texture(cube_texture_index, texture_filename.c_str());
+
+	if (status) {
+	  fprintf(stderr, "cube_data.cpp: json_import - texture %d (%s) not configured\n", cube_texture_index, texture_filename.c_str());
+	  return -1;
+	}
+
+	fprintf(stdout, "cube_data.cpp: Texture index %d processed using file %s\n", cube_texture_index, texture_filename.c_str());
+      }
+
       int status = new_cube(cube_index, cube_player, cube_uuid, cube_emoticon, cube_firstname, cube_scale_factor, cube_type, cube_color_class, cube_color, cube_material, cube_surface, cube_texture_index, cube_texture_map, spatial_position_x, spatial_position_y, spatial_position_z, spatial_rotation_x, spatial_rotation_y, spatial_rotation_z, spatial_radius, resource_energy);
       
       if (status) {
