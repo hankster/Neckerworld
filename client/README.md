@@ -40,6 +40,12 @@ A module that implements an object detection neural net pre-trained on Neckerwor
 Tensorflow 2 is used for the implementation.
 The model creation and training was completed on a PC with a GPU card using the Efficient Detect D0 neural network.
 
+### nwfield.py
+
+A program which can insert new predators or resources into the playing field.
+As predators are killed off or resources are used up they need to be replaced during game play.
+This program uses the family of predators and the collection of resources to refresh the playing field.
+It works remotely, through the messaging system to communicate with the server.
 
 
 
