@@ -261,6 +261,10 @@ def main():
     # Insertion loop -- upload new predators and resources to gaming server to put on the playing field
     while iloop:
 
+        if not InsertPredator and not InsertResource:
+            print("nwfield.py: No insertions specified, nothing to do.")
+            break
+
         if InsertPredator and len(predators) > 0:
             p = predators[pidx]
             cube_uuid = p[2]
@@ -294,7 +298,7 @@ def main():
         
         sequence += 1
         
-    logout_request(s, sequence, cube_uuid)
+    logout_request(s, sequence, server_uuid)
         
     # We're done. Goodbye.    
     shutdown_socket(s)
@@ -325,7 +329,7 @@ if __name__=='__main__':
             Usage()
             sys.exit()
         if o in ("-i", "--iloop"):
-            ilooptime = a
+            ilooptime = float(a)
         if o in ("-p", "--pswd"):
             password = a
         if o in ("-r", "--resource"):
