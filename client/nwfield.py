@@ -121,6 +121,13 @@ cube_texture_map_resource = [0.0, 0.0, 0.5, 0.0, 0.5, 1.0, 0.0, 1.0,
 def Usage():
     print("Usage: nwfield.py -a addr -d -f filename -h -i time -p password -r -t -u username -v --address addressess --debug --file=filename -help --iloop time --pswd password --resource --predator --user username --version")
 
+# Check for communications error
+def check_error(msg, response):
+    if response["message_type"] == "Error":
+        print("nwfield.py: %s - Error - %s" % (msg, response["error"]))
+        return True
+    return False
+
 # Read the list of predators and resources
 def cube_list():
     global cubedata
@@ -133,7 +140,7 @@ def cube_list():
 
     for c in cubes:
 
-        cs = c.split(',')
+        cs = c.split('\t')
         if "predator" in c:
             predators.append(cs)
         if "resource" in c:
@@ -270,8 +277,11 @@ def main():
             cube_uuid = p[2]
             jsonobject = create_cube(p, pidx)
             print("nwfield.py: Sending predator %d %s named %s" % (pidx, p[3], p[4]))
-            print(jsonobject)
+            if debug:
+                print(jsonobject)
             ijo_response = import_json_object(s, sequence, jsonobject, cube_uuid)
+            if check_error("import_json_object", ijo_response):
+                break
             pidx += 1
             if pidx == len(predators):
                 pidx = 0
@@ -282,8 +292,11 @@ def main():
             cube_uuid = r[2]
             jsonobject = create_cube(r, ridx)
             print("nwfield.py: Sending resource %d %s named %s" % (ridx, r[3], r[4]))
-            print(jsonobject)
+            if debug:
+                print(jsonobject)
             ijo_response = import_json_object(s, sequence, jsonobject, cube_uuid)
+            if check_error("import_json_object", ijo_response):
+                break
             ridx += 1
             if ridx == len(resources):
                 ridx = 0
