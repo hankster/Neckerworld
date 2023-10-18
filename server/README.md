@@ -12,7 +12,7 @@ It's started by running a command with a JSON file argument describing the windo
 cube nw.json
 ```
 This launches the game.
-Port 2020 is opened up for receipt of messages from the client players.
+Port 2020 is opened up for receipt of messages from client players.
 
 An extremely important, fundamental, task which the server rendering engine (cube_engine.cpp) performs is to generate a "cube's-eye" view of the playing field.
 Each cube player will be continually requesting visual updates of their view of the Neckerworld.
@@ -33,6 +33,7 @@ When no more cube requests come in and all the cubes are logged out the display 
 ### cube.cpp
 
 This is the main C++ program and starts all activity.
+See file "cube-keys.txt" for command codes that may be used (while focus is in the server display window).
 
 ### cube_data.cpp
 
@@ -76,6 +77,5 @@ make
 cube Neckerworld/client/nwtest.json
 # To activate predators on the playing field select the server window and type "S"
 # This will enable the server's basic strategy (control of predators and resources).
-S
 ```
 
