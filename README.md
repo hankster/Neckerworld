@@ -115,6 +115,8 @@ The following packages are needed to compile and run these programs (list detail
 * tensorflow
 * tkint
 
+See script "requirements.sh" for details.
+
 ## License
 
 All programs and materials in this repository are under the MIT License.
