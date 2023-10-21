@@ -69,12 +69,12 @@ An opengl shader program.
 Follow these steps to create and install the game server:
 ```
 # Compile the multi-thread server code (has some errors)
-cd Neckerworld/server/mtserver/mtserver
+cd ~/Neckerworld/server/mtserver/mtserver
 make
-cd Neckerworld/server
+cd ~/Neckerworld/server
 make
 # Start the server with a playing-field file
-cube Neckerworld/client/nwtest.json
+cube ~/Neckerworld/client/nwtest.json
 # To activate predators on the playing field select the server window and type "S"
 # This will enable the server's basic strategy (control of predators and resources).
 ```

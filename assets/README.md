@@ -27,7 +27,7 @@ There are several different classes of assets used.
 
 ## The standard Neckerworld family
 
-The Neckerworld standard edition contains the followig objects:
+The Neckerworld standard edition contains the following objects:
 
 * 37 males
 * 36 females
@@ -36,5 +36,5 @@ The Neckerworld standard edition contains the followig objects:
 * 81 resources
 
 Specifications for each one of these objects is in Neckerworld/training/cubedata.csv and includes details on the emoticon, size, color, surface and standard position of the object.
-The texture map, used for surface genertion in opengl, iss found in Neckerworld/training/textures.
+The texture map, used for surface genertion in opengl, is found in Neckerworld/training/textures.
 

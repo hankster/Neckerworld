@@ -72,18 +72,18 @@ The client players and programs can be on any computer running any operating sys
 Follow these steps to create and install the game server:
 ```
 # Compile the multi-thread server code (has some errors)
-cd Neckerworld/server/mtserver/mtserver
+cd ~/Neckerworld/server/mtserver/mtserver
 make
-cd Neckerworld/server
+cd ~/Neckerworld/server
 make
 # Start the server with a playing-field file
-cube Neckerworld/client/nwtest.json
+cube ~/Neckerworld/client/nwtest.json
 # To activate predators	on the playing field select the	server window and type "S"
 # This will enable the server's basic strategy (control of predators and resources).
 S
 # In a separate window start the player program
 # Make sure port 2020 is open and not firewalled
-cd Neckerworld/client
+cd ~/Neckerworld/client
 nwplay.py
 
 ```
