@@ -30,7 +30,7 @@ They are uniquely engineered to serve the needs of the organism.
 They have evolved over 100's of millions of years.
 The human visual system serves humans well, but not zebras, owls, rats, bees, or spiders.
 
-### Objectives
+## Objectives
 
 Three guiding principles of the human visual system:
 
