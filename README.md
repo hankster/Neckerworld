@@ -32,7 +32,7 @@ The human visual system serves humans well, but not zebras, owls, rats, bees, or
 
 ### Objectives
 
-Three guiding principals of the human visual system:
+Three guiding principles of the human visual system:
 
 >Find something to eat
 >
