@@ -14,7 +14,7 @@ To sucessfully play the game requires a competent program to do object detection
 
 ## Background
 
-The Necker Cube Illusion is a well known example of a perceptual illusion where the orientation of the cube is unstable and easily flips between two states.
+The Necker Cube Illusion (first published as a rhomboid in 1832 by Swiss crystallographer Louis Albert Necker) is a well known example of a perceptual illusion where the orientation of the cube is unstable and easily flips between two states.
 Serious study and research into why we perceive multiple states leads to a set of questions about the very nature of our vision.
 
 ![Necker Cube illusion example](images/Necker-Cube-Illusion-300x300.png)
