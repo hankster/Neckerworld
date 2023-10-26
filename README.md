@@ -49,6 +49,10 @@ There are five types of players in the game.
 The male, female and enby players are controlled remotely and autonomously via programs created by the game participants.
 The predators and resources are provided by and controlled by the gaming field server.
 
+An IRL analogy would be a bumper-car ride at an amusement park where we would attach a forward looking camera to the front of each car.
+Then, by a radio remote-control link, our computer would receive images from the camera and send commands to drive the bumper-car left or right, forward or backward.
+The bumper-car would then have to pursue or avoid other cars based on color, appearance and game strategy.
+
 ## Game Architecture and Structure
 
 The Neckerworld consists of a playing field server and one or more remote client players.
