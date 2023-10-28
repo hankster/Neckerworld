@@ -146,7 +146,7 @@ def predict(image_filename):
         classname = detection_classes_as_text[i].decode("UTF-8")
         # classname change
         if classname == "others":
-            classname = "enbys"
+            classname = "enbies"
         bounding_vertices = [detection_boxes[i][1], detection_boxes[i][0], detection_boxes[i][3], detection_boxes[i][2]]
         predictions["predictions"].append({"classname": classname, "score": score, "bounding_vertices": bounding_vertices})
 

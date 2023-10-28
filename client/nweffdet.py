@@ -68,11 +68,11 @@ debug = False
 show_image = False
 precision_test = False
 
-class_names_fb = ['n/a', 'females_front', 'females_back', 'males_front', 'males_back', 'enbys_front', 'enbys_back', 'predators_front', 'predators_back', 'resources_front', 'resources_back'] 
-class_names_fb_short = ['n/a', 'females', 'females', 'males', 'males', 'enbys', 'enbys', 'predators', 'predators', 'resources', 'resources'] 
-class_names = ['n/a', 'females', 'males', 'enbys', 'predators', 'resources'] 
-bounding_box_colors = {"females": "white", "males": "blue", "enbys": "purple", "predators": "red", "resources": "green",
-                       "females_front": "white", "females_back": "white", "males_front": "blue", "males_back": "blue", "enbys_front": "purple", "enbys_back": "purple",
+class_names_fb = ['n/a', 'females_front', 'females_back', 'males_front', 'males_back', 'enbies_front', 'enbies_back', 'predators_front', 'predators_back', 'resources_front', 'resources_back'] 
+class_names_fb_short = ['n/a', 'females', 'females', 'males', 'males', 'enbies', 'enbies', 'predators', 'predators', 'resources', 'resources'] 
+class_names = ['n/a', 'females', 'males', 'enbies', 'predators', 'resources'] 
+bounding_box_colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green",
+                       "females_front": "white", "females_back": "white", "males_front": "blue", "males_back": "blue", "enbies_front": "purple", "enbies_back": "purple",
                        "predators_front": "red", "predators_back": "red", "resources_front": "green", "resources_back": "green"}
 
 # filename = "../training/trainers-set2-jpg/females/training-female-1f31d-hd-0.5986-512x512.jpg"

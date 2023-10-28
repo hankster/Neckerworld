@@ -57,16 +57,16 @@ number_ground_textures = 2
 # List of locations [ (x, y, z, r) , ... ]
 locations = []
 
-# Lists of males, females, enbys
+# Lists of males, females, enbies
 males = []
 males_used = []
 males_file = assets + "/males.txt"
 females = []
 females_used = []
 females_file = assets + "/females.txt"
-enbys = []
-enbys_used = []
-enbys_file = assets + "/enbys.txt"
+enbies = []
+enbies_used = []
+enbies_file = assets + "/enbies.txt"
 
 # Lists of predators
 predators = []
@@ -364,24 +364,24 @@ def get_female():
             return female[0:-4]
     return random.choice(females)[:-4]
 
-# Read the list of possible enbys into a list
-def enbys_list():
-    global enbys
+# Read the list of possible enbies into a list
+def enbies_list():
+    global enbies
     try:
-        with open(enbys_file) as f:
-            enbys = f.read().splitlines()
+        with open(enbies_file) as f:
+            enbies = f.read().splitlines()
     except IOError as e:
-        print("nw.py: Unable to read enbys file %s - %s" % (enbys_file, e))
+        print("nw.py: Unable to read enbies file %s - %s" % (enbies_file, e))
         sys.exit()
 
 # Get a unique enby from the list
 def get_enby():
-    while len(enbys_used) < len(enbys):
-        enby = random.choice(enbys)
-        if enby not in enbys_used:
-            enbys_used.append(enby)
+    while len(enbies_used) < len(enbies):
+        enby = random.choice(enbies)
+        if enby not in enbies_used:
+            enbies_used.append(enby)
             return enby[0:-4]
-    return random.choice(enbys)[:-4]
+    return random.choice(enbies)[:-4]
 
 # Read the list of possible predators into a list
 def predators_list():
@@ -716,10 +716,10 @@ def main():
     
     print("nw.py -- Create dataset %s for the cube program" % dataset)
 
-    # Read in lists of males, females, predators, resources and surfaces
+    # Read in lists of males, females, enbies, predators, resources and surfaces
     males_list()
     females_list()
-    enbys_list()
+    enbies_list()
     predators_list()
     resources_list()
     surfaces_list()

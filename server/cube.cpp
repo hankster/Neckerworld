@@ -1000,7 +1000,7 @@ void processInput(GLFWwindow *window)
 // B -- Basic strategy toggle (server controls predators resources)
 // C -- Clock delay on/off
 // D -- Debug toggle
-// E -- Extended strategy toggle (server controls males, females, enbys)
+// E -- Extended strategy toggle (server controls males, females, enbies)
 // F -- View target -x
 // G -- View target -y
 // H -- View target -z
@@ -1116,7 +1116,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
   }
   
   if (key == GLFW_KEY_E && action == GLFW_PRESS) {
-    /* Strategy - Extended (control males, females, enbys)*/
+    /* Strategy - Extended (control males, females, enbies)*/
     if (! strategy_extended) {
       strategy_extended = true;
       printf("cube.cpp: Extended strategy on!!\n");

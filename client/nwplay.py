@@ -176,8 +176,8 @@ target_class = ""
 # Field state
 
 player_colors = {"female": "white", "male": "blue", "enby": "purple", "predator": "red", "resource": "green"}
-class_colors = {"females": "white", "males": "blue", "enbys": "purple", "predators": "red", "resources": "green"}
-bounding_box__colors = {"females": "white", "males": "blue", "enbys": "purple", "predators": "red", "resources": "green"}
+class_colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green"}
+bounding_box__colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green"}
 
 def Usage():
     print("Usage: nwplay.py -a addr -c cube_uuid -d -f filename -g -h -i -m -p password -s -u username -v --address addressess --cube cube_uuid --debug --file=filename --game --help --image --move --pswd password --sound --user username --version")
@@ -1028,7 +1028,7 @@ def predict_test(image_filename):
         classname0 = "females"
         score0 = 0.9992648959159851
         bounding_vertices0 = [0.7455063462257385, 0.3876940608024597, 0.997381865978241, 0.767550528049469]
-        classname1 = "enbys"
+        classname1 = "enbies"
         score1 = 0.9981234669685364
         bounding_vertices1 = [0.1775604635477066, 0.45660680532455444, 0.39429670572280884, 0.6395054459571838]
         p = {"predictions": [{"classname": classname0, "score": score0, "bounding_vertices": bounding_vertices0}, {"classname": classname1, "score": score1, "bounding_vertices": bounding_vertices1}]}

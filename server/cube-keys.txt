@@ -6,7 +6,7 @@
 // B -- Basic strategy toggle (server controls predators resources)
 // C -- Clock delay on/off
 // D -- Debug toggle
-// E -- Extended strategy toggle (server controls males, females, enbys)
+// E -- Extended strategy toggle (server controls males, females, enbies)
 // F -- View target -x
 // G -- View target -y
 // H -- View target -z
