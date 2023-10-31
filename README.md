@@ -125,9 +125,10 @@ See: https://mit-license.org and https://en.wikipedia.org/wiki/MIT_License for m
 ## Acknowledgement and Credits
 
 The following repositories have provided code for this project
-* stb_image - v2.23 - public domain image loader - http://nothings.org/stb
-* rapidjson - THL A29 Limited, a Tencent company, and Milo Yip. All rights reserved.
 * mtserver - https://github.com/vichargrave/threads.git and wqueue and tcpsockets
+* rapidjson - THL A29 Limited, a Tencent company, and Milo Yip. All rights reserved.
+* stb_image - v2.23 - public domain image loader - http://nothings.org/stb
+* twemoji - https://github.com/twitter/twemoji/
 
 ## Issues
 
