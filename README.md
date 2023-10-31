@@ -118,6 +118,9 @@ See script "requirements.sh" for details.
 ## License
 
 All programs and materials in this repository are under the MIT License.
+The MIT license is a simple open source license agreement that grants users the right to reuse code for any purpose, including inside proprietary software, which sets it apart from a Copyleft license.
+
+See: https://mit-license.org and https://en.wikipedia.org/wiki/MIT_License for more information.
 
 ## Acknowledgement and Credits
 
