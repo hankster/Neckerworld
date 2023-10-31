@@ -703,6 +703,7 @@ int cube_contact_index(string player) {
 // Evaluate what to do if two cubes contact
 bool cube_contact_evaluation(int i, int j) {
 
+  //                               male            female            enby           predator         resource
   int conflict_type[5][5] = {{0, 1, 0, 2, 3}, {1, 0, 0, 2, 3}, {0, 0, 0, 2, 3}, {2, 2, 2, 0, 0}, {3, 3, 3, 0, 0}};
   
   // Check for valid cubes
@@ -718,20 +719,24 @@ bool cube_contact_evaluation(int i, int j) {
 
   int conflict_rules = conflict_type[ii][jj];
   // if (debug > 1) printf("cube.cpp: Conflict rules %d\n", conflict_rules);
-  
+
+  // male vs. male or enby, femle vs. female or enby, enby vs. m or f or e, predator vs. predator or resource, resource vs. predator or resource
   if (conflict_rules == 0) {
     return cube_contact_no_action(i,j);
   }
+  // mating male vs. female, female vs. male
   if (conflict_rules == 1) {
     int m = (ip == "male") ? i : j;
     int f = (jp == "female") ? j : i;
     return cube_contact_mate(m,f);
   }
+  // male or female or enby vs. predator
   if (conflict_rules == 2) {
     int pl = (ip != "predator") ? i : j;
     int pr = (jp == "predator") ? j : i;
     return cube_contact_attack(pl,pr);
   }
+  // male of female or enby vs. resource
   if (conflict_rules == 3) {
     if (ip != "resource") return cube_contact_resource(i, j);
   }
@@ -827,12 +832,15 @@ bool cube_contact_attack(int player, int predator) {
     printf("cube.cpp: %8s %2d eliminates predator %d\n", &cubes[player].cube_player[0], player, predator);
   } else {
     // Uh oh, the predator is bigger. We still might win.
+    bool isEnby = cubes[player].cube_player == "enby";
     // The size advantage is the ratio of the size of the two cubes
     float size_advantage = cubes[predator].cube_scale_factor/cubes[player].cube_scale_factor;
     // The threshold_advantage ranges from 0.0 to 0.5 based on the size advantage. 2 x size assures a predator win.
     float threshold_advantage = min(0.5 * (size_advantage - 1.0), 0.5);
     // Compute a random number from 0.0 to 1.0
     float r = random1();
+    // Give enbies superpowers
+    if (isEnby) r = 0.9; 
     // If we can exceed the threshold then the player lucks out and beats the predator 
     if (r > (0.5 + threshold_advantage)) {
       // Player beats predator
