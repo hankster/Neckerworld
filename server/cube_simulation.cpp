@@ -832,17 +832,28 @@ bool cube_contact_attack(int player, int predator) {
     printf("cube.cpp: %8s %2d eliminates predator %d\n", &cubes[player].cube_player[0], player, predator);
   } else {
     // Uh oh, the predator is bigger. We still might win.
+    // The method for determining if the player can knock off a larger predator is this:
+    // The size advantage can go from 1.0 to 2.4 (0.5/0.5 to 1.2/0.5)
+    // At 1.0 the player has a 100% chance of killing off the predator.
+    // At 2.4 the player has a 0.0% chance of killing off the predator.
+    // We pick a random number from 0.0 to 1.0.
+    // If that number is greater than the required threshold based on size advantage the player wins.
+    // So if the size advantage is 2.4 the picked number must be 1.0 (impossible).
+    // So if the size advantage is 1.0 the picked number must be greater than 0.0 (always wins).
+    // We give special superpowers to enbies and set their size advantage to "superpower" or less.
     bool isEnby = cubes[player].cube_player == "enby";
+    float superpower = 0.2;
     // The size advantage is the ratio of the size of the two cubes
     float size_advantage = cubes[predator].cube_scale_factor/cubes[player].cube_scale_factor;
-    // The threshold_advantage ranges from 0.0 to 0.5 based on the size advantage. 2 x size assures a predator win.
-    float threshold_advantage = min(0.5 * (size_advantage - 1.0), 0.5);
+    // The threshold_requirement ranges from 0.0 to 1.0
+    float threshold_requirement = (size_advantage - 1.0)/1.4;
+    // Give enbies superpowers
+    if (isEnby) threshold_requirement = min(threshold_requirement, superpower); 
     // Compute a random number from 0.0 to 1.0
     float r = random1();
-    // Give enbies superpowers
-    if (isEnby) r = 0.9; 
+    printf("cube.cpp: size advantage (predator/player) = %0.4f, threshold = %0.4f, random number = %0.4f\n", size_advantage, threshold_requirement, r);
     // If we can exceed the threshold then the player lucks out and beats the predator 
-    if (r > (0.5 + threshold_advantage)) {
+    if (r > threshold_requirement) {
       // Player beats predator
       cubes[predator].cube_active = false;
       cubes[predator].life_death = time(NULL);
