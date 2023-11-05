@@ -69,6 +69,8 @@ The client players and programs can be on any computer running any operating sys
 
 Follow these steps to create and install the game server:
 ```
+# If you installed from the github zip file, rename the top-level directory:
+mv Neckerworld-main Neckerworld
 # Compile the multi-thread server code (has some errors)
 cd ~/Neckerworld/server/mtserver/mtserver
 make
@@ -105,8 +107,10 @@ More solutions for training will, hopefully, be forthcoming.
 The server has only been tested on Ubuntu 20.04.6 LTS and Ubuntu 22.04.3 LTS. The desktop edition is required as both the server code and player will open a graphical window to function. 
 
 The following packages are needed to compile and run these programs (list details need to be reviewed and clarified):
-* python 3
+* python3
+* python-3-pip
 * opengl
+* libglew-dev
 * glfw
 * make
 * C++
