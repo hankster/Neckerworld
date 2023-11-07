@@ -33,12 +33,12 @@ The human visual system serves humans well, but not zebras, owls, rats, bees, or
 ## Objectives
 
 Three guiding principles of the human visual system:
-* Find something to eat
+* Finding water and food to eat
 * Don't get eaten
 * Find a mate
 
 Consquently, game points are scored through three activities:
-* Finding and reaching food resources
+* Finding and reaching food/liquid resources
 * Killing off predators
 * Mating and having child cubes
 
