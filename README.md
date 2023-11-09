@@ -108,14 +108,14 @@ The server has only been tested on Ubuntu 20.04.6 LTS and Ubuntu 22.04.3 LTS. Th
 
 The following packages are needed to compile and run these programs (list details need to be reviewed and clarified):
 * python3
-* python-3-pip
-* opengl
+* python3-pip
+* opengl libraries
 * libglew-dev
 * glfw
 * make
 * C++
 * tensorflow
-* tkint
+* python3-tk (tkinter)
 
 See script "requirements.sh" for details.
 
