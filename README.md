@@ -113,7 +113,7 @@ The following packages are needed to compile and run these programs (list detail
 * libglew-dev
 * glfw
 * make
-* C++
+* g++
 * tensorflow
 * python3-tk (tkinter)
 
