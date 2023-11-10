@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <time.h>
 #include <ctime>
 #include <math.h>
@@ -675,7 +676,21 @@ int main(int argc, char* argv[]) {
   }
 
   /* Process all json files */
+
+  if (argc < 2) {
+    printf("cube.cpp: no json input files supplied on the command line\n");
+  }
+  struct stat stat_buffer;   
   for (index = optind; index < argc; index++) {
+    /* Check if the input file exists */
+    int file_status = stat(argv[index], &stat_buffer);
+    if (file_status != 0) {
+      printf("cube.cpp: json input file %s not found\n", argv[index]);
+      free_resources();
+      glfwTerminate();
+      abort();
+    }
+
     printf("cube.cpp: Processing file %s\n", argv[index]);
     if (status = json_import(argv[index])) {
       free_resources();
@@ -1322,7 +1337,7 @@ void screenview_capture(GLFWwindow* window, int i, int notify, std::vector<uint8
 
   int image_size = w * h * c;
 
-  // Lock this rewource while we're changing it
+  // Lock this resource while we're changing it
   pixels_mutex[i].lock();
   
   if (pixels[i].size() != image_size) {

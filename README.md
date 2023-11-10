@@ -110,6 +110,7 @@ The following packages are needed to compile and run these programs (list detail
 * python3
 * python3-pip
 * python3-opencv
+* python3-matplotlib
 * opengl libraries
 * libglew-dev
 * glfw
@@ -117,6 +118,7 @@ The following packages are needed to compile and run these programs (list detail
 * make
 * g++
 * tensorflow
+* imagemagick
 * python3-tk (tkinter)
 
 See script "requirements.sh" for details.
