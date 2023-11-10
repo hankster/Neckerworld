@@ -672,6 +672,7 @@ int main(int argc, char* argv[]) {
   if (status = init_resources()) {
     free_resources();
     glfwTerminate();
+    server_stop();
     return status;
   }
 
@@ -688,13 +689,15 @@ int main(int argc, char* argv[]) {
       printf("cube.cpp: json input file %s not found\n", argv[index]);
       free_resources();
       glfwTerminate();
-      abort();
+      server_stop();
+      return file_status;
     }
 
     printf("cube.cpp: Processing file %s\n", argv[index]);
     if (status = json_import(argv[index])) {
       free_resources();
       glfwTerminate();
+      server_stop();
       return status;
     }
   }
@@ -704,6 +707,7 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "cube.cpp: shader creation failed\n");
     free_resources();
     glfwTerminate();
+    server_stop();
     return status;
   }
 
