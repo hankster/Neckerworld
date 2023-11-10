@@ -106,7 +106,7 @@ More solutions for training will, hopefully, be forthcoming.
 
 The server has only been tested on Ubuntu 20.04.6 LTS and Ubuntu 22.04.3 LTS. The desktop edition is required as both the server code and player will open a graphical window to function. 
 
-The following packages are needed to compile and run these programs (list details need to be reviewed and clarified):
+The following packages are needed to compile and run these programs:
 * python3
 * python3-matplotlib
 * python3-opencv
