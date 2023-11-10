@@ -77,7 +77,7 @@ make
 cd ~/Neckerworld/server
 make
 # Start the server with a playing-field file
-cube ~/Neckerworld/client/nwtest.json
+cube ~/Neckerworld/setup/nwtest.json
 # To activate predators	on the playing field select the	server window and type "S"
 # This will enable the server's basic strategy (control of predators and resources).
 S
@@ -109,9 +109,11 @@ The server has only been tested on Ubuntu 20.04.6 LTS and Ubuntu 22.04.3 LTS. Th
 The following packages are needed to compile and run these programs (list details need to be reviewed and clarified):
 * python3
 * python3-pip
+* python3-opencv
 * opengl libraries
 * libglew-dev
 * glfw
+* libpng-dev
 * make
 * g++
 * tensorflow

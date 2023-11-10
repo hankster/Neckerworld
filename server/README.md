@@ -9,7 +9,7 @@ The "cube" program is the runtime server and uses opengl to render images of the
 It's started by running a command with a JSON file argument describing the window and ground textures:
 
 ```
-cube nw.json
+cube ../setup/nw.json
 ```
 This launches the game.
 Port 2020 is opened up for receipt of messages from client players.
