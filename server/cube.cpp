@@ -1017,7 +1017,7 @@ void processInput(GLFWwindow *window)
 // Print out all key codes
 void keyHelp()
 {
-  printf("Listing of all cube server keys:\n\n"
+  printf("cube.cpp: Listing of all cube server keys:\n"
 	 "A -- Activate (set velocity non-zero)\n"
 	 "B -- Basic strategy toggle (server controls predators resources)\n"
 	 "C -- Clock delay on/off\n"
