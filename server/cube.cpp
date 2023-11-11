@@ -1014,47 +1014,53 @@ void processInput(GLFWwindow *window)
     }
 }
 
-// The callback function receives the keyboard key, platform-specific scancode, key action and modifier bits.
-// A -- Activate (set velocity non-zero)
-// B -- Basic strategy toggle (server controls predators resources)
-// C -- Clock delay on/off
-// D -- Debug toggle
-// E -- Extended strategy toggle (server controls males, females, enbies)
-// F -- View target -x
-// G -- View target -y
-// H -- View target -z
-// I -- Y up
-// J -- X down
-// K -- Y down
-// L -- Z down
-// M -- Rotate cube right
-// N -- Rotate cube left
-// O -- Z up
-// P -- Screenshot
-// Q -- Reset view position
-// R -- View target +x
-// S -- Strategy on/off
-// T -- View tRGET +Y
-// U -- X up
-// V -- Start video recording on/off
-// W
-// X -- Change to cube view of cube_index
-// Y -- VIEW Target +z
-// Z -- Increment cube index
-// 0-8 -- Rotate-y n x pi/4
-// Left-Arrow -- Gaze left
-// Right-Arrow -- Gaze right
-// Up-Arrow  -- Gaze up
-// Down-Arrow -- Gaze down
-// Left-Bracket -- Light X -= 1.0
-// Right-Bracket -- Light X += 1.0
-// Period -- Light Y -= 0.5
-// Slash -- Light Y += 0.5
-// Minus -- Light Z -= 1.0
-// Equal -- Light Z += 1.0
-// Semicolon -- Ambient -= 0.1
-// Apostrophe -- Ambient += 0.1
-// ESC -- Exit
+// Print out all key codes
+void keyHelp()
+{
+  printf("Listing of all cube server keys:\n\n"
+	 "A -- Activate (set velocity non-zero)\n"
+	 "B -- Basic strategy toggle (server controls predators resources)\n"
+	 "C -- Clock delay on/off\n"
+	 "D -- Debug toggle\n"
+	 "E -- Extended strategy toggle (server controls males, females, enbies)\n"
+	 "F -- View target -x\n"
+	 "G -- View target -y\n"
+	 "H -- View target -z\n"
+	 "I -- Y up\n"
+	 "J -- X down\n"
+	 "K -- Y down\n"
+	 "L -- Z down\n"
+	 "M -- Rotate cube right\n"
+	 "N -- Rotate cube left\n"
+	 "O -- Z up\n"
+	 "P -- Screenshot - take a picture\n"
+	 "Q -- Reset view position\n"
+	 "R -- View target +x\n"
+	 "S -- Strategy on/off\n"
+	 "T -- View tRGET +Y\n"
+	 "U -- X up\n"
+	 "V -- Start video recording on/off\n"
+	 "W -- \n"
+	 "X -- Change to cube view of cube_index\n"
+	 "Y -- View Target +z\n"
+	 "Z -- Increment cube index\n"
+	 "0-8 -- Rotate-y n x pi/4\n"
+	 "Left-Arrow -- Gaze left\n"
+	 "Right-Arrow -- Gaze right\n"
+	 "Up-Arrow  -- Gaze up\n"
+	 "Down-Arrow -- Gaze down\n"
+	 "Left-Bracket -- Light X -= 1.0\n"
+	 "Right-Bracket -- Light X += 1.0\n"
+	 "Period -- Light Y -= 0.5\n"
+	 "Slash -- Light Y += 0.5\n"
+	 "Minus -- Light Z -= 1.0\n"
+	 "Equal -- Light Z += 1.0\n"
+	 "Semicolon -- Ambient -= 0.1\n"
+	 "Apostrophe -- Ambient += 0.1\n"
+	 "Grave Accent -- Exit\n"
+	 "ESC -- Exit\n"
+	 "? -- Help, print a list of server keys\n");
+}
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -1066,7 +1072,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
   //     //lowercase
   //   }
   // }
-  
+
+  // Print the Help screen
+  if (key == GLFW_KEY_SLASH && action == GLFW_PRESS && mode == GLFW_MOD_SHIFT) {keyHelp();}
+
   // End the game
   if ((key == GLFW_KEY_ESCAPE || key == GLFW_KEY_GRAVE_ACCENT) && action == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
@@ -1247,7 +1256,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
   if (key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS) {lights[0].position.x -= 1.0;  movelight = true; }
   if (key == GLFW_KEY_RIGHT_BRACKET && action == GLFW_PRESS) {lights[0].position.x += 1.0; movelight = true; }
   if (key == GLFW_KEY_PERIOD && action == GLFW_PRESS) {lights[0].position.y -= 0.5; movelight = true; }
-  if (key == GLFW_KEY_SLASH && action == GLFW_PRESS) {lights[0].position.y += 0.5; movelight = true; }
+  if (key == GLFW_KEY_SLASH && action == GLFW_PRESS && mode != GLFW_MOD_SHIFT) {lights[0].position.y += 0.5; movelight = true; }
   if (key == GLFW_KEY_MINUS && action == GLFW_PRESS) {lights[0].position.z -= 1.0; movelight = true; }
   if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS) {lights[0].position.z += 1.0; movelight = true; }
   if (key == GLFW_KEY_SEMICOLON && action == GLFW_PRESS) {lights[0].ambient.x -= 0.1; lights[0].ambient.y -= 0.1; lights[0].ambient.z -= 0.1; movelight = true; }
