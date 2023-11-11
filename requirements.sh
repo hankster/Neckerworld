@@ -20,4 +20,4 @@ sudo apt-get -y install imagemagick
 
 # Python packages needed
 sudo python3 -m pip install tensorflow
-sudo python -m pip install
+sudo python3 -m pip install xlib
