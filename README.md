@@ -108,18 +108,20 @@ The server has only been tested on Ubuntu 20.04.6 LTS and Ubuntu 22.04.3 LTS. Th
 
 The following packages are needed to compile and run these programs:
 * python3
-* python3-matplotlib
-* python3-opencv
 * python3-pip
-* python3-tk (tkinter)
-* opengl libraries
-* libglew-dev
-* glfw
+* python3-tk
+* python3-opencv
+* python3-matplotlib
+* libglfw3 libglfw3-dev
+* mesa-utils libglu1-mesa-dev mesa-common-dev
+* freeglut3 freeglut3-dev
+* libglew-dev libglm-dev
 * libpng-dev
-* make
+* make cmake pkg-config
 * g++
-* tensorflow
 * imagemagick
+* tensorflow
+* xlib
 
 See script "requirements.sh" for details.
 
