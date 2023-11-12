@@ -148,5 +148,5 @@ There is, to the author's knowledge, only one similar effort to build a game whe
 Future efforts to continue and enhance this game concept will, in part, depend on the feedback received.
 
 * Multi-thread context switching -- Messages can be received at the server in random order and at random times. Each messages that requests a cube's-eye view needs a proper context switch of the rendering engine. Right now this is done through a hack.
-* Rendering synchronization -- Code that insures that a proper render is sent back to the client is not well understood and not tested for a large numbber of clients.
+* Rendering synchronization -- Code that insures that a proper render is sent back to the client is not well understood and not tested for a large number of clients.
 * Cube intersection errors -- The display of cubes that are in close proximity sometimes shows unwanted overlap and incorrect physical display.

@@ -206,7 +206,25 @@ float pi = 3.14159265358979323846;
 
 void Usage()
 {
-  fprintf(stdout, "Usage: cube -c 0/1 -d level  -f filename -g 0/1 -j jsonfile -h -n 0/1 -p -r 1-4 -t -v -w 0/1 -x screenwidth -y screenheight jsonfile [...jsonfile] \n");
+  fprintf(stdout, "Usage: cube -a delay -c 0/1 -d level -f filename -g 0/1 -j jsonfile -h -n 0/1 -p -r 1-4 -t -v -w 0/1 -x screenwidth -y screenheight jsonfile [...jsonfile]\n"
+	  "where\n"
+	  "\t-a delay\tAdd 'delay' frames before returning a view request, default=0 (this is a hack).\n"
+	  "\t-c 0/1\t\tDisplay cubes, default=1 or true.\n"
+	  "\t-d level\tSet debug level, default=0.\n"
+	  "\t-f filename\tNot used.\n"
+	  "\t-g 0/1\t\tDisplay grounds, default=1 or true.\n"
+	  "\t-j jsonfile\tName of the JSON file to process (not used).\n"
+	  "\t-h\t\tPrint out parameter help.\n"
+	  "\t-n 0/1\t\tDisplay cube face normals, default=0.\n"
+	  "\t-p\t\tSet position=1 for cube spin.\n"
+	  "\t-r 1-4\t\tSetup different axes for rotation (x, y, z, all).\n"
+	  "\t-t\t\tSet transparency for rendering, default=0.\n"
+	  "\t-v\t\tPrint cube version level.\n"
+	  "\t-w 0/1\t\tDisplay wireframe cubes, default=0.\n"
+	  "\t-x width\tScreen width in X direction, default=1280.\n"
+	  "\t-y height\tScreen height in Y direction, default=720.\n"
+	  "\tjsonfiles\tOne or more JSON files to process to setup the game playing field.\n"
+	  );
 }
 
 // Generate a random number from 0.0-1.0
