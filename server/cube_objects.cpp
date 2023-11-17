@@ -416,17 +416,17 @@ bool cube_mates(int male, int female) {
     if (enby_selector < 0.33) {
       new_cube_emoticon = "1f60a";
       new_cube_firstname = "Bailey";
-      new_cube_texture_file = "assets/texture-1f60a-3072x512.png";
+      new_cube_texture_file = "../assets/texture-1f60a-3072x512.png";
     }
     if (enby_selector >= 0.33 && enby_selector <= 0.66) {
       new_cube_emoticon = "1f61a";
       new_cube_firstname = "Hunter";
-      new_cube_texture_file = "assets/texture-1f61a-3072x512.png";
+      new_cube_texture_file = "../assets/texture-1f61a-3072x512.png";
     }
     if (enby_selector > 0.66) {
       new_cube_emoticon = "1f633";
       new_cube_firstname = "Justice";
-      new_cube_texture_file = "assets/texture-1f633-3072x512.png";
+      new_cube_texture_file = "../assets/texture-1f633-3072x512.png";
     }
     new_cube_type = cubes[female].cube_type;
     new_cube_color_class = "p";
