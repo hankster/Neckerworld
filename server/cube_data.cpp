@@ -109,20 +109,20 @@ int json_import_document() {
   if (d.HasMember("window")) {
     const Value& w = d["window"];
     window_title = w["window_title"].GetString();
-    window_screen_width = w["window_screen_width"].GetInt();
-    window_screen_height = w["window_screen_height"].GetInt();
-    window_screen_channels = w["window_screen_channels"].GetInt();
+    main_window_width = w["main_window_width"].GetInt();
+    main_window_height = w["main_window_height"].GetInt();
+    main_window_channels = w["main_window_channels"].GetInt();
     window_background_color_r = (float)w["window_background_color"][0].GetDouble();
     window_background_color_g = (float)w["window_background_color"][1].GetDouble();
     window_background_color_b = (float)w["window_background_color"][2].GetDouble();
     window_background_color_a = (float)w["window_background_color"][3].GetDouble();
 
     glfwSetWindowTitle(window, window_title);
-    glfwSetWindowSize(window, window_screen_width, window_screen_height);
-    update_projection(window_screen_width, window_screen_height);
-    glViewport(0, 0, window_screen_width, window_screen_height);
+    glfwSetWindowSize(window, main_window_width, main_window_height);
+    update_projection(main_window_width, main_window_height);
+    glViewport(0, 0, main_window_width, main_window_height);
     
-    fprintf(stdout, "cube_data.cpp: Title %s, screen width %d, height %d, window color (%4.2f, %4.2f, %4.2f, %4.2f)\n", window_title, window_screen_width, window_screen_height, window_background_color_r, window_background_color_g, window_background_color_b, window_background_color_a);
+    fprintf(stdout, "cube_data.cpp: Title %s, main window width %d, height %d, window color (%4.2f, %4.2f, %4.2f, %4.2f)\n", window_title, main_window_width, main_window_height, window_background_color_r, window_background_color_g, window_background_color_b, window_background_color_a);
   }
 
   if (d.HasMember("camera")) {

@@ -61,6 +61,11 @@ struct Cube {
   std::vector<GLfloat> match_energy;
   std::vector<bool> match_results;
   GLfloat bounding_box[4];
+  GLint paintball_count;
+  GLint paintball_type;
+  glm::vec3 paintball_color;
+  GLfloat paintball_bearing;
+  GLfloat paintball_elevation;
   glm::mat4 cube_model;
   glm::mat4 cube_mvp;
 };
@@ -142,16 +147,23 @@ struct Ul {
 
 // Global vaiables -- most located in cube.cpp
 extern GLFWwindow* window;
+extern GLFWwindow* windows[];
+extern GLuint VertexArrayObject;
+extern GLuint VertexArrayObjects[];
 
-/* Window settings */
+/* Main Window settings (This is the ground view.) */
 extern const char * window_title;
-extern int window_screen_width;
-extern int window_screen_height;
-extern int window_screen_channels;
+extern int main_window_width;
+extern int main_window_height;
+extern int main_window_channels;
 extern float window_background_color_r;
 extern float window_background_color_g;
 extern float window_background_color_b;
 extern float window_background_color_a;
+
+/* Image size used for transmission to client, object detection and analysis */
+extern int raster_width;
+extern int raster_height;
 
 /* World scene variables */
 extern glm::mat4 view;
@@ -364,6 +376,10 @@ void strategy_resource(int i);
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 #define WINDOW_CHANNELS 4
+
+/* Size of image used for transmission, object identification */
+#define IMAGE_RASTER_WIDTH 512
+#define IMAGE_RASTER_HEIGHT 512
 
 /* Multi-thread server */
 #define MT_WORKERS 30

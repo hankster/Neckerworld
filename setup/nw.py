@@ -580,11 +580,11 @@ def create_JSON():
 
     # Setup our window
     window_title = "Necker World" + " - " + dataset
-    window_screen_width = 1280
-    window_screen_height = 720
-    window_screen_channels = 4
+    main_window_width = 1280
+    main_window_height = 720
+    main_window_channels = 4
     window_background_color = color_grey_075
-    window = {"window_title": window_title, "window_screen_width": window_screen_width, "window_screen_height": window_screen_height, "window_screen_channels": window_screen_channels, "window_background_color": window_background_color} 
+    window = {"window_title": window_title, "main_window_width": main_window_width, "main_window_height": main_window_height, "main_window_channels": main_window_channels, "window_background_color": window_background_color} 
     data["window"] = window
 
     # Setup the camera position and target

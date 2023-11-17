@@ -1026,7 +1026,7 @@ int new_ground(int ng, GLfloat ground_scale_factor, GLuint ground_type, glm::vec
   grounds[ng].ground_display = true;
   
   // Set remote view off
-  //grounds[ng].ground_remote = false;
+  grounds[ng].ground_remote = false;
   
   return 0;
 

@@ -211,6 +211,6 @@ bool check_login(LoginRequest msg);
 StatusResponse cube_status(string cube_uuid);
 
 // View request
-ViewResponse screenview(GLFWwindow* window, string cube_uuid, float angle, float gaze_yaw, float gaze_pitch);
-GroundViewResponse ground_screenview(GLFWwindow* window, string cube_uuid, int groundview);
+ViewResponse screenview(string cube_uuid, float angle, float gaze_yaw, float gaze_pitch);
+GroundViewResponse ground_screenview(string cube_uuid, int groundview);
 

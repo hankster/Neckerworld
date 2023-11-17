@@ -49,13 +49,18 @@ using namespace std;
 #include "cube.h"
 #include "cube_client.h"
 
+/* Main window */
 GLFWwindow* window;
+/* Hidden windows for separate cube views */
+GLFWwindow* windows[NC];
 
 /* Window settings */
 const char * window_title = "Necker World";
-int window_screen_width = WINDOW_WIDTH;
-int window_screen_height = WINDOW_HEIGHT;
-int window_screen_channels = WINDOW_CHANNELS;
+int main_window_width = WINDOW_WIDTH;
+int main_window_height = WINDOW_HEIGHT;
+int main_window_channels = WINDOW_CHANNELS;
+int raster_width = IMAGE_RASTER_WIDTH;
+int raster_height = IMAGE_RASTER_HEIGHT;
 float window_background_color_r = 1.0;
 float window_background_color_g = 1.0;
 float window_background_color_b = 1.0;
@@ -82,9 +87,9 @@ int   capture_delay = 0;
 
 /* For remote cube views */
 // pixels=frame buffer
-// pixels_frame=frame count when image captured
+// pixels_frame=frame count when image was captured
 // pixels_frame_start=minimum frame count required for capture
-// pixels_mutex=protection for pixel transfer
+// pixels_mutex=protection for pixel transfer (used in screenview())
 // pixelx_mutex_wait=protects wait condition
 // pixels_cv=variable used for message thread waiting
 std::vector<uint8_t> pixels[NC];
@@ -102,6 +107,7 @@ std::mutex ground_pixels_mutex[NG];
 
 /* The vertex attribute array */
 GLuint VertexArrayObject;
+GLuint VertexArrayObjects[NC];
 
 /* Cube generating parameters */
 int n_cubes = 0;
@@ -206,7 +212,7 @@ float pi = 3.14159265358979323846;
 
 void Usage()
 {
-  fprintf(stdout, "Usage: cube -a delay -c 0/1 -d level -f filename -g 0/1 -j jsonfile -h -n 0/1 -p -r 1-4 -t -v -w 0/1 -x screenwidth -y screenheight jsonfile [...jsonfile]\n"
+  fprintf(stdout, "Usage: cube -a delay -c 0/1 -d level -f filename -g 0/1 -j jsonfile -h -n 0/1 -p -r 1-4 -t -v -w 0/1 -x windowwidth -y windowheight jsonfile [...jsonfile]\n"
 	  "where\n"
 	  "\t-a delay\tAdd 'delay' frames before returning a view request, default=0 (this is a hack).\n"
 	  "\t-c 0/1\t\tDisplay cubes, default=1 or true.\n"
@@ -221,8 +227,8 @@ void Usage()
 	  "\t-t\t\tSet transparency for rendering, default=0.\n"
 	  "\t-v\t\tPrint cube version level.\n"
 	  "\t-w 0/1\t\tDisplay wireframe cubes, default=0.\n"
-	  "\t-x width\tScreen width in X direction, default=1280.\n"
-	  "\t-y height\tScreen height in Y direction, default=720.\n"
+	  "\t-x width\tMain window width (X direction), default=1280.\n"
+	  "\t-y height\tMain window height (Y direction), default=720.\n"
 	  "\tjsonfiles\tOne or more JSON files to process to setup the game playing field.\n"
 	  );
 }
@@ -232,7 +238,7 @@ float random1() {
   return (float)((float)rand()/float(RAND_MAX));
 }
 
-// Update the view to a ground view or the camera vies
+// Update the view to a ground view or the camera view
 void ground_update_view(int gv) {
       
   /* Redo the ground view */
@@ -241,12 +247,12 @@ void ground_update_view(int gv) {
   } else {
     view = glm::lookAt(camera_position, camera_target, camera_up);
   }
-    for (int i = 0; i < n_cubes; ++i) {
-      cube_update_mvp(i);
-    }
-    for (int i = 0; i < n_grounds; ++i) {
-      ground_update_mvp(i);
-    }
+  for (int i = 0; i < n_cubes; ++i) {
+    cube_update_mvp(i);
+  }
+  for (int i = 0; i < n_grounds; ++i) {
+    ground_update_mvp(i);
+  }
 }
 
 int shaders()
@@ -466,16 +472,6 @@ int init_resources()
 {
   int status;
 
-  /* Setup the view and projection */
-  view = glm::lookAt(camera_position, camera_target, camera_up);
-  update_projection(window_screen_width, window_screen_height);
-
-  /* A Vertex Array Object (VAO) has nothing to do with vertex arrays. */
-  /* It's used to hold vertix attribute pointers */
-  /* Program does not render without this Bind */
-  glGenVertexArrays(1, &VertexArrayObject);
-  glBindVertexArray(VertexArrayObject);
-
   /* Setup display of vector normals */
   if (display_normals) {
     if (status = show_normals()) {
@@ -483,10 +479,6 @@ int init_resources()
 	return status;
     }
   }
-  
-  glEnable(GL_BLEND);
-  glEnable(GL_DEPTH_TEST);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
   return 0;
 }
@@ -623,10 +615,10 @@ int main(int argc, char* argv[]) {
 	sscanf(optarg, "%d", &display_wires); 
         break;
       case 'x':
-	sscanf(optarg, "%d", &window_screen_width); 
+	sscanf(optarg, "%d", &main_window_width); 
         break;
       case 'y':
-	sscanf(optarg, "%d", &window_screen_height); 
+	sscanf(optarg, "%d", &main_window_height); 
         break;
       case '?':
         if (optopt == 'f')
@@ -642,8 +634,8 @@ int main(int argc, char* argv[]) {
         abort();
       }
 
-  printf("cube.cpp: options -  debug=%d, filename=%s, display_cubes=%d, display_grounds=%d, display_normals=%d, position=%d, display_rotation=%d display_wires=%d, window_screen_width=%d, window_screen_height=%d\n",
-	 debug, filename, display_cubes, display_grounds, display_normals, position, display_rotation, display_wires, window_screen_width, window_screen_height);
+  printf("cube.cpp: options -  debug=%d, filename=%s, display_cubes=%d, display_grounds=%d, display_normals=%d\ncube.cpp: options -  position=%d, display_rotation=%d display_wires=%d, main_window_width=%d, main_window_height=%d\n",
+	 debug, filename, display_cubes, display_grounds, display_normals, position, display_rotation, display_wires, main_window_width, main_window_height);
 
   // glfw: initialize and configure
   glfwInit();
@@ -653,46 +645,101 @@ int main(int argc, char* argv[]) {
   glfwWindowHint(GLFW_DEPTH_BITS, 32);
   glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
     
+  GLint n_ext;
+  glGetIntegerv(GL_NUM_EXTENSIONS, &n_ext);
+  printf("cube.cpp: Version %s, Vendor %s, Renderer %s, Extensions %d\n", (char*)glGetString(GL_VERSION), (char*)glGetString(GL_VENDOR), (char*)glGetString(GL_RENDERER), n_ext);
+
   // glfw window creation
-  window = glfwCreateWindow(window_screen_width, window_screen_height, window_title, NULL, NULL);
+  window = glfwCreateWindow(main_window_width, main_window_height, window_title, NULL, NULL);
   if (window == NULL)
     {
-      std::cout << "cube.cpp: Failed to create GLFW window" << std::endl;
+      printf("cube.cpp: Failed to create GLFW window\n");
       glfwTerminate();
       return -1;
     }
 
+  if (debug > 0) printf("cube.cpp: Created main window with title %s, %dx%d\n", window_title, main_window_width, main_window_height);
+
   glfwMakeContextCurrent(window);
+  glfwSetWindowPos(window, 100, 50);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
   glfwSwapInterval(1);
+  glEnable(GL_BLEND);
+  glEnable(GL_DEPTH_TEST);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   // Setup error callback
   glfwSetErrorCallback(window_error);	
 
+  // Setup keyboard key callback
+  glfwSetKeyCallback(window, key_callback);
+
   GLenum glew_status = glewInit();
   if (glew_status != GLEW_OK) {
-    fprintf(stderr, "Error: %s\n", glewGetErrorString(glew_status));
+    fprintf(stderr, "cube.cpp: glew Error: %s\n", glewGetErrorString(glew_status));
     return 1;
   }
 
   if (!GLEW_VERSION_2_0) {
-    fprintf(stderr, "Error: your graphic card does not support OpenGL 2.0\n");
+    fprintf(stderr, "cube.cpp: glew Error: your graphic card does not support OpenGL 2.0\n");
     return 1;
   }
 
-  // Setup keyboard key callback
-  glfwSetKeyCallback(window, key_callback);
-
-  // Setup multi-thread server
-  server_main(workers, port, ip);
+  /* A Vertex Array Object (VAO) has nothing to do with vertex arrays. */
+  /* It's used to hold vertix attribute pointers */
+  /* Program does not render without this Bind */
+  glGenVertexArrays(1, &VertexArrayObject);
+  glBindVertexArray(VertexArrayObject);
 
   /* Do required initializations */
   if (status = init_resources()) {
     free_resources();
     glfwTerminate();
-    server_stop();
     return status;
   }
+
+  // Create window contexts for individual cube views
+  char wbuf[32];
+  for(int i=0; i<NC; ++i) {
+    sprintf(wbuf, "Neckerworld Cube View %d", i);
+    // Share context of the main window with all these sub-windows.
+    if (false) { // was "if (i==0) {" for debugging 
+      glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+    } else {
+      glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+    }
+    if (debug > 0) printf("cube.cpp: Creating window[%d] with title %s\n", i, wbuf);
+    windows[i] = glfwCreateWindow(raster_width, raster_height, wbuf, NULL, window);
+    if (windows[i] == NULL) {
+      printf("cube.cpp: Failed to create GLFW window[%d]\n", i);
+      glfwTerminate();
+      return -1;
+    }
+    // Setup opengl items that are not shared
+    glfwMakeContextCurrent(windows[i]);
+
+    if (i==0) glfwSetWindowPos(windows[i], 650, 50);
+    
+    GLenum glew_status = glewInit();
+    if (glew_status != GLEW_OK) {
+      fprintf(stderr, "cube.cpp: glew_status window[%d] Error: %s\n", i, glewGetErrorString(glew_status));
+      return 1;
+    }
+
+    /* A Vertex Array Object (VAO) has nothing to do with vertex arrays. */
+    /* It's used to hold vertex attribute pointers */
+    /* Program does not render without this Bind */
+    glGenVertexArrays(1, &VertexArrayObjects[i]);
+    glBindVertexArray(VertexArrayObjects[i]);
+    glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glfwSwapInterval(1);
+
+  } // for(int i=0; i<NC; ++i) {
+  
+  // Setup multi-thread server
+  server_main(workers, port, ip);
 
   /* Process all json files */
 
@@ -732,6 +779,8 @@ int main(int argc, char* argv[]) {
   /* Seed our random number generator */
   srand((unsigned)time(NULL));
 
+  printf("cube.cpp: Initial screen width=%d, height=%d\n", main_window_width, main_window_height);
+  
   // If the status on all setup operations is good, proceed to the render loop.
   if (status == 0) {
 
@@ -744,8 +793,54 @@ int main(int argc, char* argv[]) {
     // render loop
     while (!glfwWindowShouldClose(window))
     {
-	// render and draw
+      if (view_index >= 0 && view_index < n_cubes && cubes[view_index].cube_active && cubes[view_index].cube_display && cubes[view_index].cube_remote && !cube_key_active) {
+
+	glfwMakeContextCurrent(windows[view_index]);
+	// GLFWwindow* w = glfwGetCurrentContext();
+
+	// make sure the viewport matches the window dimensions; note that width and 
+	glViewport(0, 0, raster_width, raster_height);
+	/* Setup the view and projection */
+	update_projection(raster_width, raster_height);
+	// Lock cube variables here while we setup for the next render
+	pixels_mutex[view_index].lock();
+	cube_update_view(view_index);
+	pixels_mutex[view_index].unlock();
+
+	// Render this view
 	display();
+	  
+	// glfw: swap buffers
+	glfwSwapBuffers(windows[view_index]);        	
+
+      } else {
+
+	// make sure the viewport matches the window dimensions; note that width and 
+	glViewport(0, 0, main_window_width, main_window_height);
+	/* Setup the view and projection */
+	view = glm::lookAt(camera_position, camera_target, camera_up);
+	update_projection(main_window_width, main_window_height);
+
+	display();
+
+	// glfw: swap buffers
+	glfwSwapBuffers(window);
+	
+      }
+
+      if (debug > 1) {
+	/* Verify window dimension as a sanity check */
+	int mww, mwh, rww, rwh;
+	glfwGetWindowSize(window, &mww, &mwh);
+	glfwGetWindowSize(windows[0], &rww, &rwh);
+	if (mww!=main_window_width || mwh!=main_window_height || rww!=raster_width || rwh!=raster_height) {
+	  printf("cube.cpp: Window dimension check fails mww=%d, mwh=%d, rww=%d, rwh=%d\n", mww, mwh, rww, rwh);
+	  free_resources();
+	  glfwTerminate();
+	  server_stop();
+	  return -1;
+	}
+      }
 	
 	if (debug > 1) printf("cube.cpp: render loop for frame %d\n", frame_counter);
 
@@ -760,85 +855,64 @@ int main(int argc, char* argv[]) {
         // input
         processInput(window);
 
-	// Capture this window as a temporary hack to get around glfw window context swap
-	// We have just rendered the window associated with this cube view.
-	// After each render we find and use the next cube view (for the next render).
+	// We have just rendered the window associated with this context.
+	// After each render we use the next cube view (for the next render).
 	// Check if we are active, logged in and being viewed remotely
-	// We use view_index_delay[] when a frame delay for capture is needed
 
-	// Start at the end of the delay line and work forward to the most recent view_index
-	for (int i=view_index_delay_length-1; i>=0; --i) {
-	  // Shift the view index further up the delay line
-	  if (i>0) {
-	    view_index_delay[i] = view_index_delay[i-1];
-	  } else {
-	    view_index_delay[0] = view_index;
+	if (view_index >= 0 && view_index < n_cubes) {
+	  if (cubes[view_index].cube_active && cubes[view_index].cube_remote) {
+	    screenview_capture(windows[view_index], view_index, 1, pixels,pixels_frame, pixels_frame_start, pixels_mutex);
 	  }
-	  // See if this entry in the delay line is the one we want to use. Only one will be selected.
-	  if (capture_delay == i) {
-	    int vidx = view_index_delay[i];
-	    if (debug > 1) printf("cube.cpp: render loop C%d frame %d, view_index %d vidx=%d\n", view_index, frame_counter, view_index, vidx);
-	    if (vidx >= 0 && vidx < n_cubes) {
-	      if (cubes[vidx].cube_active && cubes[vidx].cube_remote) {
-		screenview_capture(window, vidx, 1, pixels,pixels_frame, pixels_frame_start, pixels_mutex);
-	      }
-	    }
-	    if (vidx >= n_cubes && vidx < (n_cubes+n_grounds)) {
-	      int gv = vidx - n_cubes;
-	      if (grounds[gv].ground_remote) {
-		screenview_capture(window, gv, 0, ground_pixels, ground_pixels_frame, ground_pixels_frame_start, ground_pixels_mutex);
-	      }
-	    }
+	}
+	if (view_index >= n_cubes && view_index < (n_cubes+n_grounds)) {
+	  int gv = view_index - n_cubes;
+	  if (grounds[gv].ground_remote) {
+	    screenview_capture(window, gv, 0, ground_pixels, ground_pixels_frame, ground_pixels_frame_start, ground_pixels_mutex);
 	  }
 	}
 	
-	if (debug > 1) printf("cube.cpp: render loop C%d frame %d view_index %d view_index_delay [%d, %d, %d, %d]\n", view_index, frame_counter, view_index, view_index_delay[0], view_index_delay[1], view_index_delay[2], view_index_delay[3]);
+	if (debug > 1) printf("cube.cpp: render loop C%d frame %d view_index %d view_index_delay [%d, %d, %d, %d]\n",
+			      view_index, frame_counter, view_index, view_index_delay[0], view_index_delay[1], view_index_delay[2], view_index_delay[3]);
 
-	if (view_index >= 0) {
-	  bool new_view = false;
+	if (view_index >= 0 & !cube_key_active) {
 
-	  for (int i=0; i<(n_cubes+n_grounds); ++i) {
-	    // Use the modulus operator to wrap our search over the range of views
-	    view_index = (view_index + 1) % (n_cubes+n_grounds);
-	    // Check if we are active and being viewed remotely
-	    if (view_index >= 0 && view_index < n_cubes && cubes[view_index].cube_active && cubes[view_index].cube_display && cubes[view_index].cube_remote) {
-	      // Lock cube variables here while we setup for the next render
-	      pixels_mutex[view_index].lock();
-	      cube_update_view(view_index);
-	      pixels_mutex[view_index].unlock();
-	      new_view = true;
-	      break;
-	    }
-	    // Check if we are being viewed remotely
+	  // Use the modulus operator to wrap our search over the range of views
+	  // TODO: Skip over cubes that are not active, displayed or under remote control.
+	  view_index = (view_index + 1) % (n_cubes+n_grounds);
+
+	  // Check if we've finished with all the cubes and are now working on ground views and we are being viewed remotely
+	  if (view_index >= n_cubes && view_index < (n_cubes+n_grounds)) {
 	    int gvi = view_index-n_cubes;
-	    if (view_index >= n_cubes && view_index < (n_cubes+n_grounds) && grounds[gvi].ground_active && grounds[gvi].ground_display && grounds[gvi].ground_remote) {
-	      ground_update_view(view_index-n_cubes);
-	      new_view = true;
-	      break;
+	    if (grounds[gvi].ground_active && grounds[gvi].ground_display && grounds[gvi].ground_remote) {
+	      glfwMakeContextCurrent(window);
+	      ground_update_view(gvi);
 	    }
 	  }
+	} // if (view_index >= 0) {
 
-	  // If there are no remote views, fall back to the previous camera viewpoint.
-	  if (! new_view) {
-	    // If we are in cube_key viewing mode
-	    if (cube_key_active) {
-	      view_index = cube_key;
-	      cube_update_view(view_index);
-	    } else {
-	      // Restore the default view
-	      view_index = -1;
-	      ground_update_view(view_index);
-	    }
-	  }
+	// Check if any cubes have remote views (what about remote ground views? well, later)
+	bool rmt_view = false;
+	for (int rmtvw=0; rmtvw<n_cubes; ++rmtvw) {
+	  if (cubes[rmtvw].cube_remote) rmt_view = true;
 	}
 
-	// For Raspberry Pi we don't use the frame capture lag
-	// if (frames_per_second < 30.0) capture_delay = 0;
-	
+	// If there are no remote views, fall back to the previous camera viewpoint.
+	if (! rmt_view) {
+	  // Return context to our default window
+	  glfwMakeContextCurrent(window);
+	  // If we are in cube_key viewing mode
+	  if (cube_key_active) {
+	    view_index = cube_key;
+	    cube_update_view(view_index);
+	  } else {
+	    // Restore the default view
+	    view_index = -1;
+	    ground_update_view(view_index);
+	  }
+	} // if (! rmt_view) {
+
 	// Check for IP connections
-	// glfwMakeContextCurrent(NULL);
 	server_loop();
-	// glfwMakeContextCurrent(window);
 
 	// JSON imports have to be done here due to opengl context switch constraints
 	// Should mutex this as well
@@ -962,7 +1036,9 @@ int main(int argc, char* argv[]) {
   // Print a status report
   time_t time_now = time(NULL);
   double age;
-  
+
+  printf("cube.cpp: cube   type health energy         age        score        (  mate,   food,   kill) state\n");
+
   for (int i=0; i < n_cubes; ++i) {
 
     float total_points = 0.0;
@@ -1035,7 +1111,7 @@ void processInput(GLFWwindow *window)
 // Print out all key codes
 void keyHelp()
 {
-  printf("cube.cpp: Listing of all cube server keys:\n"
+  printf("cube.cpp: Listing of all cube server keys (upper or lower case):\n"
 	 "A -- Activate (set velocity non-zero)\n"
 	 "B -- Basic strategy toggle (server controls predators resources)\n"
 	 "C -- Clock delay on/off\n"
@@ -1052,14 +1128,14 @@ void keyHelp()
 	 "N -- Rotate cube left\n"
 	 "O -- Z up\n"
 	 "P -- Screenshot - take a picture\n"
-	 "Q -- Reset view position\n"
+	 "Q -- Reset view position, cube view not active\n"
 	 "R -- View target +x\n"
 	 "S -- Strategy on/off\n"
 	 "T -- View target +y\n"
 	 "U -- X up\n"
 	 "V -- Start video recording on/off\n"
 	 "W -- \n"
-	 "X -- Change to cube view of cube_index\n"
+	 "X -- Change to cube view and use cube_index (reset with Q)\n"
 	 "Y -- View target +z\n"
 	 "Z -- Increment cube index\n"
 	 "0-8 -- Rotate-y n x pi/4\n"
@@ -1217,8 +1293,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
   float gaze_yaw = 0.0;
   float gaze_pitch = 0.0;
 
+  // Go into cube view mode
+  if (key == GLFW_KEY_X && action == GLFW_PRESS) {
+    view_index = cube_key; cube_key_active = true;
+    printf("cube.cpp: Activating cube view mode, use Q to reset. cube=%d\n", cube_key);   
+  }
+
   // Update the angle of the cube in first-person-view
-  if (key == GLFW_KEY_X && action == GLFW_PRESS) {view_index = cube_key; cube_key_active = true; }
   if (key == GLFW_KEY_N && action == GLFW_PRESS) { view_index = cube_key; a = pi/8.0; }
   if (key == GLFW_KEY_M && action == GLFW_PRESS) { view_index = cube_key; a = -pi/8.0; }
   // Update the gaze (yaw, pitch) in first-person-view
@@ -1290,11 +1371,10 @@ void window_error(int error, const char* message) {
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-  window_screen_width = width;
-  window_screen_height = height;
+  main_window_width = width;
+  main_window_height = height;
   
   // make sure the viewport matches the new window dimensions; note that width and 
-  // height will be significantly larger than specified on retina displays.
   glViewport(0, 0, width, height);
   // Update our projection, too
   update_projection(width, height);
@@ -1334,7 +1414,7 @@ void screenshot(GLFWwindow* window, string filename) {
   // glfwGetFramebufferSize(window, &fb_width, &fb_height);
   
   // Make the BYTE array, factor of 4 because it's RBGA.
-  int channels = window_screen_channels;
+  int channels = main_window_channels;
   std::vector<uint8_t> pixels(channels * width * height);
   glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
 
@@ -1351,11 +1431,11 @@ void screenshot(GLFWwindow* window, string filename) {
 }
 
 // Copy the window
-void screenview_capture(GLFWwindow* window, int i, int notify, std::vector<uint8_t> *pixels, unsigned *pixels_frame, unsigned *pixels_frame_start, mutex *pixels_mutex) {
+void screenview_capture(GLFWwindow* capture_window, int i, int notify, std::vector<uint8_t> *pixels, unsigned *pixels_frame, unsigned *pixels_frame_start, mutex *pixels_mutex) {
 
   int w;
   int h;
-  int c = window_screen_channels;
+  int c = main_window_channels;
 
   // Avoid a race condition where the frame is not ready yet.
   if (frame_counter < pixels_frame_start[i]) {
@@ -1364,7 +1444,7 @@ void screenview_capture(GLFWwindow* window, int i, int notify, std::vector<uint8
   }
   
   // Get window size
-  glfwGetWindowSize(window, &w, &h);
+  glfwGetWindowSize(capture_window, &w, &h);
 
   int image_size = w * h * c;
 
@@ -1393,10 +1473,7 @@ void screenview_capture(GLFWwindow* window, int i, int notify, std::vector<uint8
   }
 }
 
-ViewResponse screenview(GLFWwindow* window, string uuid, float angle, float gaze_yaw, float gaze_pitch) {
-
-  // Change the GLFW context
-  // glfwMakeContextCurrent(window);
+ViewResponse screenview(string uuid, float angle, float gaze_yaw, float gaze_pitch) {
 
   // Structure to return
   ViewResponse r;
@@ -1411,7 +1488,7 @@ ViewResponse screenview(GLFWwindow* window, string uuid, float angle, float gaze
 
   r.cubeview = i;
  
-  // printf("cube.cpp: Screenview window is %u\n", window);
+  // printf("cube.cpp: Screenview window is %u\n", windows[r.cubeview]);
   if (debug > 0) printf("cube.cpp: Screenview angle %0.2f gaze.x %0.2f gaze.y %0.2f\n", angle, gaze_yaw, gaze_pitch);
 
   // Lock the resource while we're changing it
@@ -1426,7 +1503,7 @@ ViewResponse screenview(GLFWwindow* window, string uuid, float angle, float gaze
   // Update mvp
   cube_update_mvp(i);
   // Get window size
-  glfwGetWindowSize(window, &r.width, &r.height);
+  glfwGetWindowSize(windows[i], &r.width, &r.height);
   // Get bounding box (needed for training)
   cube_bounding_box(i, r.width, r.height);
   // Flip the y coordinates upside down
@@ -1441,7 +1518,7 @@ ViewResponse screenview(GLFWwindow* window, string uuid, float angle, float gaze
   if (view_index < 0) view_index = i;
   
   // Make the BYTE array, factor of 4 because it's RBGA.
-  r.channels = window_screen_channels;
+  r.channels = main_window_channels;
   r.extension = "raw";
   r.mode = "RGBA";
 
@@ -1499,16 +1576,11 @@ ViewResponse screenview(GLFWwindow* window, string uuid, float angle, float gaze
     }
   }
   
-  // Detach the current contextt
-  //glfwMakeContextCurrent(NULL);
-
   return r;
 }
 
-GroundViewResponse ground_screenview(GLFWwindow* window, string uuid, int gv) {
-
-  // Change the GLFW context
-  // glfwMakeContextCurrent(window);
+// GroundViewResponse ground_screenview(GLFWwindow* window, string uuid, int gv) {
+GroundViewResponse ground_screenview(string uuid, int gv) {
 
   // Structure to return
   GroundViewResponse r;
@@ -1521,7 +1593,7 @@ GroundViewResponse ground_screenview(GLFWwindow* window, string uuid, int gv) {
 
   r.groundview = gv;
 
-  // printf("cube.cpp: Screenview window is %u\n", window);
+  // printf("cube.cpp: Screenview window is %u\n", windows[i]);
     
   // Enable first-person-view (ground view) if not already on
   if (view_index < 0) view_index = gv + n_cubes;
@@ -1543,7 +1615,7 @@ GroundViewResponse ground_screenview(GLFWwindow* window, string uuid, int gv) {
   r.bounding_box[3] = r.height - cubes[i].bounding_box[1];
 
   // Make the BYTE array, factor of 4 because it's RBGA.
-  r.channels = window_screen_channels;
+  r.channels = main_window_channels;
   r.extension = "raw";
 
   // Lock the resource while we're changing it
@@ -1587,8 +1659,5 @@ GroundViewResponse ground_screenview(GLFWwindow* window, string uuid, int gv) {
     }
   }
   
-  // Detach the current contextt
-  //glfwMakeContextCurrent(NULL);
-
   return r;
 }

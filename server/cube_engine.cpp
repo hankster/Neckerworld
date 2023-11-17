@@ -365,9 +365,6 @@ void display()
     } /* end for(ground_index ... ) */
   } /* if (display_grounds) { ... */
 
-  // glfw: swap buffers
-  glfwSwapBuffers(window);
-
 } // end display() ...
 
 /* Print out a lot of scene information for debug purposes */
@@ -409,5 +406,3 @@ void debug_grounds(int ground_index)
 {  fprintf(stdout, "cube_engine.cpp: Ground index %d, scale factor %4.2f, type %d, material %d, texture %d\n", ground_index, grounds[ground_index].ground_scale_factor, grounds[ground_index].ground_type, grounds[ground_index].ground_material, grounds[ground_index].ground_texture_index);
   return;
 }
-
-

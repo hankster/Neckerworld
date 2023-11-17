@@ -254,6 +254,11 @@ string doLogoutRequest(LogoutRequest msgLogoutRequest) {
   cubes[cube_index].cube_remote = false;
   if (debug > 0) printf("cube_simulation.cpp: doLogoutRequest - cube %d no longer remote\n", cube_index);
   
+  // Cancel ground view requests now, too.
+  for (int i=0; i<n_grounds; ++i) {
+    grounds[i].ground_remote = false;
+  }
+
   // document is the root of a json message
   Document d;
   // define the document as an object rather than an array
@@ -372,7 +377,7 @@ string doViewRequest(ViewRequest msgViewRequest) {
   float gaze_yaw = msgViewRequest.gaze.x;
   float gaze_pitch = msgViewRequest.gaze.y;
 
-  ViewResponse r = screenview(window, uuid, angle, gaze_yaw, gaze_pitch);
+  ViewResponse r = screenview(uuid, angle, gaze_yaw, gaze_pitch);
 
   if (r.cubeview < 0) return error_v;
 			 
@@ -457,7 +462,7 @@ string doGroundViewRequest(GroundViewRequest msgGroundViewRequest) {
   string uuid = msgGroundViewRequest.cube_uuid;
   int gv = msgGroundViewRequest.groundview;
 
-  GroundViewResponse r = ground_screenview(window, uuid, gv);
+  GroundViewResponse r = ground_screenview(uuid, gv);
 
   if (r.groundview < 0) return error_g;
 			 
