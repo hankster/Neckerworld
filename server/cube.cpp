@@ -475,7 +475,7 @@ int init_resources()
   /* Setup display of vector normals */
   if (display_normals) {
     if (status = show_normals()) {
-	fprintf(stderr, "cube.cpp: show_normals faild\n");
+	fprintf(stderr, "cube.cpp: show_normals failed\n");
 	return status;
     }
   }
@@ -793,8 +793,22 @@ int main(int argc, char* argv[]) {
     // render loop
     while (!glfwWindowShouldClose(window))
     {
-      if (view_index >= 0 && view_index < n_cubes && cubes[view_index].cube_active && cubes[view_index].cube_display && cubes[view_index].cube_remote && !cube_key_active) {
+      // Check if we are processing raster image cube-eye views
+      if (view_index >= 0 && view_index < n_cubes && !cube_key_active) {
+	// Move view_index to the next displayable cube
+	// If displayable, exit with its view_index
+	// If there are none displayable then view_index exits with view_index=n_cubes
+	for (view_index; view_index<n_cubes; ++view_index) {
+	  if (cubes[view_index].cube_active && cubes[view_index].cube_display && cubes[view_index].cube_remote) {
+	    break;
+	  }
+	} // for ( ...
+      }
 
+      // Check if we are processing raster image cube-eye views
+      // if () is true we render a raster image and if not we render the ground image
+      if (view_index >= 0 && view_index < n_cubes && !cube_key_active) {
+      
 	glfwMakeContextCurrent(windows[view_index]);
 	// GLFWwindow* w = glfwGetCurrentContext();
 
@@ -813,6 +827,24 @@ int main(int argc, char* argv[]) {
 	// glfw: swap buffers
 	glfwSwapBuffers(windows[view_index]);        	
 
+      } else if (view_index >= n_cubes && view_index < (n_cubes+n_grounds)
+		 && grounds[view_index-n_cubes].ground_active && grounds[view_index-n_cubes].ground_display
+		 &&!cube_key_active) {
+
+	// We've  finished with all the cubes and are now working on ground views
+	glfwMakeContextCurrent(window);
+	// make sure the viewport matches the window dimensions; note that width and 
+	glViewport(0, 0, main_window_width, main_window_height);
+	/* Setup the view and projection */
+	update_projection(main_window_width, main_window_height);
+	ground_update_view(view_index-n_cubes);
+	
+	// Render a ground view
+	display();
+
+	// glfw: swap buffers
+	glfwSwapBuffers(window);
+	  
       } else {
 
 	// make sure the viewport matches the window dimensions; note that width and 
@@ -821,12 +853,12 @@ int main(int argc, char* argv[]) {
 	view = glm::lookAt(camera_position, camera_target, camera_up);
 	update_projection(main_window_width, main_window_height);
 
-	display();
+	display(); 
 
 	// glfw: swap buffers
 	glfwSwapBuffers(window);
 	
-      }
+      } // if (view_index >= 0 ...
 
       if (debug > 1) {
 	/* Verify window dimension as a sanity check */
@@ -840,76 +872,67 @@ int main(int argc, char* argv[]) {
 	  server_stop();
 	  return -1;
 	}
+      } // if (debug > 1) {
+	
+      if (debug > 1) printf("cube.cpp: render loop for frame %d\n", frame_counter);
+
+      // Make a video if requested
+      if (video) {
+	screenshot(window, "");
+      }
+
+      // poll events that have come in and then return immediately
+      glfwPollEvents();
+
+      // input
+      processInput(window);
+
+      // Check if we are active, logged in and being viewed remotely
+
+      if (view_index >= 0 && view_index < n_cubes) {
+	if (cubes[view_index].cube_active && cubes[view_index].cube_remote) {
+	  screenview_capture(windows[view_index], view_index, 1, pixels,pixels_frame, pixels_frame_start, pixels_mutex);
+	}
+      }
+      if (view_index >= n_cubes && view_index < (n_cubes+n_grounds)) {
+	int gv = view_index - n_cubes;
+	if (grounds[gv].ground_remote) {
+	  screenview_capture(window, gv, 0, ground_pixels, ground_pixels_frame, ground_pixels_frame_start, ground_pixels_mutex);
+	}
       }
 	
-	if (debug > 1) printf("cube.cpp: render loop for frame %d\n", frame_counter);
+      if (debug > 1) printf("cube.cpp: render loop C%d frame %d view_index %d view_index_delay [%d, %d, %d, %d]\n",
+			    view_index, frame_counter, view_index, view_index_delay[0], view_index_delay[1], view_index_delay[2], view_index_delay[3]);
 
-	// Make a video if requested
-	if (video) {
-	  screenshot(window, "");
-	}
-
-	// poll events that have come in and then return immediately
-	glfwPollEvents();
-
-        // input
-        processInput(window);
-
+      if (view_index >= 0 & !cube_key_active) {
+	
 	// We have just rendered the window associated with this context.
 	// After each render we use the next cube view (for the next render).
-	// Check if we are active, logged in and being viewed remotely
+	// Use the modulus operator to wrap our search over the range of views
+	view_index = (view_index + 1) % (n_cubes+n_grounds);
 
-	if (view_index >= 0 && view_index < n_cubes) {
-	  if (cubes[view_index].cube_active && cubes[view_index].cube_remote) {
-	    screenview_capture(windows[view_index], view_index, 1, pixels,pixels_frame, pixels_frame_start, pixels_mutex);
-	  }
+      } // if (view_index >= 0) {
+
+      // Check if any cubes have remote views
+      bool rmt_view = false;
+      for (int rmtvw=0; rmtvw<n_cubes; ++rmtvw) {
+	if (cubes[rmtvw].cube_remote) rmt_view = true;
+      }
+
+      // If there are no remote views, fall back to the previous camera viewpoint.
+      if (! rmt_view) {
+	// Return context to our default window
+	glfwMakeContextCurrent(window);
+	// If we are in cube_key viewing mode
+	if (cube_key_active) {
+	  view_index = cube_key;
+	  cube_update_view(view_index);
+	} else {
+	  // Restore the default view
+	  view_index = -1;
+	  ground_update_view(view_index);
 	}
-	if (view_index >= n_cubes && view_index < (n_cubes+n_grounds)) {
-	  int gv = view_index - n_cubes;
-	  if (grounds[gv].ground_remote) {
-	    screenview_capture(window, gv, 0, ground_pixels, ground_pixels_frame, ground_pixels_frame_start, ground_pixels_mutex);
-	  }
-	}
-	
-	if (debug > 1) printf("cube.cpp: render loop C%d frame %d view_index %d view_index_delay [%d, %d, %d, %d]\n",
-			      view_index, frame_counter, view_index, view_index_delay[0], view_index_delay[1], view_index_delay[2], view_index_delay[3]);
-
-	if (view_index >= 0 & !cube_key_active) {
-
-	  // Use the modulus operator to wrap our search over the range of views
-	  // TODO: Skip over cubes that are not active, displayed or under remote control.
-	  view_index = (view_index + 1) % (n_cubes+n_grounds);
-
-	  // Check if we've finished with all the cubes and are now working on ground views and we are being viewed remotely
-	  if (view_index >= n_cubes && view_index < (n_cubes+n_grounds)) {
-	    int gvi = view_index-n_cubes;
-	    if (grounds[gvi].ground_active && grounds[gvi].ground_display && grounds[gvi].ground_remote) {
-	      glfwMakeContextCurrent(window);
-	      ground_update_view(gvi);
-	    }
-	  }
-	} // if (view_index >= 0) {
-
-	// Check if any cubes have remote views (what about remote ground views? well, later)
-	bool rmt_view = false;
-	for (int rmtvw=0; rmtvw<n_cubes; ++rmtvw) {
-	  if (cubes[rmtvw].cube_remote) rmt_view = true;
-	}
-
-	// If there are no remote views, fall back to the previous camera viewpoint.
-	if (! rmt_view) {
-	  // Return context to our default window
-	  glfwMakeContextCurrent(window);
-	  // If we are in cube_key viewing mode
-	  if (cube_key_active) {
-	    view_index = cube_key;
-	    cube_update_view(view_index);
-	  } else {
-	    // Restore the default view
-	    view_index = -1;
-	    ground_update_view(view_index);
-	  }
-	} // if (! rmt_view) {
+      } // if (! rmt_view) {
 
 	// Check for IP connections
 	server_loop();
@@ -1542,7 +1565,8 @@ ViewResponse screenview(string uuid, float angle, float gaze_yaw, float gaze_pit
   r.pixels = pixels[i];
   r.pixels_frame = pixels_frame[i];
 
-  if (debug > 1) printf("cube.cpp: screenview_request B%d - frame_counter %d view_index %d pixels_frame %d start %d status %s\n", i, frame_counter, i, pixels_frame[i], pixels_frame_start[i], pixels_frame[i] >= pixels_frame_start[i] ? "True" : "False");
+  if (debug > 1) printf("cube.cpp: screenview_request B%d - frame_counter %d view_index %d pixels_frame %d start %d status %s\n",
+			i, frame_counter, i, pixels_frame[i], pixels_frame_start[i], pixels_frame[i] >= pixels_frame_start[i] ? "True" : "False");
   
   // Unlock
   pixels_mutex[i].unlock();
