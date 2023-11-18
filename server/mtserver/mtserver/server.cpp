@@ -61,12 +61,10 @@ class ConnectionHandler : public Thread
 	  char message[1500];
 	  int message_length;
 	  string response;
-	  bool disconnect = false;
 	  string goodbye = "{\"mesage_type\": \"GoodBye\"}";
 	  
 	  while ((message_length = stream->receive(message, sizeof(message))) > 0 ){
 	    response = cube_decode_message(message, message_length);
-	    if (response == goodbye) disconnect = true;
 	    int response_length = response.size();
 	    if (response_length > 0) stream->send(&response[0], response_length);
 	  }

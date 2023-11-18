@@ -6,7 +6,7 @@ INCLUDES	= -I../threads -I../wqueue -I../tcpsockets
 OBJECTS		= $(SOURCES:.cpp=.o)
 TARGET		= server
 
-all: $(SOURCES) $(OBJECTS)
+all: $(SOURCES) $(TARGET)
 
 $(TARGET): $(OBJECTS) 
 	$(CC)  $(OBJECTS) $(LDFLAGS) -o $@ 

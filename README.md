@@ -71,7 +71,7 @@ Follow these steps to create and install the game server:
 ```
 # If you installed from the github zip file, rename the top-level directory:
 mv Neckerworld-main Neckerworld
-# Compile the multi-thread server code (has some errors)
+# Compile the multi-thread server code
 cd ~/Neckerworld/server/mtserver/mtserver
 make
 cd ~/Neckerworld/server
@@ -140,6 +140,7 @@ The following repositories have provided code for this project
 * stb_image - v2.23 - public domain image loader - http://nothings.org/stb
 * twemoji - https://github.com/twitter/twemoji/
 
+And many thanks to collaborator and beta-tester: CS.
 ## Issues
 
 This game is still in an early stage of development and many aspects of the server and client are open for enhancement and development.
@@ -148,3 +149,4 @@ There is, to the author's knowledge, only one similar effort to build a game whe
 Future efforts to continue and enhance this game concept will, in part, depend on the feedback received.
 
 * Cube intersection errors -- The display of cubes that are in close proximity sometimes shows unwanted overlap and incorrect physical display.
+* Object Identification examples and training are not provided.
