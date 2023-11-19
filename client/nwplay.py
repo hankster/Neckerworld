@@ -206,6 +206,7 @@ def display_window(cube_uuid):
     global spatial_position_blocked_field
     global resource_energy_field
     global total_points_field
+    global vrloops_per_second_field
     global cube_state_field
     global btn_mate, btn_predator, btn_resource, btn_game
     
@@ -224,15 +225,17 @@ def display_window(cube_uuid):
     root.columnconfigure(0, weight=1)
     root.rowconfigure(0, weight=1)
     resource_energy_field = StringVar()
-    ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#080', textvariable=resource_energy_field).grid(column=1, row=2, sticky=(W, E))
+    ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#080', textvariable=resource_energy_field).grid(column=0, row=2, sticky=(W, E))
     total_points_field = StringVar()
-    ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#008', textvariable=total_points_field).grid(column=2, row=2, sticky=(W, E))
+    ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#008', textvariable=total_points_field).grid(column=1, row=2, sticky=(W, E))
     spatial_angle_field = StringVar()
-    ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#008', textvariable=spatial_angle_field).grid(column=3, row=2, sticky=(W, E))
+    ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#008', textvariable=spatial_angle_field).grid(column=2, row=2, sticky=(W, E))
     spatial_direction_field = StringVar()
-    ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#008', textvariable=spatial_direction_field).grid(column=4, row=2, sticky=(W, E))
+    ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#008', textvariable=spatial_direction_field).grid(column=3, row=2, sticky=(W, E))
     spatial_velocity_field = StringVar()
-    ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#008', textvariable=spatial_velocity_field).grid(column=5, row=2, sticky=(W, E))
+    ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#008', textvariable=spatial_velocity_field).grid(column=4, row=2, sticky=(W, E))
+    vrloops_per_second_field = StringVar()
+    ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#008', textvariable=vrloops_per_second_field).grid(column=5, row=2, sticky=(W, E))
     spatial_position_blocked_field = StringVar()
     ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#800', textvariable=spatial_position_blocked_field).grid(column=6, row=2, sticky=(W, E))
     cube_state_field = StringVar()
@@ -240,13 +243,13 @@ def display_window(cube_uuid):
     cube_firstname_field = StringVar()
     ttk.Label(mainframe, width=15, padding="5 5 5 5", foreground='#000', textvariable=cube_firstname_field).grid(column=4, row=4, sticky=(W, E))
     btn_mate = ttk.Button(mainframe, text="Mate", command=find_mate, style="C.TButton")
-    btn_mate.grid(column=1, row=4, sticky=W)
+    btn_mate.grid(column=0, row=4, sticky=W)
     btn_predator = ttk.Button(mainframe, text="Predator", command=find_predator, style="C.TButton")
-    btn_predator.grid(column=2, row=4, sticky=W)
+    btn_predator.grid(column=1, row=4, sticky=W)
     btn_resource = ttk.Button(mainframe, text="Resource", command=find_resource, style="C.TButton")
-    btn_resource.grid(column=3, row=4, sticky=W)
+    btn_resource.grid(column=2, row=4, sticky=W)
     btn_game = ttk.Button(mainframe, text="Game", command=game_on, style="C.TButton")
-    btn_game.grid(column=4, row=4, sticky=W)
+    btn_game.grid(column=3, row=4, sticky=W)
     option_values_field = StringVar()
     option_entry = ttk.Entry(mainframe, width=25, textvariable=option_values_field)
     option_entry.grid(column=6, row=4, sticky=W)
@@ -298,7 +301,7 @@ def update_panel():
     btn_predator.config(text = "Predator %s" % FindPredator)
     btn_resource.config(text = "Resource %s" % FindResource)
     btn_game.config(text = "Game %s" % ("On" if GameOn else "Off"))
-    cube_state_field.set(cube_state)
+    cube_state_field.set("%s" % cube_state)
     
 # Create our detected bounding boxes
 def update_bounding_boxes(plist):
@@ -985,8 +988,13 @@ def main():
 
         # End of this processing loop
         vrloop_count += 1.0
+
         vrloop_elapsed_time = time.time() - vrloop_start
         vrloops_per_second = vrloop_count / vrloop_elapsed_time
+        ivrct = int(vrloop_count)
+        if (ivrct % 60 == 0):
+            vrloops_per_second_field.set("Views/sec = %0.2f" % vrloops_per_second)  
+
         if debug:
             print("nwplay.py: ViewRequests per second = %0.2f" % vrloops_per_second)
 
