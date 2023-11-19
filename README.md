@@ -151,5 +151,3 @@ Future efforts to continue and enhance this game concept will, in part, depend o
 * Cube intersection errors -- The display of cubes that are in close proximity sometimes shows unwanted overlap and incorrect physical display.
 * When cubes run into an obstacle their backup and recovery strategy needs work.
 * Object Identification examples and training are not provided.
-* Occasional lockup in nwplay.py. Becomes unresponsive, as if waiting for a message response that never comes. Button presses fail.
-* Sometimes nwplay.py starts up on its own for no known reason.
