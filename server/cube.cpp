@@ -1,4 +1,4 @@
-/**
+ /**
  * From the OpenGL Programming wikibook: http://en.wikibooks.org/wiki/OpenGL_Programming
  * This file is in the public domain.
  * Contributors: Sylvain Beucler
@@ -55,7 +55,7 @@ GLFWwindow* window;
 GLFWwindow* windows[NC];
 
 /* Window settings */
-const char * window_title = "Necker World";
+const char * window_title = "Neckerworld";
 int main_window_width = WINDOW_WIDTH;
 int main_window_height = WINDOW_HEIGHT;
 int main_window_channels = WINDOW_CHANNELS;

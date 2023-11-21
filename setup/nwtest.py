@@ -615,7 +615,7 @@ def create_JSON():
     wireList = []
 
     # Setup our window
-    window_title = "Necker World" + " - " + dataset
+    window_title = "Neckerworld" + " - " + dataset
     main_window_width = 1280
     main_window_height = 720
     main_window_channels = 4
