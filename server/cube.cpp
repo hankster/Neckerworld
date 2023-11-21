@@ -638,7 +638,12 @@ int main(int argc, char* argv[]) {
 	 debug, filename, display_cubes, display_grounds, display_normals, position, display_rotation, display_wires, main_window_width, main_window_height);
 
   // glfw: initialize and configure
-  glfwInit();
+  if (!glfwInit())
+    {
+      printf("cube.cpp: Failed to initialize GLFW library\n");
+      glfwTerminate();
+      return -1;
+    }
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
