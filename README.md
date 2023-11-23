@@ -53,6 +53,24 @@ An IRL analogy would be a bumper-car ride at an amusement park where we would at
 Then, by a radio remote-control link, our computer would receive images from the camera and send commands to drive the bumper-car left or right, forward or backward.
 The bumper-car would then have to pursue or avoid other cars based on color, appearance and game strategy.
 
+## Game Points, Energy Points and Game Play
+
+Game points are earned in three different ways and determine which player wins the game.
+
+Energy points are the vital resource that keeps a cube alive during the game.
+Each second of play uses up energy points as does moving around the playing field.
+Energy points come from feeding on the resource cubes.
+
+A player (Male, Female or Enby) earns game points:
+* Feeding on a resource cube. Each hit on a resource cube earns 200 game points and 200 energy points with a maximum of 1000 points.
+* Killing off a predator. All the predator's energy points are transferred to the victor as game points.
+* When mating half the energy points of the male and female are given to the child. As compensation, those lost energy points are added to the player's game points.
+
+Game play is completely autonomous and a winning program will have fast object detection, an internal representation of the field, a movement strategy that avoids field obstacles and excellent decision making on what targets will yield the most points.
+A prototype player program is provided (see client/nwplay.py) that is a starter program for competition.
+The player programs are remote from the game server and connected by a messaging protocol.
+Consequently, autonomous player programs can be developed on any compute platform desired using favorite systems and tools.
+
 ## Game Architecture and Structure
 
 The Neckerworld consists of a playing field server and one or more remote client players.
