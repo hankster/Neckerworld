@@ -260,21 +260,39 @@ def send_view_message(s, message):
     # ready_to_read, ready_to_write, in_error = select.select(potential_readers, potential_writers, potential_errs, timeout)
 
     try:
+        # print("nwmessage.py: send_view_message  %s" % bytes)
+
         s.send(bytes)
         while(True):
             msg = str(s.recv(4096), 'utf-8')
-            # print("nwmessage.py: Received %d bytes" % len(msg))
+            message_length = len(msg)
             response += msg
-            msglen = len(msg)
-            # Read did not return our full request and JSON brace terminates. We're done.
-            if msglen < 4096 and response[-1:] == '}':
+            response_length = len(response)
+
+            # print("nwmessage.py: Received %d bytes" % message_length)
+            # if response_length > 0 :
+            #    rend = response[-1:]
+            #else:
+            #    rend = "!!!"
+            # print("nwmessage.py: Message length %d Response received %d bytes, rend [%s]" % (message_length, response_length, rend))
+
+            # if we didn't get a full buffer, check if we're done. Now check if if the response is complete
+            if message_length < 4096:
+                if response_length > 0:
+                    # Test for JSON closing brace
+                    if response[-1:] == '}':
+                        break
+                    else:
+                        # At times a buffer is not packed with a full 4096 bytes. It's a shorter buffer.
+                        continue
+                else:
+                    # The response looks incomplete and the connection is probably closed.
+                    print("nwmessage.py: Error in message length %d, response length %d, [%s]" % (message_length, response_length, response))
+                    return {"message_type": "Error", "error": "view request response is incomplete"}
+
+            ## If the message length == 4096 and we find a brace at the end, we're done (braces are not allowed in base64 encoding character set).
+            if message_length == 4096 and response[-1:] == '}':
                 break
-            # We had a timeout and either got zero bytes or exactly 4096 bytes
-            if msglen == 0 and response[-1:] == '}':
-                break
-            # A timeout but we're not done. Bad.
-            if msglen == 0:
-                return {"message_type": "Error", "error": "receive timeout"}
     
     except socket.timeout as e:
         print("nwmessage.py: send_view_message timeout %s" % e)
