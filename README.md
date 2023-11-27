@@ -143,6 +143,8 @@ The following packages are needed to compile and run these programs:
 
 See script "requirements.sh" for details.
 
+A user has reported that Linux Mint 21.2 Cinnamon ver 5.8.4 also works.
+
 ## License
 
 All programs and materials in this repository are under the MIT License.
