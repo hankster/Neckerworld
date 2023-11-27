@@ -17,10 +17,19 @@ nw.py
 
 ### nw.py
 This is the main program to create a Neckerworld game space.
-A new JSON file "nw.json" is created as a result.
+A new JSON file "nw-yyyy-mm-dd.json" is created as a result of running "nw.py".
+The objects are randomly selected and randomly placed on the playing field for each invocation of "nw.py".
+To use it, change to the server directory (/server) and type "cube ../setup/nw-yyyy-mm-dd.json"
+If you then go to the game window and type "E" followed by "S" you will see a simulation of game action.
+
+### nwu.py
+A utility helper program for nw.py
 
 ### nwtest.py
 A five-player game space used to test functions of the game.
+Produces the standard test file "nwtest.json".
+To use it change to the server directory (/server) and type "cube ../setup/nwtest.json"
 
 ### nwtest.json
-The json file created by running nwtest.py
+The json file created by running nwtest.py.
+This is a small field with five objects used for testing and debugging programs.
