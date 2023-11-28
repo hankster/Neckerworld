@@ -24,6 +24,7 @@ res = 512
 
 # Location of all our graphical assets
 assets = "../assets"
+training = "../training"
 emoticons = "tw-emoticons-%d" % res
 patches = "patches"
 patches_assets = assets + '/' + patches
@@ -31,6 +32,7 @@ surface_templates = "surfaces"
 surface_assets = assets + '/' + surface_templates
 textures = "textures"
 texture_assets = assets + '/' + textures
+cubedata = training + '/cubedata.csv'
 
 # List of locations [ (x, y, z, r) , ... ]
 locations = []
@@ -566,6 +568,94 @@ def setup_cubes(nw_player_count, ground_scale_factor, number_ground_textures):
     for cube_index in range(nw_player_count):
         cube = new_cube(cube_index, ground_scale_factor, number_ground_textures)
         cubeList.append(cube)
+    return cubeList
+
+# Load all cube descriptors from cubedata.csv
+def new_cube_from_list_initialize():
+
+    cube_database = {'male':[], 'female':[], 'enby':[], 'predator':[], 'resource':[]}
+    with open(cubedata, 'r') as f:
+        cd = f.readlines()
+    for c in cd:
+        c = c.strip()
+        clist = c.split('\t')
+        cube_database[clist[1]].append(clist)
+
+    return cube_database
+
+# Lookup cube description from cubedata.csv
+def new_cube_from_list(cube_database, cube_index, cube_player, cube_player_index, cube_x, cube_z, ground_scale_factor, number_ground_textures):
+
+    # dataset,cube_player,cube_uuid,cube_emoticon,cube_firstname,cube_scale_factor,cube_type,cube_color_class,cube_color[0],cube_color[1],cube_color[2],cube_material,cube_surface,spatial_position[0],spatial_position[1],spatial_position[2],spatial_radius,resource_energy,texture_filename
+    # female-1f31d,female,9c220cfb-e22e-40ac-bfc4-09fd40bd5fa8,1f31d,Mary,0.53965,3,w,0.63137,0.63137,0.63137,0,,0.00000,0.54065,0.00000,0.76318,100.00000,training/textures/1f31d-texture.png
+
+    maps = {'male': cube_texture_map_2_panes, 'female': cube_texture_map_2_panes, 'enby': cube_texture_map_6_panes, 'predator': cube_texture_map_6_panes, 'resource': cube_texture_map_resource}
+
+    cd = cube_database[cube_player][cube_player_index]
+    cube_player = cd[1]
+    cube_uuid = cd[2]
+    cube_emoticon = cd[3]
+    cube_firstname = cd[4]
+    cube_texture_map = maps[cube_player]
+    cube_active = True
+    cube_display = True
+    cube_scale_factor = float(cd[5])
+    cube_type = int(cd[6])
+    cube_color_class = cd[7]
+    cube_color = [float(cd[8]), float(cd[9]), float(cd[10]), 1.0]
+    cube_material = int(cd[11])
+    cube_surface = cd[12]
+    cube_texture_index = number_ground_textures + cube_index
+    cube_parameters = {}
+
+    spatial_position = [cube_x, float(cd[14]), cube_z] 
+    spatial_rotation = [0.0, 0.0, 0.0]
+    spatial_radius = float(cd[16])
+    spatial_gaze = [0.0, 0.0]
+    spatial_destination = [0.0, 0.0, 0.0]
+    spatial_velocity = 0.0
+    resource_energy = float(cd[17])
+            
+    cube = {"cube_index": cube_index, "cube_player": cube_player, "cube_uuid": cube_uuid, "cube_emoticon": cube_emoticon, "cube_firstname": cube_firstname,
+            "cube_active": cube_active, "cube_display": cube_display, "cube_scale_factor": cube_scale_factor,
+            "cube_type": cube_type, "cube_color_class": cube_color_class, "cube_color": cube_color, "cube_material": cube_material,
+            "cube_surface": cube_surface, "cube_texture_index": cube_texture_index, "cube_texture_map": cube_texture_map,
+            "cube_parameters": cube_parameters,
+            "spatial_position": spatial_position, "spatial_rotation": spatial_rotation, "spatial_gaze": spatial_gaze, "spatial_radius": spatial_radius,
+            "spatial_destination": spatial_destination, "spatial_velocity": spatial_velocity,
+            "resource_energy": resource_energy
+    }
+
+    return cube
+
+# Setup cubes from a .csv file
+def setup_cubelist(cubelist, ground_scale_factor, number_ground_textures):
+
+    # Read contens of cubedat.csv
+    cube_database = new_cube_from_list_initialize()
+
+    cubeList = []
+
+    with open(cubelist, 'r') as f:
+        c_lines = f.readlines()
+
+        if debug:
+            print(c_lines)
+
+        for c in c_lines:
+            if "Player" in c:
+                continue
+            c = c.strip()
+            cube_parameters = c.split('\t')
+            cube_index = int(cube_parameters[0])
+            cube_player = cube_parameters[1]
+            cube_player_index = int(cube_parameters[2])
+            cube_x = float(cube_parameters[3])
+            cube_z = float(cube_parameters[4])
+            print("nwu.py: Creating cube %d which is a %s using list item %d at (%0.2f, %0.2f)" % (cube_index, cube_player, cube_player_index, cube_x, cube_z))
+            cube = new_cube_from_list(cube_database, cube_index, cube_player, cube_player_index, cube_x, cube_z, ground_scale_factor, number_ground_textures)
+            cubeList.append(cube)
+
     return cubeList
 
 # Setup lights

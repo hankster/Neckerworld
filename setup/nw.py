@@ -8,12 +8,13 @@ Sample usage:
 
 Complete specification:
 
- nw.py -d -f filename -h -s dataset -v --camera=T/F --cubes=T/F --debug --file=filename --grounds=T/F --help --lights=T/F --materials=T/F --set=dataset --textures=T/F --version --window=T/F
+ nw.py -d -f filename -h -s dataset -v --camera=T/F --cubes=T/F --cubelist=file.csv --debug --file=filename --grounds=T/F --help --lights=T/F --materials=T/F --set=dataset --textures=T/F --version --window=T/F
 
  where
 
  --camera=True/False    Setup camera position
  --cubes=True/False     Setup cubes
+ --cubelist=file.csv    Setup cubes from an indexed list (.csv)
  --debug, -d            Turn debug statements on
  --file, -f             Output filename
  --grounds=True/False   Setup grounds
@@ -65,6 +66,7 @@ from nwu import setup_window
 from nwu import setup_camera
 from nwu import setup_grounds
 from nwu import setup_cubes
+from nwu import setup_cubelist
 from nwu import setup_lights
 from nwu import setup_materials
 from nwu import setup_textures
@@ -111,16 +113,20 @@ ambient = [0.40, 0.40, 0.40]
 # Components to set up
 do_camera = True
 do_cubes = True
+do_cubelist = False
 do_grounds = True
 do_lights = True
 do_materials = True
 do_textures = True
 do_window = True
 
+# Name of the cubelist file
+cubelist = ""
+
 debug = False
 
 def Usage():
-    print("Usage: nw.py -d -f filename -h -s dataset -v --camera=True/False --cubes=True/False --debug --file=filename --grounds=True/False --help --lights=True/False --materials=True/False --set=dataset --textures=True/False --version --window=True/False")
+    print("Usage: nw.py -d -f filename -h -s dataset -v --camera=True/False --cubes=True/False --cubelist=file.csv --debug --file=filename --grounds=True/False --help --lights=True/False --materials=True/False --set=dataset --textures=True/False --version --window=True/False")
 
 # Create a new JSON data file
 def create_JSON(jsonName):
@@ -144,6 +150,10 @@ def create_JSON(jsonName):
     if do_cubes:
         data["cubes"] = setup_cubes(nw_player_count, nw_ground_scale_factor, nw_ground_textures)
 
+    # Setup cubelist
+    if do_cubelist:
+        data["cubes"] = setup_cubelist(cubelist, nw_ground_scale_factor, nw_ground_textures)
+
     # Setup lights
     if do_lights:
         data["lights"] = setup_lights(ambient)
@@ -153,8 +163,9 @@ def create_JSON(jsonName):
         data["materials"] = setup_materials()
 
     # Setup textures
-    if do_cubes and do_textures:
-        data["textures"] = setup_textures(nw_player_count, nw_ground_textures, data["cubes"])
+    if (do_cubes or do_cubelist) and do_textures:
+        player_count = len(data["cubes"])
+        data["textures"] = setup_textures(player_count, nw_ground_textures, data["cubes"])
 
     if debug :
         print(json.dumps(data, indent=4, sort_keys=True))
@@ -195,7 +206,7 @@ if __name__=='__main__':
     #                                                                                            
 
     try:
-        options, args = getopt.getopt(sys.argv[1:], 'df:hs:v', ['camera=', 'cubes=', 'debug', 'file=', 'grounds=', 'help', 'lights=', 'materials=', 'set=', 'textures=', 'version', 'window='])
+        options, args = getopt.getopt(sys.argv[1:], 'df:hs:v', ['camera=', 'cubes=', 'cubelist=', 'debug', 'file=', 'grounds=', 'help', 'lights=', 'materials=', 'set=', 'textures=', 'version', 'window='])
     except getopt.GetoptError:
         Usage()
         sys.exit(2)
@@ -205,6 +216,10 @@ if __name__=='__main__':
             do_camera = True if a == 'True' else False
         if o in ("--cubes"):
             do_cubes = True if a == 'True' else False
+        if o in ("--cubelist"):
+            cubelist = a
+            do_cubes = False
+            do_cubelist = True
         if o in ("-d", "--debug"):
             debug = True
         if o in ("-f", "--file"):
