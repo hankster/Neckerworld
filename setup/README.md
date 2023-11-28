@@ -34,12 +34,12 @@ To use it change to the server directory (/server) and type "cube ../setup/nwtes
 The json file created by running nwtest.py.
 This is a small field with five objects used for testing and debugging programs.
 
-### tournament-1.csv
+### tournament.csv
 This is a spreadsheet file (tab separated) which may be used to create a game with a specified number of cubes taken from the standard list of game cubes (see "/training/cubedata.csv").
 This allows new game datasets to be specified in a repeatable manner for tournaments.
 
 ```
-nw.py --cubelist=tournament-1.csv
+nw.py --cubelist=tournament.csv
 ```
 
 ### prettyjson.py
