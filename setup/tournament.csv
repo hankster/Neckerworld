@@ -6,10 +6,10 @@ Player	Type	Index	Position X	Position Z
 4	enby	0	-25	-15
 5	enby	1	25	-15
 6	enby	2	15	15
-7	predator	0	-30	-30
-8	predator	1	-30	30
-9	predator	2	30	-30
-10	predator	3	30	30
+7	predator	0	-30	-20
+8	predator	1	-30	20
+9	predator	2	30	-20
+10	predator	3	30	20
 11	resource	0	-25	-25
 12	resource	1	-25	0
 13	resource	2	0	-25

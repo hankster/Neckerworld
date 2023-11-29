@@ -71,10 +71,12 @@ from nwu import setup_lights
 from nwu import setup_materials
 from nwu import setup_textures
 
-local = time.localtime()
-ymd = time.strftime('%Y-%m-%d', local)
-filename = "nw-%s.json" % ymd
-dataset = "Neckerworld %s" % ymd
+# Name of output JSON file
+filename = ""
+# Name of the cubelist file
+cubelist = ""
+# Name of the dataset
+dataset = ""
 
 # Number of players to create
 nw_player_count = 20
@@ -94,6 +96,7 @@ nw_ground_textures = 2
 nw_ground_scale_factor = 10
 nw_ground_scale_factor_wide = 50
 ground_texture_map_reference = [0.0, 0.0, 20.0, 0.0, 20.0, 20.0, 0.0, 20.0]
+
 ground_texture_map_reference_wide = [0.0, 0.0, 100.0, 0.0, 100.0, 100.0, 0.0, 100.0]
 ground_texture_map_background = [0.875, 1.0, 0.125, 1.0, 0.125, 0.0, 0.875, 0.0]
 
@@ -120,23 +123,20 @@ do_materials = True
 do_textures = True
 do_window = True
 
-# Name of the cubelist file
-cubelist = ""
-
 debug = False
 
 def Usage():
     print("Usage: nw.py -d -f filename -h -s dataset -v --camera=True/False --cubes=True/False --cubelist=file.csv --debug --file=filename --grounds=True/False --help --lights=True/False --materials=True/False --set=dataset --textures=True/False --version --window=True/False")
 
 # Create a new JSON data file
-def create_JSON(jsonName):
+def create_JSON(dset, jsonName, clist):
 
     # Initialize JSON object
-    data = {"dataset":dataset}
+    data = {"dataset":dset}
 
     # Setup our window
     if do_window:
-        data["window"] = setup_window(dataset, background_color)
+        data["window"] = setup_window(dset, background_color)
             
     # Setup the camera position and target
     if do_camera:
@@ -152,7 +152,7 @@ def create_JSON(jsonName):
 
     # Setup cubelist
     if do_cubelist:
-        data["cubes"] = setup_cubelist(cubelist, nw_ground_scale_factor, nw_ground_textures)
+        data["cubes"] = setup_cubelist(clist, nw_ground_scale_factor, nw_ground_textures)
 
     # Setup lights
     if do_lights:
@@ -184,7 +184,31 @@ def create_JSON(jsonName):
 
 def main():
     
-    print("nw.py -- Create dataset %s for the cube program" % dataset)
+    global filename, cubelist, dataset
+    
+    local = time.localtime()
+    ymd = time.strftime('%Y-%m-%d', local)
+
+    if len(filename) > 0:
+        # If an output filename was specified, use it but make sure it ends in ".json"
+        if not (len(filename) > 5 and filename[-5:] == ".json"):
+            filename += ".json"
+    elif len(cubelist) > 0:
+        # Name the output file based on the cubelist name
+        if len(cubelist) > 4 and (cubelist[-4:] == ".csv" or cubelist[-4:] == ".txt"):
+            filename = cubelist[:-4] + ".json"
+        else:
+            filename = cubelist + ".json"
+    else:
+        # Setup the default name
+        filename = "nw-%s.json" % ymd
+
+    # Now name the dataset
+    dataset = filename[:-5]
+
+    print("nw.py: Create dataset %s for the cube program in file %s" % (dataset, filename))
+    if len(cubelist) > 0:
+        print("nw.py: The cubelist filename %s is being used to create this dataset" % cubelist)
 
     # Read in lists of males, females, enbies, predators, resources and surfaces
     males_list()
@@ -195,7 +219,7 @@ def main():
     surfaces_list()
 
     # Now start creating our big JSON file
-    create_JSON(filename)
+    create_JSON(dataset, filename, cubelist)
 
     return
 
