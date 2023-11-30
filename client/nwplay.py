@@ -906,7 +906,14 @@ def main():
     
     # Find display size from X
     displayNumber = os.getenv('DISPLAY', ':0')
-    display = Xlib.display.Display(displayNumber)
+    try:
+        display = Xlib.display.Display(displayNumber)
+    except Xlib.error.DisplayConnectionError as e:
+        print("nwplay.py: Xlib.display connection error - %s" % e)
+        sys.exit(-1)
+    except IOError as e:
+        print("nwplay.py: Xlib.display IOError - %s" % e)
+        sys.exit(-1)
     root = display.screen().root
     displays = display.screen_count()
     displayWidth = root.get_geometry().width

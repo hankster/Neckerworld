@@ -37,6 +37,9 @@ def create_socket(address, port, blocking):
         s.setblocking(blocking)
         # now connect to the server on the port
         s.connect((address, port))
+    except ConnectionRefusedError as e:
+        print("nwmessage.py: create_socket connection refused %s" % e)
+        sys.exit(-1)
     except socket.timeout as e:
         print("nwmessage.py: create_socket timeout %s" % e)
         sys.exit(-1)
