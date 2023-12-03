@@ -128,6 +128,7 @@ y_max = 0.665
 
 # Sound effects
 sound = False
+sounds = "../sounds"
 
 # Options
 FindPredator = False
@@ -879,12 +880,12 @@ def m_test(m, mi):
 def get_sound(state, player, velocity, sdac, FR, FM, FP):
 
     if state == "Scanning":
-        return "sounds/chirp-440-1320-250.wav"
+        return sounds + "/chirp-440-1320-250.wav"
     if state == "Moving":
         if sdac:
-            return "sounds/440-125.wav"
+            return sounds + "/440-125.wav"
         else:
-            return "sounds/1000-125.wav"
+            return sounds + "/1000-125.wav"
     return ""
 
 # Main program starts here

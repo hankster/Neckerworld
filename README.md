@@ -10,7 +10,7 @@ All players and resources in the game are cubes.
 The cube players are guided solely through autonomous computer vision programs.
 No human manual control or input is permitted during gameplay.
 
-To sucessfully play the game requires a competent program to do object detection and identification, playing field knowledge representation and strategic decision making.
+To successfully play the game requires a competent program to do object detection and identification, playing field knowledge representation and strategic decision making.
 
 ## Background
 
