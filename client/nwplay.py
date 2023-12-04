@@ -158,6 +158,9 @@ total_mates = 0.0
 total_resources = 0.0
 total_predators = 0.0
 
+# Runtime status messages
+status_message = ""
+
 # Cube state variables needed for stategy execution
 # These are set and controller locally
 cube_state = "Idle"
@@ -199,7 +202,7 @@ def display_window(cube_uuid):
     
     global visual
     global field
-    global option_values_field
+    global multi_use_field
     global cube_firstname_field
     global spatial_angle_field
     global spatial_direction_field
@@ -210,6 +213,8 @@ def display_window(cube_uuid):
     global vrloops_per_second_field
     global cube_state_field
     global btn_mate, btn_predator, btn_resource, btn_game
+    global multi_use_field
+    global status_message
     
     window_title = window_name + cube_uuid
     root = tkinter.Tk()
@@ -251,9 +256,9 @@ def display_window(cube_uuid):
     btn_resource.grid(column=2, row=4, sticky=W)
     btn_game = ttk.Button(mainframe, text="Game", command=game_on, style="C.TButton")
     btn_game.grid(column=3, row=4, sticky=W)
-    option_values_field = StringVar()
-    option_entry = ttk.Entry(mainframe, width=25, textvariable=option_values_field)
-    option_entry.grid(column=6, row=4, sticky=W)
+    multi_use_field = StringVar()
+    option_entry = ttk.Entry(mainframe, width=35, textvariable=multi_use_field)
+    option_entry.grid(column=5, row=4, columnspan=2, sticky=W)
     option_entry.focus()
     ttk.Button(mainframe, text="Quit", command=quit_play, style="C.TButton").grid(column=7, row=4, sticky=E)
 
@@ -303,6 +308,7 @@ def update_panel():
     btn_resource.config(text = "Resource %s" % FindResource)
     btn_game.config(text = "Game %s" % ("On" if GameOn else "Off"))
     cube_state_field.set("%s" % cube_state)
+    multi_use_field.set(status_message)
     
 # Create our detected bounding boxes
 def update_bounding_boxes(plist):
@@ -475,6 +481,7 @@ def execute_strategy(state):
     global FindMate, FindPredator, FindResource, GameOn
     global target_class
     global total_points, total_mates, total_resources, total_predators, resource_energy
+    global status_message
     
     if state == "Idle":
         if spatial_position_blocked:
@@ -483,6 +490,7 @@ def execute_strategy(state):
             spatial_direction_active_control = True
             starting_location = current_location[:]
             sequence += 1
+            status_message = "Unblock distance %0.2f, angle %0.2f" % (spatial_distance_control, spatial_direction_control)
             print("nwplay.py: unblock distance %0.2f, angle %0.2f" % (spatial_distance_control, spatial_direction_control))
             move_response = cube_move(s, sequence, cube_uuid, spatial_angle_control, spatial_direction_control, spatial_direction_active_control, spatial_distance_control)
             return "Moving"
@@ -505,6 +513,7 @@ def execute_strategy(state):
         if scan_delay > 0:
             scan_delay -= 1
             return "Scanning"
+        status_message = "Current state %s" % state
         print("nwplay.py: Current state %s" % state)
         p_filename = "p_files/prediction-%05d.jpg" % sequence
         snapshot(p_filename, view_response["image"])
@@ -525,6 +534,7 @@ def execute_strategy(state):
         return "Scanning"
     
     if state == "ScanDone":
+        status_message = "Current state %s" % state
         print("nwplay.py: Current state %s" % state)
 
         player_field_list_merge()
@@ -557,6 +567,7 @@ def execute_strategy(state):
     if state == "Moving":
 
         update_location()
+
         if debug:
             print("nwplay.py: Current state %s, spatial_distance = %0.2f sdc %0.2f x %0.2f z %0.2f (%0.2f, %0.2f)"
               % (state, spatial_distance, spatial_distance_control, current_location[0], current_location[2], starting_location[0], starting_location[2]))
@@ -608,6 +619,7 @@ def execute_strategy(state):
         return state
 
     if state == "NoTargets":
+        status_message = "Current state %s" % state
         print("nwplay.py: Current state %s" % state)
         FindMate = False
         FindPredator = False
@@ -625,6 +637,7 @@ def move_to_target(tclass):
     global spatial_direction_control, spatial_direction_active_control
     global current_location
     global starting_location
+    global status_message
     
     current_target = get_nearest(current_location, tclass)
 
@@ -641,6 +654,7 @@ def move_to_target(tclass):
             spatial_direction_active_control = False
             starting_location = current_location[:]
             sequence += 1
+            status_message = "Move to target %s distance %0.2f" % (classname, distance)
             print("nwplay.py: move_to_target class %s distance %0.2f, angle %0.2f" % (classname, distance, angle))
             move_response = cube_move(s, sequence, cube_uuid, spatial_angle_control, spatial_direction_control, spatial_direction_active_control, distance)
             return "Moving"
@@ -804,7 +818,8 @@ def analyze_scene(predictions):
         target_location_z = current_location[2] + distance * math.cos(target_angle)
         target_location = [target_location_x, target_location_y, target_location_z]
         
-        if True or debug:
+        # if True or debug:
+        if debug:
             print("nwplay.py: analyze_scene Box coordinate: xcbb %0.2f, ymbb %0.2f, csf %0.2f, px %0.2f, py %0.2f, x %0.2f, z %0.2f, a00 %0.2f, a11 %0.2f" % (xcbb, ymbb, csf, px, py, x, z, a00, a11))
             print("nwplay.py: analyze_scene View coordinate: x %0.2f, y %0.2f, z %0.2f, distance %0.2f angle %0.2f" % (x, 0.0, z, distance, angle))
             print("nwplay.py: analyze_scene %s xmin %0.2f ymin %0.2f xmax %0.2f  ymax %0.2f xc %0.2f xw %0.2f sf %0.2f distance %0.2f angle %0.2f spatial_angle %0.2f target_angle %0.2f tx %0.2f tz %0.2f" %
