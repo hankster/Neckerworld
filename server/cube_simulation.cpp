@@ -222,6 +222,11 @@ string doLoginRequest(LoginRequest msgLoginRequest) {
       grounds[i].ground_remote = true;
     }
   }
+
+  GLfloat ground_scale_factor = 10.0;
+  if (n_grounds > 0) {
+    ground_scale_factor = grounds[0].ground_scale_factor;
+  }
   
   // document is the root of a json message
   Document d;
@@ -234,6 +239,7 @@ string doLoginRequest(LoginRequest msgLoginRequest) {
   d.AddMember("timestamp", frame_time, allocator);
   d.AddMember("cube_uuid", msgLoginRequest.cube_uuid, allocator);
   d.AddMember("frame", frame_counter, allocator);
+  d.AddMember("ground_scale_factor", ground_scale_factor, allocator);
   StringBuffer strbuf;
   Writer<StringBuffer> writer(strbuf);
   d.Accept(writer);

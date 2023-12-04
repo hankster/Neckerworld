@@ -116,6 +116,9 @@ window_height = 512
 window_channels = 4
 window_image_length = window_width * window_height * window_channels
 
+# ground scale factor (1/2 width of the playing field)
+ground_scale_factor = 10.0
+
 # imagea we are retrieving from the server
 image = []
 
@@ -325,9 +328,10 @@ def update_bounding_boxes(plist):
 # Update our field plot
 def update_field(angle, state):
 
+    global ground_scale_factor
     global field
     
-    scale = 20.0
+    scale = 2.0 * ground_scale_factor
     xw = float(window_width)
     yw = float(window_height)
     xwc = xw/2.0
@@ -910,6 +914,7 @@ def main():
     
     global debug
     global displayNumber, displayWidth, displayHeight
+    global ground_scale_factor
     global s
     global sequence
     global view_response
@@ -951,6 +956,9 @@ def main():
         shutdown_socket(s)
         return
 
+    if "ground_scale_factor" in response.keys():
+        ground_scale_factor = response["ground_scale_factor"]
+
     vrloop = True
     vrloop_count = 0.0
     vrloop_start = time.time()
@@ -975,7 +983,7 @@ def main():
             continue
 
         # If we have an image
-        if view_response["image_length"] > 0:
+        if "image_length" in view_response.keys() and view_response["image_length"] > 0:
 
             # We have a new image. Get rid of any bounding box outlines.
             visual.delete("boxes")
