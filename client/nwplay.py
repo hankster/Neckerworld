@@ -774,7 +774,8 @@ def analyze_scene(predictions):
         bbdx = bbox[2]-bbox[0]
         bbdy = bbox[3]-bbox[1]
         if bbdx > 0.95 or bbdy > 0.95:
-            print("nwplay.py: analyze_scene Discarding suspect player %s bounding box limits exceeded (%0.3f, %0.3f)" % (classname, bbdx, bbdy))
+            if debug:
+                print("nwplay.py: analyze_scene Discarding suspect player %s bounding box limits exceeded (%0.3f, %0.3f)" % (classname, bbdx, bbdy))
             continue
 
         # Window coordinates - (x0, y0) upper left corner, (512, 512) lower right corner
@@ -804,7 +805,8 @@ def analyze_scene(predictions):
         xright = -(z * pxright) / a00
         xwidth = xright - xleft
         if xwidth > 3.0 and score < 0.8:
-            print("nwplay.py: analyze_scene Discarding suspect player %s detection width %0.2f score %0.2f" % (classname, xwidth, score))
+            if debug:
+                print("nwplay.py: analyze_scene Discarding suspect player %s detection width %0.2f score %0.2f" % (classname, xwidth, score))
             continue
         sf = min(xwidth/2.0, 1.2)
         sf = max(sf, 0.5)
@@ -818,7 +820,6 @@ def analyze_scene(predictions):
         target_location_z = current_location[2] + distance * math.cos(target_angle)
         target_location = [target_location_x, target_location_y, target_location_z]
         
-        # if True or debug:
         if debug:
             print("nwplay.py: analyze_scene Box coordinate: xcbb %0.2f, ymbb %0.2f, csf %0.2f, px %0.2f, py %0.2f, x %0.2f, z %0.2f, a00 %0.2f, a11 %0.2f" % (xcbb, ymbb, csf, px, py, x, z, a00, a11))
             print("nwplay.py: analyze_scene View coordinate: x %0.2f, y %0.2f, z %0.2f, distance %0.2f angle %0.2f" % (x, 0.0, z, distance, angle))
