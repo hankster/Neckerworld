@@ -50,7 +50,7 @@ using namespace rapidjson;
 string goodbye = "{\"message_type\": \"GoodBye\"}";
 string error_a = "{\"message_type\": \"Error\", \"error\": \"Cube not active.\"}";
 string error_g = "{\"message_type\": \"Error\", \"error\": \"Ground View not allowed.\"}";
-string error_i = "{\"message_type\": \"Error\", \"error\": \"Cube index not found.\"}";
+string error_i = "{\"message_type\": \"Error\", \"error\": \"Cube or ground index not found.\"}";
 string error_j = "{\"message_type\": \"Error\", \"error\": \"JSON file import failed.\"}";
 string error_r = "{\"message_type\": \"Error\", \"error\": \"Remote not enabled.\"}";
 string error_u = "{\"message_type\": \"Error\", \"error\": \"Unknown message type.\"}";
@@ -80,6 +80,7 @@ string cube_decode_message(char* message, int message_length) {
   unsigned sequence;
   double timestamp;
   string cube_uuid;
+  string ground_uuid;
   
   // Make sure this message is terminated like a C string. Program crashes without this.
   message[message_length] = '\0';
@@ -98,6 +99,7 @@ string cube_decode_message(char* message, int message_length) {
   if (d.HasMember("sequence")) { sequence = d["sequence"].GetUint();}
   if (d.HasMember("timestamp")) { timestamp = d["timestamp"].GetDouble();}
   if (d.HasMember("cube_uuid")) { cube_uuid = d["cube_uuid"].GetString();}
+  if (d.HasMember("ground_uuid")) { ground_uuid = d["ground_uuid"].GetString();}
 
   // if (debug > 0) sleep(10);
   
@@ -106,6 +108,7 @@ string cube_decode_message(char* message, int message_length) {
     msgLoginRequest.sequence = sequence;
     msgLoginRequest.timestamp = timestamp;
     msgLoginRequest.cube_uuid = cube_uuid;
+    msgLoginRequest.ground_uuid = ground_uuid;
     msgLoginRequest.username = d["username"].GetString();
     msgLoginRequest.password = d["password"].GetString();
     string rsp = doLoginRequest(msgLoginRequest);
@@ -117,6 +120,7 @@ string cube_decode_message(char* message, int message_length) {
     msgLogoutRequest.sequence = sequence;
     msgLogoutRequest.timestamp = timestamp;
     msgLogoutRequest.cube_uuid = cube_uuid;
+    msgLogoutRequest.ground_uuid = ground_uuid;
     string rsp = doLogoutRequest(msgLogoutRequest);
     return rsp;
   }
@@ -141,14 +145,17 @@ string cube_decode_message(char* message, int message_length) {
     return rsp;
   }
   
-  // Check if we are using a valid cube id.
+  // Convert cube uuid into an index
   int cube_index = cube_get_index(cube_uuid);
-  if (cube_index < 0) return error_i;
+
+  // If we were given a cube uuid and no index was found, return an error.
+  if (cube_uuid.length() > 0 && cube_index < 0) return error_i;
 
   // Check if we are logged in and remote has been set.
-  if (! cubes[cube_index].cube_remote) return error_r;
+  if (cube_index >= 0 && (! cubes[cube_index].cube_remote)) return error_r;
 
-  if (mt == "MoveRequest") {
+  if (mt == "MoveRequest" && cube_index >= 0) {
+    if (! cubes[cube_index].cube_remote) return error_r;
     msgMoveRequest.message_type = mt;
     msgMoveRequest.sequence = sequence;
     msgMoveRequest.timestamp = timestamp;
@@ -164,7 +171,8 @@ string cube_decode_message(char* message, int message_length) {
     return rsp;
   }
 
-  if (mt == "StatusRequest") {
+  if (mt == "StatusRequest" && cube_index >= 0) {
+    if (! cubes[cube_index].cube_remote) return error_r;
     msgStatusRequest.message_type = mt;
     msgStatusRequest.sequence = sequence;
     msgStatusRequest.timestamp = timestamp;
@@ -173,7 +181,8 @@ string cube_decode_message(char* message, int message_length) {
     return rsp;
   }
   
-  if (mt == "ViewRequest") {
+  if (mt == "ViewRequest" && cube_index >= 0) {
+    if (! cubes[cube_index].cube_remote) return error_r;
     msgViewRequest.message_type = mt;
     msgViewRequest.sequence = sequence;
     msgViewRequest.timestamp = timestamp;
@@ -185,12 +194,22 @@ string cube_decode_message(char* message, int message_length) {
     return rsp;
   }
   
-  if (mt == "GroundViewRequest") {
+  // Convert ground uuid into an index
+  int ground_index = ground_get_index(ground_uuid);
+
+  // If we were given a ground uuid and no index was found, return an error.
+  if (ground_uuid.length() > 0 && ground_index < 0) return error_i;
+
+  // Check if we are logged in and remote has been set.
+  if (ground_index >= 0 && (! grounds[ground_index].ground_remote)) return error_r;
+
+  if (mt == "GroundViewRequest"  && ground_index >= 0) {
+    if (! cubes[cube_index].cube_remote) return error_r;
     msgGroundViewRequest.message_type = mt;
     msgGroundViewRequest.sequence = sequence;
     msgGroundViewRequest.timestamp = timestamp;
-    msgGroundViewRequest.cube_uuid = cube_uuid;
-    msgGroundViewRequest.groundview = d["groundview"].GetInt();
+    msgGroundViewRequest.ground_uuid = ground_uuid;
+    msgGroundViewRequest.groundview = ground_index;
     string rsp = doGroundViewRequest(msgGroundViewRequest);
     return rsp;
   }
@@ -208,19 +227,21 @@ string doLoginRequest(LoginRequest msgLoginRequest) {
   }
 
   if (debug > 0) printf("cube_simulation.cpp: login cube_uuid %s\n", &msgLoginRequest.cube_uuid[0]);
+
   int cube_index = cube_get_index(msgLoginRequest.cube_uuid);
-  if (debug > 0) printf("cube_simulation.cpp: login cube index %d\n", cube_index);
+  int ground_index = ground_get_index(msgLoginRequest.ground_uuid);
+  if (debug > 0) printf("cube_simulation.cpp: login cube index %d, ground index %d\n", cube_index, ground_index);
 
   if (cube_index >= 0) {
-
     // This cube is now remotely controlled
     cubes[cube_index].cube_remote = true;
     if (debug > 0) printf("cube_simulation.cpp: doLoginRequest - cube %d now under remote control\n", cube_index);
-
+  }
+  
+  if (ground_index >= 0) {
+    // This ground is now remotely controlled
     // Allow ground view requests now, too.
-    for (int i=0; i<n_grounds; ++i) {
-      grounds[i].ground_remote = true;
-    }
+    grounds[ground_index].ground_remote = true;
   }
 
   GLfloat ground_scale_factor = 10.0;
@@ -228,6 +249,8 @@ string doLoginRequest(LoginRequest msgLoginRequest) {
     ground_scale_factor = grounds[0].ground_scale_factor;
   }
   
+  if (cube_index < 0 && ground_index < 0) return goodbye;
+
   // document is the root of a json message
   Document d;
   // define the document as an object rather than an array
@@ -239,6 +262,7 @@ string doLoginRequest(LoginRequest msgLoginRequest) {
   d.AddMember("timestamp", frame_time, allocator);
   d.AddMember("cube_uuid", msgLoginRequest.cube_uuid, allocator);
   d.AddMember("frame", frame_counter, allocator);
+  d.AddMember("ground_uuid", msgLoginRequest.ground_uuid, allocator);
   d.AddMember("ground_scale_factor", ground_scale_factor, allocator);
   StringBuffer strbuf;
   Writer<StringBuffer> writer(strbuf);
@@ -251,19 +275,31 @@ string doLoginRequest(LoginRequest msgLoginRequest) {
 // Process a logout request
 string doLogoutRequest(LogoutRequest msgLogoutRequest) {
 
+  // Convert uuid into an index
   int cube_index = cube_get_index(msgLogoutRequest.cube_uuid);
-  if (cube_index < 0 || ! cubes[cube_index].cube_remote) {
-    return goodbye;
-  }
+
+  // If we were given a cube uuid and no index was found, return an error.
+  if (msgLogoutRequest.cube_uuid.length() > 0 && cube_index < 0) return error_i;
+
+  // Check if we were logged in and cancel remote.
+  if (cube_index >= 0 && (! cubes[cube_index].cube_remote)) return error_r;
+
+  // If we were logged in, now cancel the remote flag
+  if (cube_index >= 0) cubes[cube_index].cube_remote = false;
+  if (cube_index >= 0 && debug > 0) printf("cube_simulation.cpp: doLogoutRequest - cube %d no longer remote\n", cube_index);
+
+  // Convert uuid into an index
+  int ground_index = ground_get_index(msgLogoutRequest.ground_uuid);
+
+  // If we were given a ground uuid and no index was found, return an error.
+  if (msgLogoutRequest.ground_uuid.length() > 0 && ground_index < 0) return error_i;
+
+  // Cancel ground view requests.
+  if (ground_index >= 0) grounds[ground_index].ground_remote = false;
+  if (ground_index >= 0 && debug > 0) printf("cube_simulation.cpp: doLogoutRequest - ground %d no longer remote\n", ground_index);
   
-  // This cube is no longer remotely controlled
-  cubes[cube_index].cube_remote = false;
-  if (debug > 0) printf("cube_simulation.cpp: doLogoutRequest - cube %d no longer remote\n", cube_index);
-  
-  // Cancel ground view requests now, too.
-  for (int i=0; i<n_grounds; ++i) {
-    grounds[i].ground_remote = false;
-  }
+  // Check if we had a valid request
+  if (cube_index < 0 && ground_index < 0) return goodbye;
 
   // document is the root of a json message
   Document d;
@@ -275,6 +311,7 @@ string doLogoutRequest(LogoutRequest msgLogoutRequest) {
   d.AddMember("sequence", msgLogoutRequest.sequence, allocator);
   d.AddMember("timestamp", frame_time, allocator);
   d.AddMember("cube_uuid", msgLogoutRequest.cube_uuid, allocator);
+  d.AddMember("ground_uuid", msgLogoutRequest.ground_uuid, allocator);
   StringBuffer strbuf;
   Writer<StringBuffer> writer(strbuf);
   d.Accept(writer);
@@ -465,7 +502,7 @@ string doViewRequest(ViewRequest msgViewRequest) {
 
 string doGroundViewRequest(GroundViewRequest msgGroundViewRequest) {
 
-  string uuid = msgGroundViewRequest.cube_uuid;
+  string uuid = msgGroundViewRequest.ground_uuid;
   int gv = msgGroundViewRequest.groundview;
 
   GroundViewResponse r = ground_screenview(uuid, gv);

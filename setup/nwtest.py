@@ -180,12 +180,14 @@ ground_texture_map_background = [0.875, 1.0, 0.125, 1.0, 0.125, 0.0, 0.875, 0.0]
 def Usage():
     print("Usage: nw.py -d -f filename -h -v --debug --file=filename --help --version")
 
-standard_test = ['male', 'female', 'enby', 'predator', 'resource']
+standard_test = ['male', 'female', 'enby', 'predator', 'resource', 'ground']
 standard_uuids = ['1354b75f-9ca5-4da5-80b2-8f0056f9e08e',
                   'a1a98c6d-e123-4c7e-8cd0-9dabfdb60e22',
                   'd08f9dc2-8c83-4fba-b4ab-af1d1ae49ba6',
                   'b5a49a67-60cf-4b10-b136-04f28d986368',
                   'cd9d80e9-40d7-49f6-b92b-ac41b4161fff']
+# ground_uuid = str(uuid.uuid4())
+ground_uuid = "9787fbe0-68f9-40e7-81b7-904d36e7a848"
 standard_emoticons = ['1f609', '1f62f', '1f633', '1f63d', '1f370']
 standard_surfaces = ['', '', '', 'surface-8-snakeskin-512x512', '']
 standard_scale_factors = [1.1660442497464159,
@@ -643,7 +645,7 @@ def create_JSON():
     ground_view_position = camera_position
     ground_view_target = camera_target
     ground_view_up = camera_up
-    ground = {"ground_index": ground_index, "ground_scale_factor": ground_scale_factor_0, "ground_type": ground_type, "ground_color": ground_color, "ground_material": ground_material, "ground_texture_index": ground_texture_index, "ground_texture_map": ground_texture_map, "ground_spatial_position": ground_spatial_position, "ground_spatial_rotation": ground_spatial_rotation, "ground_view_position": ground_view_position, "ground_view_target": ground_view_target, "ground_view_up": ground_view_up}
+    ground = {"ground_index": ground_index, "ground_uuid": ground_uuid, "ground_scale_factor": ground_scale_factor_0, "ground_type": ground_type, "ground_color": ground_color, "ground_material": ground_material, "ground_texture_index": ground_texture_index, "ground_texture_map": ground_texture_map, "ground_spatial_position": ground_spatial_position, "ground_spatial_rotation": ground_spatial_rotation, "ground_view_position": ground_view_position, "ground_view_target": ground_view_target, "ground_view_up": ground_view_up}
     groundList.append(ground)
 
     data["grounds"] = groundList

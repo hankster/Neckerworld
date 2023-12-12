@@ -523,9 +523,10 @@ def setup_camera(camera_position, camera_target, camera_up):
     return camera
 
 # Setup the grounds
-def setup_grounds(ng, gsf, ground_texture_map_reference, ground_texture_map_background, camera_position, camera_target, camera_up):
+def setup_grounds(ng, uuid, gsf, ground_texture_map_reference, ground_texture_map_background, camera_position, camera_target, camera_up):
     groundList = []
     ground_index = 0
+    ground_uuid = uuid
     ground_scale_factor_0 = gsf
     ground_type = 3
     ground_color = color_green
@@ -537,10 +538,11 @@ def setup_grounds(ng, gsf, ground_texture_map_reference, ground_texture_map_back
     ground_view_position = camera_position
     ground_view_target = camera_target
     ground_view_up = camera_up
-    ground = {"ground_index": ground_index, "ground_scale_factor": ground_scale_factor_0, "ground_type": ground_type, "ground_color": ground_color, "ground_material": ground_material, "ground_texture_index": ground_texture_index, "ground_texture_map": ground_texture_map, "ground_spatial_position": ground_spatial_position, "ground_spatial_rotation": ground_spatial_rotation, "ground_view_position": ground_view_position, "ground_view_target": ground_view_target, "ground_view_up": ground_view_up}
+    ground = {"ground_index": ground_index, "ground_uuid": ground_uuid, "ground_scale_factor": ground_scale_factor_0, "ground_type": ground_type, "ground_color": ground_color, "ground_material": ground_material, "ground_texture_index": ground_texture_index, "ground_texture_map": ground_texture_map, "ground_spatial_position": ground_spatial_position, "ground_spatial_rotation": ground_spatial_rotation, "ground_view_position": ground_view_position, "ground_view_target": ground_view_target, "ground_view_up": ground_view_up}
     groundList.append(ground)
 
     ground_index = 1
+    ground_uuid = uuid
     # Check if this is correct. It's not used.
     ground_scale_factor_1 = gsf+10.0
     ground_type = 2
@@ -554,7 +556,7 @@ def setup_grounds(ng, gsf, ground_texture_map_reference, ground_texture_map_back
     ground_view_target = camera_target
     ground_view_up = camera_up
     z_offsset = -ground_scale_factor_1
-    ground = {"ground_index": ground_index, "ground_scale_factor": ground_scale_factor_1, "ground_type": ground_type, "ground_color": ground_color, "ground_material": ground_material, "ground_texture_index": ground_texture_index, "ground_texture_map": ground_texture_map, "ground_spatial_position": ground_spatial_position, "ground_spatial_rotation": ground_spatial_rotation, "ground_view_position": ground_view_position, "ground_view_target": ground_view_target, "ground_view_up": ground_view_up}
+    ground = {"ground_index": ground_index, "ground_uuid": ground_uuid, "ground_scale_factor": ground_scale_factor_1, "ground_type": ground_type, "ground_color": ground_color, "ground_material": ground_material, "ground_texture_index": ground_texture_index, "ground_texture_map": ground_texture_map, "ground_spatial_position": ground_spatial_position, "ground_spatial_rotation": ground_spatial_rotation, "ground_view_position": ground_view_position, "ground_view_target": ground_view_target, "ground_view_up": ground_view_up}
 
     if ng == 1:
         return groundList

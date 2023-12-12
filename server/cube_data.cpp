@@ -255,6 +255,7 @@ int json_import_document() {
     for( SizeType i = 0; i < gg.Size(); ++i ) {
       const Value& g = gg[i];
       int ground_index = g["ground_index"].GetInt();
+      string ground_uuid = g["ground_uuid"].GetString();
       float ground_scale_factor = (float)g["ground_scale_factor"].GetDouble();
       int ground_type = g["ground_type"].GetInt();
       float ground_color_r = (float)g["ground_color"][0].GetDouble();

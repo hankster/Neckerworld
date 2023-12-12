@@ -74,8 +74,8 @@ from nwmessage import nwmessage_debug
 
 # def create_socket(address, port, blocking)
 # def shutdown_socket(s)
-# def login_request(s, sequence, username, password, cube_uuid)
-# def logout_request(s, sequence, cube_uuid)
+# def login_request(s, sequence, username, password, cube_uuid, ground_uuid)
+# def logout_request(s, sequence, cube_uuid, ground_uuid)
 # def import_json_file(s, sequence, jsonfile, cube_uuid)
 # def move_request(s, sequence, cube_uuid, spatial_angle, spatial_direction, spatial_direction_active, distance, velocity, gaze)
 # def status_request(s, sequence, cube_uuid)
@@ -950,7 +950,7 @@ def main():
     # Create an inet, streaming socket with blocking
     s = create_socket(address, port, True)
 
-    response = login_request(s, sequence, username, password, cube_uuid)
+    response = login_request(s, sequence, username, password, cube_uuid, "")
     if check_error("login_request", response):
         # We're done. Goodbye.    
         shutdown_socket(s)
@@ -1049,7 +1049,7 @@ def main():
             time.sleep(5)
         
     sequence += 1
-    logout_request(s, sequence, cube_uuid)
+    logout_request(s, sequence, cube_uuid, "")
         
     # Close the window
     window.destroy()

@@ -60,11 +60,11 @@ def shutdown_socket(s):
         print("nwmessage.py: %s" % e)
         return {"message_type": "Error", "error": e}
         
-def login_request(s, sequence, username, password, cube_uuid):
+def login_request(s, sequence, username, password, cube_uuid, ground_uuid):
 
     message_type = "LoginRequest"
     timestamp = time.time()
-    message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "cube_uuid": cube_uuid, "username": username, "password": password}
+    message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "cube_uuid": cube_uuid, "ground_uuid": ground_uuid, "username": username, "password": password}
     data = json.dumps(message)
     if debug:
         print("nwmessage.py: Sending   " + data)
@@ -85,12 +85,12 @@ def login_request(s, sequence, username, password, cube_uuid):
         return {"message_type": "Error", "error": e}
     return j
         
-def logout_request(s, sequence, cube_uuid):
+def logout_request(s, sequence, cube_uuid, ground_uuid):
     
     message_type = "LogoutRequest"
 
     timestamp = time.time()
-    message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "cube_uuid": cube_uuid}
+    message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "cube_uuid": cube_uuid, "ground_uuid": ground_uuid}
     data = json.dumps(message)
     if debug:
         print("nwmessage.py: Sending   " + data)

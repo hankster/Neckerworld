@@ -767,6 +767,14 @@ int cube_get_index(string uuid) {
   return -1;
 }
 
+// Convert ground uuid to a ground index
+int ground_get_index(string uuid) {
+  for (int i=0; i<n_grounds; ++i) {
+    if (grounds[i].ground_uuid == uuid) return i;
+  }
+  return -1;
+}
+
 // Compute total points for a cube
 void cube_total_points(int i, float *total, float *mate, float *food, float *kill) {
 

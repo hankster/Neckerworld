@@ -95,6 +95,8 @@ nw_ground_count = 1
 nw_ground_textures = 2
 nw_ground_scale_factor = 10
 nw_ground_scale_factor_wide = 50
+ground_uuid = "9787fbe0-68f9-40e7-81b7-904d36e7a848"
+ground_uuid_wide = "86521488-c1b7-493e-b82a-2473e34af982"
 ground_texture_map_reference = [0.0, 0.0, 20.0, 0.0, 20.0, 20.0, 0.0, 20.0]
 
 ground_texture_map_reference_wide = [0.0, 0.0, 100.0, 0.0, 100.0, 100.0, 0.0, 100.0]
@@ -104,6 +106,7 @@ if wide_field:
     # Overwrite previous values
     camera_position = camera_position_wide
     nw_ground_scale_factor = nw_ground_scale_factor_wide
+    ground_uuid = ground_uuid_wide
     ground_texture_map_reference = ground_texture_map_reference_wide
     
 # Lighting and colors
@@ -144,7 +147,7 @@ def create_JSON(dset, jsonName, clist):
 
     # Setup the grounds
     if do_grounds:
-        data["grounds"] = setup_grounds(nw_ground_count, nw_ground_scale_factor, ground_texture_map_reference, ground_texture_map_background, camera_position, camera_target, camera_up)
+        data["grounds"] = setup_grounds(nw_ground_count, ground_uuid, nw_ground_scale_factor, ground_texture_map_reference, ground_texture_map_background, camera_position, camera_target, camera_up)
 
     # Setup cubes
     if do_cubes:

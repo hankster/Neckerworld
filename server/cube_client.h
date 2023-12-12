@@ -6,6 +6,7 @@ struct LoginRequest {
   unsigned sequence;
   double timestamp;
   string cube_uuid;
+  string ground_uuid;
   string username;
   string password;
 
@@ -17,6 +18,7 @@ struct LogoutRequest {
   unsigned sequence;
   double timestamp;
   string cube_uuid;
+  string ground_uuid;
 
 };
 
@@ -60,7 +62,7 @@ struct GroundViewRequest {
   string message_type;
   unsigned sequence;
   double timestamp;
-  string cube_uuid;
+  string ground_uuid;
   int groundview;
   
 };
@@ -95,6 +97,7 @@ struct LoginResponse {
   unsigned sequence;
   double timestamp;
   string cube_uuid;
+  string ground_uuid;
   unsigned frame;
   
 };
@@ -168,7 +171,7 @@ struct GroundViewResponse {
   string message_type;
   unsigned sequence;
   double timestamp;
-  string cube_uuid;
+  string ground_uuid;
   unsigned frame;
   int groundview;
   string extension;
@@ -212,5 +215,5 @@ StatusResponse cube_status(string cube_uuid);
 
 // View request
 ViewResponse screenview(string cube_uuid, float angle, float gaze_yaw, float gaze_pitch);
-GroundViewResponse ground_screenview(string cube_uuid, int groundview);
+GroundViewResponse ground_screenview(string ground_uuid, int groundview);
 

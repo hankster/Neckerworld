@@ -57,7 +57,7 @@ from nwmessage import nwmessage_debug
 
 # def create_socket(address, port, blocking)
 # def shutdown_socket(s)
-# def login_request(s, sequence, username, password, cube_uuid)
+# def login_request(s, sequence, username, password, cube_uuid, ground_uuid)
 # def logout_request(s, sequence, cube_uuid)
 # def import_json_file(s, sequence, jsonfile, cube_uuid)
 # def import_json_object(s, sequence, jsonobject, cube_uuid)
@@ -255,7 +255,7 @@ def main():
     s = create_socket(address, port, True)
 
     server_uuid = "XXXX"
-    response = login_request(s, sequence, username, password, server_uuid)
+    response = login_request(s, sequence, username, password, "", server_uuid)
     if check_error("login_request", response):
         # We're done. Goodbye.    
         shutdown_socket(s)
@@ -311,7 +311,7 @@ def main():
         
         sequence += 1
         
-    logout_request(s, sequence, server_uuid)
+    logout_request(s, sequence, "", server_uuid)
         
     # We're done. Goodbye.    
     shutdown_socket(s)

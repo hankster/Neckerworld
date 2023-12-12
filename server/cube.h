@@ -89,6 +89,7 @@ struct Ground {
   bool ground_active;
   bool ground_display;
   bool ground_remote;
+  string ground_uuid;
   GLfloat ground_scale_factor;
   glm::mat4 ground_scale;
   GLuint ground_type;
@@ -340,6 +341,7 @@ int cube_remote_move(int cube_index, float angle, float direction, bool directio
 
 // UUID
 int cube_get_index(string uuid);
+int ground_get_index(string uuid);
 string get_uuid();
 
 // Energy related
