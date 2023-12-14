@@ -276,8 +276,8 @@ def main():
             # Now display our image on the screen
             img = Image.fromarray(view_response["image"][:,:,::-1])
             # If the canvas changed size then resize
-            if vw != window_width+2 or vh != window_height+2:
-                img = img.resize((vw,vh))
+            if vw > 320 and vh > 180 and (vw != window_width+2 or vh != window_height+2):
+                img = img.resize((vw-2,vh-2))
                 w, h = img.size
             imgtk = ImageTk.PhotoImage(img)
             visual.itemconfig(visual_id, image=imgtk)
