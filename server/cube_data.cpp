@@ -283,14 +283,14 @@ int json_import_document() {
       float ground_view_up_y = (float)g["ground_view_up"][1].GetDouble();
       float ground_view_up_z = (float)g["ground_view_up"][2].GetDouble();
       
-      int status = new_ground(ground_index, ground_scale_factor,  ground_type, ground_color, ground_material, ground_texture_index, ground_texture_map, ground_spatial_position_x, ground_spatial_position_y, ground_spatial_position_z, ground_spatial_rotation_x, ground_spatial_rotation_y, ground_spatial_rotation_z, ground_view_position_x, ground_view_position_y, ground_view_position_z, ground_view_target_x, ground_view_target_y, ground_view_target_z, ground_view_up_x, ground_view_up_y, ground_view_up_z);
+      int status = new_ground(ground_index, ground_uuid, ground_scale_factor,  ground_type, ground_color, ground_material, ground_texture_index, ground_texture_map, ground_spatial_position_x, ground_spatial_position_y, ground_spatial_position_z, ground_spatial_rotation_x, ground_spatial_rotation_y, ground_spatial_rotation_z, ground_view_position_x, ground_view_position_y, ground_view_position_z, ground_view_target_x, ground_view_target_y, ground_view_target_z, ground_view_up_x, ground_view_up_y, ground_view_up_z);
 
       if (status) {
 	fprintf(stderr, "cube_data.cpp: json_import - ground %d not configured\n", ground_index);
 	return -1;
       }
 
-      fprintf(stdout, "cube_data.cpp: Ground index %d processed - scale factor %4.2f, type %d, color (%4.2f, %4.2f, %4.2f, %4.2f), material %d, texture %d\n", ground_index, ground_scale_factor, ground_type, ground_color_r, ground_color_g, ground_color_b, ground_color_a, ground_material, ground_texture_index);
+      fprintf(stdout, "cube_data.cpp: Ground index %d processed - uuid %s, scale factor %4.2f, type %d, color (%4.2f, %4.2f, %4.2f, %4.2f), material %d, texture %d\n", ground_index, ground_uuid.c_str(), ground_scale_factor, ground_type, ground_color_r, ground_color_g, ground_color_b, ground_color_a, ground_material, ground_texture_index);
 
       // Increment our total ground count if needed
       if (ground_index >= n_grounds) n_grounds = ground_index + 1;

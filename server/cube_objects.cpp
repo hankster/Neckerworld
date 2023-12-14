@@ -931,7 +931,7 @@ int new_wire(int nw, float wire_scale_factor, float x, float y, float z, float r
 }
 
 /* Create the ground plane */
-int new_ground(int ng, GLfloat ground_scale_factor, GLuint ground_type, glm::vec4 ground_color, GLuint ground_material, GLuint ground_texture_index, float ground_texture_map[8], float x, float y, float z, float rotX, float rotY, float rotZ, float viewX, float viewY, float viewZ, float targetX, float targetY, float targetZ, float upX, float upY, float upZ)
+int new_ground(int ng, string ground_uuid, GLfloat ground_scale_factor, GLuint ground_type, glm::vec4 ground_color, GLuint ground_material, GLuint ground_texture_index, float ground_texture_map[8], float x, float y, float z, float rotX, float rotY, float rotZ, float viewX, float viewY, float viewZ, float targetX, float targetY, float targetZ, float upX, float upY, float upZ)
 {
   GLfloat ground_vertices[] =
     {
@@ -988,6 +988,9 @@ int new_ground(int ng, GLfloat ground_scale_factor, GLuint ground_type, glm::vec
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, grounds[ng].ibo_ground_elements);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ground_elements), ground_elements, GL_STATIC_DRAW);
   fprintf(stdout, "ibo_ground_elements %d (%d)\n", grounds[ng].ibo_ground_elements, int(sizeof(ground_elements)));
+
+  /* Save ground uuid */
+  grounds[ng].ground_uuid = ground_uuid;
   
   /* Setup the ground scale */
 

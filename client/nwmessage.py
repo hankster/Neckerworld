@@ -241,11 +241,11 @@ def cube_view_request(s, sequence, cube_uuid, spatial_angle, gaze):
     response = send_view_message(s, message)
     return response
     
-def ground_view_request(s, sequence, cube_uuid, groundview):
+def ground_view_request(s, sequence, ground_uuid, groundview):
     
     message_type = "GroundViewRequest"
     timestamp = time.time()
-    message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "cube_uuid": cube_uuid, "groundview": groundview}
+    message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "ground_uuid": ground_uuid, "groundview": groundview}
     response = send_view_message(s, message)
     if response["message_type"] != "Error":
         response["message_type"] = "GroundViewResponse"

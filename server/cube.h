@@ -313,7 +313,7 @@ int new_cube(int nc, string cube_player, string cube_uuid, string cube_emoticon,
 // Create a new wire cube
 int new_wire(int nw, float wire_scale_factor, float x, float y, float z, float rotX, float rotY, float rotZ, int type, glm::vec4 color);
 // Create a new ground plane
-int new_ground(int ng, GLfloat ground_scale_factor, GLuint ground_type, glm::vec4 ground_color, GLuint ground_material, GLuint ground_texture_index, float ground_texture_map[8], float x, float y, float z, float rotX, float rotY, float rotZ, float viewX, float viewY, float viewZ, float targetX, float targetY, float targetZ, float upX, float upY, float upZ);
+int new_ground(int ng, string ground_uuid, GLfloat ground_scale_factor, GLuint ground_type, glm::vec4 ground_color, GLuint ground_material, GLuint ground_texture_index, float ground_texture_map[8], float x, float y, float z, float rotX, float rotY, float rotZ, float viewX, float viewY, float viewZ, float targetX, float targetY, float targetZ, float upX, float upY, float upZ);
 // Create a new light
 int new_light(int light_index, glm::vec3 position, glm::vec3 intensity, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float constant, float linear, float quadratic);
 // Create a new material

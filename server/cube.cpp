@@ -1630,19 +1630,6 @@ GroundViewResponse ground_screenview(string uuid, int gv) {
   // Get window size
   glfwGetWindowSize(window, &r.width, &r.height);
 
-  // Identify the cube we are getting the bounding box for
-  // Use cubes[0] if uuid not specified
-  int i = cube_get_index(uuid);
-  if (i < 0) i = 0;
-
-  // Get bounding box (needed for training)
-  cube_bounding_box(i, r.width, r.height);
-  // Flip the y coordinates upside down
-  r.bounding_box[0] = cubes[i].bounding_box[0];
-  r.bounding_box[1] = r.height - cubes[i].bounding_box[3];
-  r.bounding_box[2] = cubes[i].bounding_box[2];
-  r.bounding_box[3] = r.height - cubes[i].bounding_box[1];
-
   // Make the BYTE array, factor of 4 because it's RBGA.
   r.channels = main_window_channels;
   r.extension = "raw";

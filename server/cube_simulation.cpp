@@ -155,7 +155,6 @@ string cube_decode_message(char* message, int message_length) {
   if (cube_index >= 0 && (! cubes[cube_index].cube_remote)) return error_r;
 
   if (mt == "MoveRequest" && cube_index >= 0) {
-    if (! cubes[cube_index].cube_remote) return error_r;
     msgMoveRequest.message_type = mt;
     msgMoveRequest.sequence = sequence;
     msgMoveRequest.timestamp = timestamp;
@@ -172,7 +171,6 @@ string cube_decode_message(char* message, int message_length) {
   }
 
   if (mt == "StatusRequest" && cube_index >= 0) {
-    if (! cubes[cube_index].cube_remote) return error_r;
     msgStatusRequest.message_type = mt;
     msgStatusRequest.sequence = sequence;
     msgStatusRequest.timestamp = timestamp;
@@ -182,7 +180,6 @@ string cube_decode_message(char* message, int message_length) {
   }
   
   if (mt == "ViewRequest" && cube_index >= 0) {
-    if (! cubes[cube_index].cube_remote) return error_r;
     msgViewRequest.message_type = mt;
     msgViewRequest.sequence = sequence;
     msgViewRequest.timestamp = timestamp;
@@ -204,7 +201,6 @@ string cube_decode_message(char* message, int message_length) {
   if (ground_index >= 0 && (! grounds[ground_index].ground_remote)) return error_r;
 
   if (mt == "GroundViewRequest"  && ground_index >= 0) {
-    if (! cubes[cube_index].cube_remote) return error_r;
     msgGroundViewRequest.message_type = mt;
     msgGroundViewRequest.sequence = sequence;
     msgGroundViewRequest.timestamp = timestamp;
