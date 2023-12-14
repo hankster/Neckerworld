@@ -47,6 +47,10 @@ As predators are killed off or resources are used up they need to be replaced du
 This program uses the family of predators and the collection of resources to refresh the playing field.
 It works remotely, through the messaging system to communicate with the server.
 
+### nwview.py
+
+A utility which allows the server playing field to be viewed remotely.
+
 
 
 

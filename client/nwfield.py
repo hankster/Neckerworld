@@ -8,7 +8,7 @@ Sample usage:
 
 Complete specification:
 
- nwfield.py -a address -c cube_uuid -d -f filename -g -h -i time -p password -r -t -u username -v --address address --cube cube_uuid --debug --file=filename --game --help --iloop time --pswd=password --predator --resource --user=username --version
+ nwfield.py -a address -c cube_uuid -d -f filename -g -h -i time -p password -r -t -u username -v --address=address --cube=cube_uuid --debug --file=filename --game --help --iloop=time --pswd=password --predator --resource --user=username --version
 
  where
 
@@ -119,7 +119,7 @@ cube_texture_map_resource = [0.0, 0.0, 0.5, 0.0, 0.5, 1.0, 0.0, 1.0,
                              0.0, 0.0, 0.5, 0.0, 0.5, 1.0, 0.0, 1.0]
 
 def Usage():
-    print("Usage: nwfield.py -a addr -d -f filename -h -i time -p password -r -t -u username -v --address addressess --debug --file=filename -help --iloop time --pswd password --resource --predator --user username --version")
+    print("Usage: nwfield.py -a addr -d -f filename -h -i time -p password -r -t -u username -v --address=address --debug --file=filename -help --iloop=time --pswd=password --resource --predator --user=username --version")
 
 # Check for communications error
 def check_error(msg, response):

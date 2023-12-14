@@ -8,7 +8,7 @@ Sample usage:
 
 Complete specification:
 
- nwplay.py -a address -c cube_uuid -d -f filename -g -h -i -k -m -p password -r -s -u username -v --address address --cube cube_uuid --debug --file=filename --game --help --image --kill --mate --pswd=password --resource --sound --user=username --version
+ nwplay.py -a address -c cube_uuid -d -f filename -g -h -i -k -m -p password -r -s -u username -v --address address --cube=cube_uuid --debug --file=filename --game --help --image --kill --mate --pswd=password --resource --sound --user=username --version
 
  where
 
@@ -187,7 +187,7 @@ class_colors = {"females": "white", "males": "blue", "enbies": "purple", "predat
 bounding_box__colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green"}
 
 def Usage():
-    print("Usage: nwplay.py -a addr -c cube_uuid -d -f filename -g -h -i -m -p password -s -u username -v --address addressess --cube cube_uuid --debug --file=filename --game --help --image --move --pswd password --sound --user username --version")
+    print("Usage: nwplay.py -a addr -c cube_uuid -d -f filename -g -h -i -m -p password -s -u username -v --address=address --cube=cube_uuid --debug --file=filename --game --help --image --move --pswd=password --sound --user=username --version")
 
 # probability density function
 
