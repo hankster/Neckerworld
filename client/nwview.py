@@ -241,6 +241,7 @@ def main():
         attempts += 1
         if attempts == len(ground_ids):
             # We're done. Goodbye.    
+            print("nwview.py: Login request failed. Verify the ground UUID in use.")
             shutdown_socket(s)
             return
 
