@@ -951,8 +951,9 @@ def main():
     s = create_socket(address, port, True)
 
     response = login_request(s, sequence, username, password, cube_uuid, "")
-    if check_error("login_request", response):
+    if check_error("login_request", response) or response["message_type"] == "GoodBye":
         # We're done. Goodbye.    
+        print("nwplay.py: Login request failed. Check credentials and cube UUID in use.")
         shutdown_socket(s)
         return
 
