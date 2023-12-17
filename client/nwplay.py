@@ -141,6 +141,10 @@ GameOn = False
 vrloop = False
 sequence = 0
 
+# This is a small delay to insure we have the correct image.
+# It's a temporary fixup
+scan_delay = 2
+
 # Window variables
 
 # Cube state variables from status call
@@ -899,7 +903,9 @@ def m_test(m, mi):
 # Get sound file for our current state
 def get_sound(state, player, velocity, sdac, FR, FM, FP):
 
-    if state == "Scanning":
+    global scan_delay
+    
+    if state == "Scanning" and scan_delay == 0:
         return sounds + "/chirp-440-1320-250.wav"
     if state == "Moving":
         if sdac:

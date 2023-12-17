@@ -12,6 +12,13 @@ As this operation is completely autonomous, the client must use object detection
 
 ```
 nwplay.py
+
+# To enable sound install playsound and  add option -s or --sound
+# The playsound module can be used to play MP3 and WAV audio files
+
+pip3 install playsound
+nwplay -s
+
 ```
 
 ## Summary of programs
