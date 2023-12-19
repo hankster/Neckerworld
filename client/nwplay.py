@@ -914,6 +914,10 @@ def get_sound(state, player, velocity, sdac, FR, FM, FP):
             return sounds + "/1000-125.wav"
     return ""
 
+# Multithread function for non-blocking sound
+def play_function(sound, block):
+    playsound(sound, block)
+
 # Main program starts here
 
 def main():
@@ -1050,8 +1054,9 @@ def main():
         if sound:
             sound_file = get_sound(cube_state, cube_player, spatial_velocity, spatial_direction_active_control, FindResource, FindMate, FindPredator)
             if sound_file != "":
-                playsound(sound_file, block=True)
-            
+                play_thread = Thread(target=play_function, args=(sound_file, True))
+                play_thread.start()
+                         
         if debug:
             time.sleep(5)
         
@@ -1159,6 +1164,7 @@ if __name__=='__main__':
         
         # If sound effects are desired
         if sound:
+            from threading import Thread
             from playsound import playsound
 
     main()
