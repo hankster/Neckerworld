@@ -21,3 +21,5 @@ sudo apt-get -y install imagemagick
 # Python packages needed
 sudo python3 -m pip install tensorflow
 sudo python3 -m pip install xlib
+sudo python3 -m pip install playsound
+
