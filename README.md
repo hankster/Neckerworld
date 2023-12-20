@@ -140,6 +140,7 @@ The following packages are needed to compile and run these programs:
 * imagemagick
 * tensorflow
 * xlib
+* playsound
 
 See script "requirements.sh" for details.
 
