@@ -8,7 +8,7 @@ Sample usage:
 
 Complete specification:
 
- nwview.py -a address -d -g uuid -h -i -p password -s -u username -v --address address --debug --ground=uuid --help --image --pswd=password  --sound --user=username --version
+ nwview.py -a address -d -g uuid -h -i -p password -u username -v --address address --debug --ground=uuid --help --image --pswd=password  --user=username --version
 
  where
 
@@ -18,7 +18,6 @@ Complete specification:
  -h, --help           Print usage information
  -i, --image          Image snapshot
  -p, --pswd           Password
- -s, --sound          Enable sound
  -u, --user           Username
  -v, --version        Report program version
 
@@ -99,10 +98,6 @@ ground_scale_factor = 10.0
 # imagea we are retrieving from the server
 image = []
 
-# Sound effects
-sound = False
-sounds = "../sounds"
-
 # Options
 vrloop = False
 sequence = 0
@@ -113,7 +108,7 @@ sequence = 0
 status_message = ""
 
 def Usage():
-    print("Usage: nwview.py -a addr -d -g uuid -h -i -p password -s -u username -v --address=address --debug --ground=uuid --help --image --pswd=password --sound --user=username --version")
+    print("Usage: nwview.py -a addr -d -g uuid -h -i -p password -u username -v --address=address --debug --ground=uuid --help --image --pswd=password --user=username --version")
 
 # Create our display window
 def display_window(name, uuid):
@@ -191,10 +186,6 @@ def check_error(msg, response):
         print("nwview.py: %s - Error - %s" % (msg, response["error"]))
         return True
     return False
-
-# Get sound file for our current state
-def get_sound(state, player, velocity, sdac, FR, FM, FP):
-    return ""
 
 # Main program starts here
 
@@ -304,12 +295,6 @@ def main():
         # Update the field display window
         window.update()
 
-        # Play a sound
-        if sound:
-            sound_file = get_sound(cube_state, cube_player, spatial_velocity, spatial_direction_active_control, FindResource, FindMate, FindPredator)
-            if sound_file != "":
-                playsound(sound_file, block=True)
-            
         if debug:
             time.sleep(5)
         
@@ -350,17 +335,12 @@ if __name__=='__main__':
             image_snapshot = True
         if o in ("-p", "--pswd"):
             password = a
-        if o in ("-s", "--sound"):
-            sound = True
         if o in ("-u", "--user"):
             username = a
         if o in ("-v", "--version"):
             print("nwview.py Version 1.0")
             sys.exit()
         
-        # If sound effects are desired
-        if sound:
-            from playsound import playsound
 
     main()
     sys.exit()
