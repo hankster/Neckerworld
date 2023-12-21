@@ -315,7 +315,7 @@ if __name__=='__main__':
     #                                                                                            
 
     try:
-        options, args = getopt.getopt(sys.argv[1:], 'a:dg:hip:su:v', ['address=','debug','ground=','help','image', 'pswd=','sound','user=','version'])
+        options, args = getopt.getopt(sys.argv[1:], 'a:dg:hip:u:v', ['address=','debug','ground=','help','image', 'pswd=','user=','version'])
     except getopt.GetoptError:
         Usage()
         sys.exit(2)
