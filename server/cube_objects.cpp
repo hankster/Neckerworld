@@ -341,6 +341,9 @@ int new_cube(int nc, string cube_player, string cube_uuid, string cube_emoticon,
   /* Initial resource energy */
   cubes[nc].resource_energy = resource_energy;
 
+  // Record the starting waypoint
+  cube_update_waypoints(nc, IDLE);
+
   return 0;
 
 }
@@ -628,6 +631,7 @@ void cube_move_to_target(int me, int target) {
     cube_update_view(me);
     cube_update_mvp(me);
     cubes[me].spatial_velocity = d/10.0;
+    //cube_update_waypoints(me, MOVEMENT);
 }
 
 // Update the position for a cube
@@ -658,6 +662,10 @@ void cube_update_position(int i) {
       // printf("cube.cpp: %8s %2d out of bounds - stopping.\n", &cubes[i].cube_player[0], i);
       cubes[i].spatial_velocity = 0.0;
       cubes[i].spatial_position_blocked = true;
+
+      // Record the blocked waypoint
+      cube_update_waypoints(i, BLOCKED);
+
       return;
     }
 
@@ -722,6 +730,9 @@ void cube_block_position(int i) {
     cube_update_mvp(i);
     // Set the blocked flag
     cubes[i].spatial_position_blocked = true;
+    // Record the blocked waypoint
+    cube_update_waypoints(i, BLOCKED);
+
     // printf("cube.cpp New move blocked for %d\n", i);
   }
 }
@@ -752,10 +763,27 @@ int cube_remote_move(int i, float angle, float direction, bool direction_active,
   // Update our gaze as requested
   cubes[i].spatial_gaze = gaze;
 
+  // Record the starting waypoint
+  cube_update_waypoints(i, MOVEMENT);
+
   // Now make our move
   cube_update_position(i);
   
   return 0;
+}
+
+
+// Update the waypoint list
+void cube_update_waypoints(int i, int waypoint_event) {
+
+  spatial_waypoint w;
+
+  w.seconds = time(NULL);
+  w.spatial_event = waypoint_event;
+  w.spatial_position = cubes[i].spatial_position;
+  w.spatial_position_blocked = cubes[i].spatial_position_blocked;
+  cubes[i].spatial_waypoints.push_back(w);
+  
 }
 
 

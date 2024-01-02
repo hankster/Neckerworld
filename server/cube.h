@@ -1,5 +1,18 @@
 /* Structures and Function prototypes for cube.cpp */
 
+/* Spatial Waypoint definition */
+struct spatial_waypoint {
+  time_t seconds;
+  int spatial_event;
+  bool spatial_position_blocked;
+  glm::vec3 spatial_position;
+};
+
+#define IDLE 0 
+#define MOVEMENT 1
+#define BLOCKED 2
+#define REVERSE 3
+
 /* Structure to hold object description and state. */
 struct Cube {
   GLuint vbo_cube_vertices;
@@ -40,6 +53,7 @@ struct Cube {
   GLfloat spatial_velocity;
   GLint spatial_position_timer;
   bool spatial_position_blocked;
+  std::vector<spatial_waypoint> spatial_waypoints;
   GLint life_target_male;
   GLint life_target_female;
   time_t life_birth;
@@ -338,6 +352,7 @@ GLfloat cube_distance(int i, int j);
 void cube_move_to_target(int i, int target);
 void cube_block_position(int i);
 int cube_remote_move(int cube_index, float angle, float direction, bool direction_active, float distance, float velocity, glm::vec2 gaze);
+void cube_update_waypoints(int i, int waypoint_event);
 
 // UUID
 int cube_get_index(string uuid);
@@ -392,7 +407,7 @@ void strategy_resource(int i);
 #define DEFAULT_FPS 6.5
 
 /* Cube genrating parameters */
-#define NC 30
+#define NC 50
 
 /* Wire cube generating parameters */
 #define NW 20
@@ -407,7 +422,7 @@ void strategy_resource(int i);
 #define NM 5
 
 /* Texture related definitions*/
-#define NT 32
+#define NT 52
 
 // Motion related
 #define VELOCITY_MAX 5.0

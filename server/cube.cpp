@@ -178,6 +178,10 @@ double frame_time;
 /* Screen shot number */
 int screenshot_number = 0;
 
+/* Waypoint printout (the "breadcrumbs") */
+bool waypoints = false;
+string way_events[] = {"Idle", "Move", "Blocked", "Reverse"};
+
 // Define a static variable for key processing related to cubes
 int cube_key = 0;
 bool cube_key_active = false;
@@ -212,14 +216,15 @@ float pi = 3.14159265358979323846;
 
 void Usage()
 {
-  fprintf(stdout, "Usage: cube -a delay -c 0/1 -d level -f filename -g 0/1 -j jsonfile -h -n 0/1 -p -r 1-4 -t -v -w 0/1 -x windowwidth -y windowheight jsonfile [...jsonfile]\n"
+  fprintf(stdout, "Usage: cube -a delay -b 0/1 -c 0/1 -d level -f filename -g 0/1 -j jsonfile -h -n 0/1 -p -r 1-4 -t -v -w 0/1 -x windowwidth -y windowheight jsonfile [...jsonfile]\n"
 	  "where\n"
 	  "\t-a delay\tAdd 'delay' frames before returning a view request, default=0 (this is a hack).\n"
 	  "\t-c 0/1\t\tDisplay cubes, default=1 or true.\n"
+	  "\t-b 0/1\t\tBreadcrumb (waypoints) printout, default=0 or false.\n"
 	  "\t-d level\tSet debug level, default=0.\n"
 	  "\t-f filename\tNot used.\n"
 	  "\t-g 0/1\t\tDisplay grounds, default=1 or true.\n"
-	  "\t-j jsonfile\tName of the JSON file to process (not used).\n"
+	  "\t-j jsonfile\tName of the JSON file to process (not used)\n"
 	  "\t-h\t\tPrint out parameter help.\n"
 	  "\t-n 0/1\t\tDisplay cube face normals, default=0.\n"
 	  "\t-p\t\tSet position=1 for cube spin.\n"
@@ -564,11 +569,16 @@ int main(int argc, char* argv[]) {
 
   opterr = 0;
 
-  while ((c = getopt (argc, argv, "a:c:d:f:g:hj:n:pr:tvw:x:y:")) != -1)
+  while ((c = getopt (argc, argv, "a:b:c:d:f:g:hj:n:pr:tvw:x:y:")) != -1)
     switch (c)
       {
       case 'a':
 	sscanf(optarg, "%d", &capture_delay);
+        break;
+      case 'b':
+	int w;
+	sscanf(optarg, "%d", &w);
+	waypoints = (w==1?true:false);
         break;
       case 'c':
 	sscanf(optarg, "%d", &display_cubes);
@@ -634,8 +644,8 @@ int main(int argc, char* argv[]) {
         abort();
       }
 
-  printf("cube.cpp: options -  debug=%d, filename=%s, display_cubes=%d, display_grounds=%d, display_normals=%d\ncube.cpp: options -  position=%d, display_rotation=%d display_wires=%d, main_window_width=%d, main_window_height=%d\n",
-	 debug, filename, display_cubes, display_grounds, display_normals, position, display_rotation, display_wires, main_window_width, main_window_height);
+  printf("cube.cpp: options -  debug=%d, filename=%s, display_cubes=%d, display_grounds=%d, display_normals=%d\ncube.cpp: options -  position=%d, display_rotation=%d display_wires=%d, main_window_width=%d, main_window_height=%d, waypoints=%d\n",
+	 debug, filename, display_cubes, display_grounds, display_normals, position, display_rotation, display_wires, main_window_width, main_window_height, waypoints);
 
   // glfw: initialize and configure
   if (!glfwInit())
@@ -1064,9 +1074,17 @@ int main(int argc, char* argv[]) {
   // Print a status report
   time_t time_now = time(NULL);
   double age;
+  std::ofstream wf;
+  char wfbuf[1024];
 
   printf("cube.cpp: cube   type health energy         age        score        (  mate,   food,   kill) state\n");
 
+  // Open waypoints file if requested
+  if (waypoints) {
+    wf.open("waypoints.tsv", ios::out);
+    wf << "Cube\tTime\tEvent\tBlock\tX\tY\tZ\n";
+  }
+  
   for (int i=0; i < n_cubes; ++i) {
 
     float total_points = 0.0;
@@ -1087,7 +1105,21 @@ int main(int argc, char* argv[]) {
     } else {
       printf("cube.cpp: %2d %8s, %s energy %7.2f age %6.1f score %6.1f (%6.1f, %6.1f, %6.1f)\n", i, &cubes[i].cube_player[0], cubes[i].cube_active ? "alive" : "dead ", cubes[i].resource_energy, age, total_points, mate_points, food_points, kill_points);
     }
+
+    // Write all waypoints for a cube to a tab-separated file
+    if (waypoints) {
+      for (int j=0; j < cubes[i].spatial_waypoints.size(); ++j) {
+	sprintf(wfbuf, "%d\t%ld\t%s\t%d\t%3.3f\t%3.3f\t%3.3f\n",
+                          i, cubes[i].spatial_waypoints[j].seconds, way_events[cubes[i].spatial_waypoints[j].spatial_event].c_str(), cubes[i].spatial_waypoints[j].spatial_position_blocked,
+                          cubes[i].spatial_waypoints[j].spatial_position[0], cubes[i].spatial_waypoints[j].spatial_position[1], cubes[i].spatial_waypoints[j].spatial_position[2]);
+	wf << string(wfbuf);
+      }
+    }
+
   }
+
+  // Open waypoints file if requested
+  if (waypoints) wf.close();
   
   return 0;
 
