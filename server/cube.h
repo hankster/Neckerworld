@@ -19,69 +19,69 @@ struct Cube {
   GLuint vbo_cube_normals;
   GLuint vbo_cube_texture_map_coords;
   GLuint ibo_cube_elements;
-  GLuint timestamp;
-  int cube_index;
-  string cube_player;
-  string cube_uuid;
-  string cube_emoticon;
-  string cube_firstname;
-  bool cube_active;
-  bool cube_display;
-  bool cube_remote;
-  GLfloat cube_scale_factor;
-  glm::mat4 cube_scale;
-  GLint cube_type;
-  string cube_color_class;
-  glm::vec4 cube_color;
-  GLint cube_material;
-  string cube_surface;
-  GLint cube_texture_index;
-  GLfloat cube_texture_map[6*4*2];
+  GLuint timestamp; // Time of birth in seconds.
+  int cube_index; // Index number in the list of cubes.
+  string cube_player; // Class of players for this cube ("male", "female", ...).
+  string cube_uuid; // Unique ID for this cube.
+  string cube_emoticon; // Emotican for the cube face.
+  string cube_firstname; // Cube's nickname.
+  bool cube_active; // Cube is an active participant in the game.
+  bool cube_display;  // Display this cube on the playing field.
+  bool cube_remote; // Cube is under remote control of a client program.
+  GLfloat cube_scale_factor; // Size of a cube (default 0.5 to 1.2).
+  glm::mat4 cube_scale; // Scaler matrix.
+  GLint cube_type; // Characteristic structure for this cube.
+  string cube_color_class; // Color class ("blue", "white", ...).
+  glm::vec4 cube_color; // Specific color for cube skin.
+  GLint cube_material; // Material property for cube surfaces.
+  string cube_surface; // Description of cube surface texture.
+  GLint cube_texture_index; // Texture used for the cubbe skins.
+  GLfloat cube_texture_map[6*4*2]; // Texture mapping coordinaates.
   //cube_parameters    { ... }
-  glm::vec3 spatial_position;
-  glm::vec3 spatial_position_previous;
-  glm::mat4 spatial_translation;
-  glm::vec3 spatial_rotation;
-  glm::mat4 spatial_rotation_matrix;
-  float spatial_direction;
-  bool spatial_direction_active;
-  glm::vec2 spatial_gaze;
-  GLfloat spatial_radius;
-  glm::vec3 spatial_destination;
-  GLfloat spatial_distance;
-  GLfloat spatial_distance_previous;
-  GLfloat spatial_velocity;
-  GLint spatial_position_timer;
-  bool spatial_position_blocked;
-  std::vector<spatial_waypoint> spatial_waypoints;
-  GLint life_target_male;
+  glm::vec3 spatial_position; // Location in space for the cube.
+  glm::vec3 spatial_position_previous; // Previous location (needed for collision checkingand blocked testing).
+  glm::mat4 spatial_translation; // Matrix for translation.
+  glm::vec3 spatial_rotation; // Rotation angles.
+  glm::mat4 spatial_rotation_matrix; // Rotation matrix.
+  float spatial_direction; // Direction to travel (used only during a backup operation). Spatial rotation Y defines normal direction of travel.
+  bool spatial_direction_active; // When true, direction of travel is set by spatial_direction (otherwise spatial rotation).
+  glm::vec2 spatial_gaze; // Horizontal and vertical view angle (yaw, pitch). Allows cube to look around without moving.
+  GLfloat spatial_radius; // Minimal distance from the center of a cube to enclose it (i.e. 1/2 diagonal).
+  glm::vec3 spatial_destination; // Target location.
+  GLfloat spatial_distance; // Desired distance to travel.
+  GLfloat spatial_distance_previous; // Distance to travel previous (needed for collisions and backups).
+  GLfloat spatial_velocity; // Speed at which cube will travel.
+  GLint spatial_position_timer; // Timer to countdown a backup move. Blocking collisions are discarded.
+  bool spatial_position_blocked; // Cube has stopped after hitting another cube or running off the edge of the playing field.
+  std::vector<spatial_waypoint> spatial_waypoints; // List of recorded positions (for waypoints.tsv)
+  GLint life_target_male; 
   GLint life_target_female;
-  time_t life_birth;
-  time_t life_death;
-  string life_father;
-  string life_mother;
-  std::vector<std::string> life_mates;
-  std::vector<std::string> life_children;
-  std::vector<time_t> life_mate_times;
-  std::vector<GLfloat> life_energy;
+  time_t life_birth; // Time of birth.
+  time_t life_death; // Time of death
+  string life_father; // Father's UUID.
+  string life_mother; // Mother's UUID
+  std::vector<std::string> life_mates; // List of mates.
+  std::vector<std::string> life_children; // Progeny
+  std::vector<time_t> life_mate_times; // When mating was done.
+  std::vector<GLfloat> life_energy; // Energy lost.
   GLint resource_target;
-  GLfloat resource_energy;
-  std::vector<std::string> resource_list;
-  std::vector<time_t> resource_times;
-  std::vector<GLfloat>resource_capture;
-  GLint match_target;
-  std::vector<std::string> match_opponent;
-  std::vector<time_t> match_times;
-  std::vector<GLfloat> match_energy;
-  std::vector<bool> match_results;
-  GLfloat bounding_box[4];
-  GLint paintball_count;
-  GLint paintball_type;
-  glm::vec3 paintball_color;
-  GLfloat paintball_bearing;
-  GLfloat paintball_elevation;
-  glm::mat4 cube_model;
-  glm::mat4 cube_mvp;
+  GLfloat resource_energy; // Energy meter.
+  std::vector<std::string> resource_list; // List of resources visited.
+  std::vector<time_t> resource_times; // Times when resources were visited.
+  std::vector<GLfloat>resource_capture; // Resource energy captured.
+  GLint match_target; // Cube index for current target.
+  std::vector<std::string> match_opponent; // UUID of opponents encountered.
+  std::vector<time_t> match_times; // Times for combat.
+  std::vector<GLfloat> match_energy; // Energy gained from combat.
+  std::vector<bool> match_results; // Who won.
+  GLfloat bounding_box[4]; // Bounding box coordinates.
+  GLint paintball_count; // Experimental, not yet implemented.
+  GLint paintball_type; // Experimental, not yet implemented.
+  glm::vec3 paintball_color; // Experimental, not yet implemented.
+  GLfloat paintball_bearing; // Experimental, not yet implemented.
+  GLfloat paintball_elevation; // Experimental, not yet implemented.
+  glm::mat4 cube_model; // Matrix for current cube model.
+  glm::mat4 cube_mvp; // Matrix for current model * view * position.
 };
 
 struct Wire {
