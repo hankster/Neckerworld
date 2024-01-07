@@ -23,7 +23,7 @@ struct Cube {
   int cube_index; // Index number in the list of cubes.
   string cube_player; // Class of players for this cube ("male", "female", ...).
   string cube_uuid; // Unique ID for this cube.
-  string cube_emoticon; // Emotican for the cube face.
+  string cube_emoticon; // Emoticon for the cube face.
   string cube_firstname; // Cube's nickname.
   bool cube_active; // Cube is an active participant in the game.
   bool cube_display;  // Display this cube on the playing field.
@@ -35,11 +35,11 @@ struct Cube {
   glm::vec4 cube_color; // Specific color for cube skin.
   GLint cube_material; // Material property for cube surfaces.
   string cube_surface; // Description of cube surface texture.
-  GLint cube_texture_index; // Texture used for the cubbe skins.
-  GLfloat cube_texture_map[6*4*2]; // Texture mapping coordinaates.
+  GLint cube_texture_index; // Texture used for the cube skins.
+  GLfloat cube_texture_map[6*4*2]; // Texture mapping coordinates.
   //cube_parameters    { ... }
   glm::vec3 spatial_position; // Location in space for the cube.
-  glm::vec3 spatial_position_previous; // Previous location (needed for collision checkingand blocked testing).
+  glm::vec3 spatial_position_previous; // Previous location (needed for collision checking and blocked testing).
   glm::mat4 spatial_translation; // Matrix for translation.
   glm::vec3 spatial_rotation; // Rotation angles.
   glm::mat4 spatial_rotation_matrix; // Rotation matrix.
@@ -81,7 +81,7 @@ struct Cube {
   GLfloat paintball_bearing; // Experimental, not yet implemented.
   GLfloat paintball_elevation; // Experimental, not yet implemented.
   glm::mat4 cube_model; // Matrix for current cube model.
-  glm::mat4 cube_mvp; // Matrix for current model * view * position.
+  glm::mat4 cube_mvp; // Matrix for current (model * view * position).
 };
 
 struct Wire {
