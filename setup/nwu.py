@@ -586,7 +586,7 @@ def new_cube_from_list_initialize():
     return cube_database
 
 # Lookup cube description from cubedata.csv
-def new_cube_from_list(cube_database, cube_index, cube_player, cube_player_index, cube_x, cube_z, ground_scale_factor, number_ground_textures):
+def new_cube_from_list(cube_database, cube_index, cube_player, cube_player_index, cube_x, cube_z, cube_angle, ground_scale_factor, number_ground_textures):
 
     # dataset,cube_player,cube_uuid,cube_emoticon,cube_firstname,cube_scale_factor,cube_type,cube_color_class,cube_color[0],cube_color[1],cube_color[2],cube_material,cube_surface,spatial_position[0],spatial_position[1],spatial_position[2],spatial_radius,resource_energy,texture_filename
     # female-1f31d,female,9c220cfb-e22e-40ac-bfc4-09fd40bd5fa8,1f31d,Mary,0.53965,3,w,0.63137,0.63137,0.63137,0,,0.00000,0.54065,0.00000,0.76318,100.00000,training/textures/1f31d-texture.png
@@ -611,7 +611,7 @@ def new_cube_from_list(cube_database, cube_index, cube_player, cube_player_index
     cube_parameters = {}
 
     spatial_position = [cube_x, float(cd[14]), cube_z] 
-    spatial_rotation = [0.0, 0.0, 0.0]
+    spatial_rotation = [0.0, cube_angle, 0.0]
     spatial_radius = float(cd[16])
     spatial_gaze = [0.0, 0.0]
     spatial_destination = [0.0, 0.0, 0.0]
@@ -654,8 +654,9 @@ def setup_cubelist(cubelist, ground_scale_factor, number_ground_textures):
             cube_player_index = int(cube_parameters[2])
             cube_x = float(cube_parameters[3])
             cube_z = float(cube_parameters[4])
-            print("nwu.py: Creating cube %d which is a %s using list item %d at (%0.2f, %0.2f)" % (cube_index, cube_player, cube_player_index, cube_x, cube_z))
-            cube = new_cube_from_list(cube_database, cube_index, cube_player, cube_player_index, cube_x, cube_z, ground_scale_factor, number_ground_textures)
+            cube_angle = float(cube_parameters[5])
+            print("nwu.py: Creating cube %d which is a %s using list item %d at (%0.2f, %0.2f) facing %0.2f" % (cube_index, cube_player, cube_player_index, cube_x, cube_z, cube_angle))
+            cube = new_cube_from_list(cube_database, cube_index, cube_player, cube_player_index, cube_x, cube_z, cube_angle, ground_scale_factor, number_ground_textures)
             cubeList.append(cube)
 
     return cubeList

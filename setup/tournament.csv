@@ -1,20 +1,20 @@
-Player	Type	Index	Position X	Position Z
-0	male	0	0	0
-1	male	1	-35	-35
-2	female	0	20	-15
-3	female	1	-20	-15
-4	enby	0	-25	-15
-5	enby	1	25	-15
-6	enby	2	15	15
-7	predator	0	-30	-20
-8	predator	1	-30	20
-9	predator	2	30	-20
-10	predator	3	30	20
-11	resource	0	-25	-25
-12	resource	1	-25	0
-13	resource	2	0	-25
-14	resource	3	25	25
-15	resource	4	-25	25
-16	resource	5	25	-25
-17	resource	6	25	0
-18	resource	7	0	25
+Player	Type	Index	Position X	Position Z	Angle
+0	male	0	0.00	0.00	0.00
+1	male	1	-35.00	-35.00	0.00
+2	female	0	20.00	-15.00	0.00
+3	female	1	-20.00	-15.00	0.00
+4	enby	0	-25.00	-15.00	0.00
+5	enby	1	25.00	-15.00	0.00
+6	enby	2	15.00	15.00	0.00
+7	predator	0	-30.00	-30.00	0.00
+8	predator	1	-30.00	30.00	0.00
+9	predator	2	30.00	-30.00	0.00
+10	predator	3	30.00	30.00	0.00
+11	resource	0	-25.00	-25.00	0.00
+12	resource	1	-25.00	0.00	0.00
+13	resource	2	0.00	-25.00	0.00
+14	resource	3	25.00	25.00	0.00
+15	resource	4	-25.00	25.00	0.00
+16	resource	5	25.00	-25.00	0.00
+17	resource	6	25.00	0.00	0.00
+18	resource	7	0.00	25.00	0.00
