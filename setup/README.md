@@ -35,9 +35,13 @@ The json file created by running nwtest.py.
 This is a small field with five objects used for testing and debugging programs.
 
 ### nwtest.csv
-The tab-separated file which creeates a playing field similar to nwrest.py.
-It's designed to be used with the --cubelist=test.csv option for nw.py.
-This is a small field with five objects used for testing and debugging programs.
+A tab-separated file which creates a wide playing field similar to nwtest.py.
+It's designed to be used with the --cubelist=nwtest.csv option in nw.py.
+This is a wide (large width and depth) field with five objects used for testing and debugging programs.
+To control the male cube, invoke nwplay.py with its unique UUID:
+```
+nwplay.py -c a5ba491d-85a9-4736-bc60-c39adc12a723
+```
 
 ### tournament.csv
 This is a spreadsheet file (tab separated) which may be used to create a game with a specified number of cubes taken from the standard list of game cubes (see "/training/cubedata.csv").
