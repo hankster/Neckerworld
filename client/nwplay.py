@@ -150,7 +150,10 @@ scan_delay = 2
 # Cube state variables from status call
 # These are updated from the playing field server
 cube_player = ""
-cube_uuid = '1354b75f-9ca5-4da5-80b2-8f0056f9e08e'
+cube_uuid = ""
+cube_uuid_option = ""
+cube_uuid_list = []
+cube_uuid_favorites = ['1354b75f-9ca5-4da5-80b2-8f0056f9e08e', 'a5ba491d-85a9-4736-bc60-c39adc12a723']
 cube_firstname = ""
 cube_active = True
 spatial_angle = 0.0
@@ -931,6 +934,7 @@ def main():
     global image_snapshot
     global vrloop
     global FindMate, FindResource, FindPredator, GameOn
+    global cube_uuid, cube_uuid_option, cube_uuid_list, cube_uuid_favorites
     global cube_state
     global scan_state_control
     global spatial_angle_control
@@ -954,18 +958,37 @@ def main():
     if debug :
         print('Display: width = %d, height = %d' % (displayWidth, displayHeight))
 
-    # Create a named window
-    window = display_window(cube_uuid)
-
     # Create an inet, streaming socket with blocking
     s = create_socket(address, port, True)
 
-    response = login_request(s, sequence, username, password, cube_uuid, "")
-    if check_error("login_request", response) or response["message_type"] == "GoodBye":
+    # If user has specified a uuid, use it
+    if cube_uuid_option != "":
+        cube_uuid_list = [cube_uuid_option]
+    # Otherwise, try some of our standard cube uuid's
+    else:
+        cube_uuid_list = cube_uuid_favorites
+
+    for uuid in cube_uuid_list:
+        response = login_request(s, sequence, username, password, uuid, "")
+        # If this login attempt failed
+        if check_error("login_request", response) or response["message_type"] == "GoodBye":
+            continue
+        # We're good to go
+        else:
+            cube_uuid = uuid
+            break
+        
+    # If we failed to login, exit
+    if cube_uuid == "":
         # We're done. Goodbye.    
         print("nwplay.py: Login request failed. Check credentials and cube UUID in use.")
         shutdown_socket(s)
         return
+    else:
+        print("nwplay.py: Login completed with cube UUID %s" % cube_uuid)
+
+    # Create a named window
+    window = display_window(cube_uuid)
 
     if "ground_scale_factor" in response.keys():
         ground_scale_factor = response["ground_scale_factor"]
@@ -1133,7 +1156,7 @@ if __name__=='__main__':
         if o in ("-a", "--address"):
             address = a
         if o in ("-c", "--cube"):
-            cube_uuid = a
+            cube_uuid_option = a
         if o in ("-d", "--debug"):
             debug = True
             nwmessage_debug(debug)
