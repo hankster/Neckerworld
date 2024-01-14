@@ -1,0 +1,175 @@
+dataset	cube_player	cube_uuid	cube_emoticon	cube_firstname	cube_scale_factor	cube_type	cube_color_class	cube_color[0]	cube_color[1]	cube_color[2]	cube_material	cube_surface	spatial_position[0]	spatial_position[1]	spatial_position[2]	spatial_radius	resource_energy	texture_filename
+female-1f31d	female	9c220cfb-e22e-40ac-bfc4-09fd40bd5fa8	1f31d	Mary	0.53965	3	w	0.63137	0.63137	0.63137	0		0	0.54065	0	0.76318	100	training/textures/1f31d-texture.png
+female-1f31e	female	1e2a7d1f-bb71-4b78-aee8-72487a7a91d9	1f31e	Anna	1.16329	3	w	0.64314	0.64314	0.64314	0		0	1.16429	0	1.64515	100	training/textures/1f31e-texture.png
+female-1f600	female	027cb24d-2866-4873-a488-7b16511f3065	1f600	Emma	1.09648	3	w	0.80000	0.80000	0.80000	0		0	1.09748	0	1.55066	100	training/textures/1f600-texture.png
+female-1f602	female	4e879950-e97e-4937-a9f4-48d17de5b7d1	1f602	Elizabeth	0.57385	3	w	0.66667	0.66667	0.66667	0		0	0.57485	0	0.81155	100	training/textures/1f602-texture.png
+female-1f605	female	07cc469f-afc8-4470-bd1f-a2d53f46303c	1f605	Minnie	1.17795	3	w	0.77255	0.77255	0.77255	0		0	1.17895	0	1.66587	100	training/textures/1f605-texture.png
+female-1f607	female	df2c8f11-9139-44f0-aa9b-3fd8d66ef4f2	1f607	Margaret	0.98379	3	w	0.85882	0.85882	0.85882	0		0	0.98479	0	1.39129	100	training/textures/1f607-texture.png
+female-1f60c	female	9a8328ff-4269-41c5-97a8-dc8cb917e645	1f60c	Ida	1.07632	3	w	0.94902	0.94902	0.94902	0		0	1.07732	0	1.52214	100	training/textures/1f60c-texture.png
+female-1f60d	female	8fc445e3-89c6-4830-8606-469d782248d0	1f60d	Alice	1.18003	3	w	0.83922	0.83922	0.83922	0		0	1.18103	0	1.66881	100	training/textures/1f60d-texture.png
+female-1f60f	female	d2606760-2020-4e79-8db9-db3d09d14224	1f60f	Bertha	0.51897	3	w	0.63922	0.63922	0.63922	0		0	0.51997	0	0.73393	100	training/textures/1f60f-texture.png
+female-1f613	female	a63f6f7b-3e06-4395-862d-8547c5d7b4f1	1f613	Sarah	0.62025	3	w	0.66667	0.66667	0.66667	0		0	0.62125	0	0.87716	100	training/textures/1f613-texture.png
+female-1f614	female	826ee82b-754b-4f6e-90db-d0f0954ece85	1f614	Annie	0.92105	3	w	0.71765	0.71765	0.71765	0		0	0.92205	0	1.30257	100	training/textures/1f614-texture.png
+female-1f618	female	8b4c0943-2701-4ed5-82b2-05ca96320f01	1f618	Clara	1.15190	3	w	0.88235	0.88235	0.88235	0		0	1.1529	0	1.62903	100	training/textures/1f618-texture.png
+female-1f61e	female	0d9cce12-b51b-4184-b32b-bb9eeeecfbb7	1f61e	Ella	0.53668	3	w	0.64706	0.64706	0.64706	0		0	0.53768	0	0.75898	100	training/textures/1f61e-texture.png
+female-1f61f	female	ddc3094b-dd35-4758-bcfc-f265c71f2431	1f61f	Florence	0.77934	3	w	0.72157	0.72157	0.72157	0		0	0.78034	0	1.10215	100	training/textures/1f61f-texture.png
+female-1f622	female	7176d17a-5a11-41f3-9748-c2c993c99257	1f622	Cora	1.10822	3	w	0.83137	0.83137	0.83137	0		0	1.10922	0	1.56726	100	training/textures/1f622-texture.png
+female-1f623	female	ae88c38f-5203-40f2-b8fe-dfb1e1366c80	1f623	Martha	1.06785	3	w	0.80392	0.80392	0.80392	0		0	1.06885	0	1.51016	100	training/textures/1f623-texture.png
+female-1f625	female	44d9d229-6e8b-4718-8dfd-f472bc8b5f2c	1f625	Laura	0.88005	3	w	0.72157	0.72157	0.72157	0		0	0.88105	0	1.24457	100	training/textures/1f625-texture.png
+female-1f626	female	e9d7b8ff-80f4-41ad-b48f-68e935262daa	1f626	Nellie	0.58248	3	w	0.84314	0.84314	0.84314	0		0	0.58348	0	0.82375	100	training/textures/1f626-texture.png
+female-1f627	female	065d7b6b-69ab-4dcd-87a9-62fb1e00d02f	1f627	Grace	1.12070	3	w	0.88627	0.88627	0.88627	0		0	1.1217	0	1.5849	100	training/textures/1f627-texture.png
+female-1f628	female	c02ade6a-bd0b-41bf-bde6-489bc3fa849e	1f628	Carrie	1.17521	3	w	0.78431	0.78431	0.78431	0		0	1.17621	0	1.66199	100	training/textures/1f628-texture.png
+female-1f62a	female	19e19646-d3f8-43b1-8157-53224c72b939	1f62a	Maude	0.69583	3	w	0.81176	0.81176	0.81176	0		0	0.69683	0	0.98406	100	training/textures/1f62a-texture.png
+female-1f62b	female	4d9b8d68-c754-4c3a-a38c-452b161513b3	1f62b	Mabel	0.65153	3	w	0.92157	0.92157	0.92157	0		0	0.65253	0	0.92141	100	training/textures/1f62b-texture.png
+female-1f62d	female	f2c93f62-14d6-4474-9e09-11c84c046304	1f62d	Bessie	0.62800	3	w	0.77647	0.77647	0.77647	0		0	0.629	0	0.88812	100	training/textures/1f62d-texture.png
+female-1f62e	female	eb11154a-c565-4021-afbc-8620d3f9527f	1f62e	Jennie	1.07188	3	w	0.87451	0.87451	0.87451	0		0	1.07288	0	1.51587	100	training/textures/1f62e-texture.png
+female-1f62f	female	4ff289a6-9b2e-4afe-b5c6-2da49d3cdf9f	1f62f	Gertrude	0.96886	3	w	0.66667	0.66667	0.66667	0		0	0.96986	0	1.37018	100	training/textures/1f62f-texture.png
+female-1f630	female	8d9fd9ba-4f46-45f2-af82-f327b248d64b	1f630	Julia	1.15654	3	w	0.89020	0.89020	0.89020	0		0	1.15754	0	1.63559	100	training/textures/1f630-texture.png
+female-1f632	female	1bb0f16b-bcc3-4fd9-8708-45820172c43c	1f632	Hattie	0.51319	3	w	0.78824	0.78824	0.78824	0		0	0.51419	0	0.72576	100	training/textures/1f632-texture.png
+female-1f637	female	5da1cf04-f4a4-4bff-98d7-c802fc9958e3	1f637	Edith	0.99880	3	w	0.70588	0.70588	0.70588	0		0	0.9998	0	1.41251	100	training/textures/1f637-texture.png
+female-1f643	female	eb73f3dc-6635-4cac-ba5d-5eb2114333bc	1f643	Mattie	1.12100	3	w	0.83529	0.83529	0.83529	0		0	1.122	0	1.58533	100	training/textures/1f643-texture.png
+female-1f910	female	5a779a80-fcd2-4d9a-a8ef-fa9a1bd910f6	1f910	Rose	0.65748	3	w	0.92157	0.92157	0.92157	0		0	0.65848	0	0.92982	100	training/textures/1f910-texture.png
+female-1f912	female	f66752c2-b1c8-4ac6-9b43-163783cf755b	1f912	Catherine	0.75360	3	w	0.74902	0.74902	0.74902	0		0	0.7546	0	1.06576	100	training/textures/1f912-texture.png
+female-1f915	female	1d7f8c92-81a6-4bc5-b05f-1925babef0dc	1f915	Lillian	0.58702	3	w	0.75686	0.75686	0.75686	0		0	0.58802	0	0.83017	100	training/textures/1f915-texture.png
+female-1f923	female	26ab6dac-5506-4766-9013-61d6c77b9d00	1f923	Ada	0.91899	3	w	0.98824	0.98824	0.98824	0		0	0.91999	0	1.29965	100	training/textures/1f923-texture.png
+female-1f924	female	fcd7792f-aba7-4a46-a4ba-8c01b4e6cfcb	1f924	Lillie	0.59189	3	w	0.98431	0.98431	0.98431	0		0	0.59289	0	0.83706	100	training/textures/1f924-texture.png
+female-1f929	female	fd48f9ff-2aa4-457b-ba52-7d2e4f2ff30a	1f929	Helen	0.61258	3	w	0.67451	0.67451	0.67451	0		0	0.61358	0	0.86632	100	training/textures/1f929-texture.png
+female-1f972	female	eedb5fe7-dacf-4f79-96bc-42d6dc0e979c	1f972	Jessie	1.02133	3	w	0.89412	0.89412	0.89412	0		0	1.02233	0	1.44438	100	training/textures/1f972-texture.png
+male-1f601	male	c09c7471-3842-4436-b86f-c03cbb34ad0c	1f601	John	0.83105	3	b	0.12941	0.18824	0.83529	0		0	0.83205	0	1.17529	100	training/textures/1f601-texture.png
+male-1f603	male	cc5f7e30-a38f-447b-8ed3-c6e619d6581a	1f603	William	0.70637	3	b	0.26667	0.03529	0.75294	0		0	0.70737	0	0.99896	100	training/textures/1f603-texture.png
+male-1f604	male	d030e686-e864-464a-b919-25992e2c44c1	1f604	James	1.14308	3	b	0.23137	0.16863	0.71373	0		0	1.14408	0	1.61656	100	training/textures/1f604-texture.png
+male-1f606	male	2951d21e-d2d7-4714-aabd-3974031cd28c	1f606	Charles	0.57200	3	b	0.01176	0.32941	0.71765	0		0	0.573	0	0.80892	100	training/textures/1f606-texture.png
+male-1f608	male	e5ca862a-a888-45ec-86d7-ffc304518a58	1f608	George	1.11406	3	b	0.27451	0.06667	0.96471	0		0	1.11506	0	1.57552	100	training/textures/1f608-texture.png
+male-1f609	male	a5ba491d-85a9-4736-bc60-c39adc12a723	1f609	Frank	0.94631	3	b	0.08627	0.03922	0.79608	0		0	0.94731	0	1.33829	100	training/textures/1f609-texture.png
+male-1f60b	male	909ecdf8-2fac-4982-be23-d8ea12d71426	1f60b	Joseph	0.86999	3	b	0.25490	0.24706	0.76471	0		0	0.87099	0	1.23035	100	training/textures/1f60b-texture.png
+male-1f60e	male	c3927124-8774-4a96-a640-226e61afc23b	1f60e	Thomas	0.69043	3	b	0.13725	0.02353	0.79608	0		0	0.69143	0	0.97641	100	training/textures/1f60e-texture.png
+male-1f610	male	7bade17f-88eb-4d45-a472-bd182cb38fc6	1f610	Henry	0.78462	3	b	0.16471	0.19216	0.72157	0		0	0.78562	0	1.10963	100	training/textures/1f610-texture.png
+male-1f611	male	fa3c9053-72d2-40f5-a4a4-5940e20eb949	1f611	Robert	1.05692	3	b	0.32157	0.22745	1.00000	0		0	1.05792	0	1.49471	100	training/textures/1f611-texture.png
+male-1f612	male	97462f2a-64d4-4eea-8fe3-b1463a1466fa	1f612	Edward	1.04953	3	b	0.12941	0.05098	0.79216	0		0	1.05053	0	1.48426	100	training/textures/1f612-texture.png
+male-1f615	male	71c8b0ea-0603-467b-93b8-95be20a54712	1f615	Harry	0.95216	3	b	0.16471	0.32549	0.74118	0		0	0.95316	0	1.34656	100	training/textures/1f615-texture.png
+male-1f616	male	a327d534-c75b-428e-a346-4d94cffcdfae	1f616	Walter	0.84001	3	b	0.00000	0.29020	0.65098	0		0	0.84101	0	1.18796	100	training/textures/1f616-texture.png
+male-1f617	male	28c4d6e6-df7a-4a6f-8476-8b9085b44d4c	1f617	Arthur	1.11265	3	b	0.13725	0.37255	0.71373	0		0	1.11365	0	1.57352	100	training/textures/1f617-texture.png
+male-1f619	male	b97e8789-dc9b-4f88-a85f-55d1d2ba6321	1f619	Fred	0.64516	3	b	0.08627	0.37255	0.71373	0		0	0.64616	0	0.9124	100	training/textures/1f619-texture.png
+male-1f61b	male	34d874d3-6f5b-4aed-9a24-2c7b0fcb0b6c	1f61b	Albert	0.77116	3	b	0.36863	0.14510	0.69020	0		0	0.77216	0	1.09058	100	training/textures/1f61b-texture.png
+male-1f61c	male	a04ff2fa-f86a-430f-937c-384afd0d7db4	1f61c	Samuel	1.11370	3	b	0.27059	0.09412	0.74118	0		0	1.1147	0	1.57501	100	training/textures/1f61c-texture.png
+male-1f61d	male	c950552b-3035-406a-a0a1-2037120bc113	1f61d	David	0.74862	3	b	0.01961	0.08627	0.97647	0		0	0.74962	0	1.0587	100	training/textures/1f61d-texture.png
+male-1f620	male	41e9b9bc-e7d6-412a-b1e3-c884716e054f	1f620	Louis	0.58778	3	b	0.18431	0.05882	0.98431	0		0	0.58878	0	0.83125	100	training/textures/1f620-texture.png
+male-1f621	male	c04ae7df-1eec-44ad-bc4b-2e9fc7eee112	1f621	Joe	0.55986	3	b	0.07451	0.34510	0.87451	0		0	0.56086	0	0.79176	100	training/textures/1f621-texture.png
+male-1f624	male	08d9eb3f-54ef-401e-92fe-0dda88d9e96f	1f624	Charlie	1.03885	3	b	0.34118	0.30196	0.63137	0		0	1.03985	0	1.46915	100	training/textures/1f624-texture.png
+male-1f629	male	5d0e3bf1-1aa9-4499-bdf8-94790583518f	1f629	Clarence	0.71015	3	b	0.21569	0.18039	0.75686	0		0	0.71115	0	1.0043	100	training/textures/1f629-texture.png
+male-1f62c	male	0abeef08-e913-4bae-a9f1-50beda52ab52	1f62c	Richard	0.98952	3	b	0.07843	0.36863	0.74118	0		0	0.99052	0	1.39939	100	training/textures/1f62c-texture.png
+male-1f634	male	ac556199-acad-4441-8bee-e19d4acf0dca	1f634	Andrew	0.58893	3	b	0.00392	0.06667	0.63922	0		0	0.58993	0	0.83288	100	training/textures/1f634-texture.png
+male-1f635	male	75f73ef7-f0a3-44b8-a66b-08f9f2739843	1f635	Daniel	0.73804	3	b	0.24706	0.14902	0.86667	0		0	0.73904	0	1.04375	100	training/textures/1f635-texture.png
+male-1f636	male	171192da-2d79-4b09-b4d8-31ec1966cfc2	1f636	Ernest	0.67895	3	b	0.01176	0.28627	0.72157	0		0	0.67995	0	0.96018	100	training/textures/1f636-texture.png
+male-1f641	male	b0fd54b4-4acf-4637-82ff-ca23b93e1133	1f641	Will	0.99286	3	b	0.30196	0.18431	0.84706	0		0	0.99386	0	1.40411	100	training/textures/1f641-texture.png
+male-1f642	male	4b542a3b-f1db-4cbb-87cd-139e0d9c20f6	1f642	Jesse	1.08421	3	b	0.08235	0.34902	0.91765	0		0	1.08521	0	1.5333	100	training/textures/1f642-texture.png
+male-1f644	male	fec1e97b-7df7-4bfb-b8c4-2aec6aa67b5a	1f644	Oscar	0.81187	3	b	0.00392	0.01176	0.81569	0		0	0.81287	0	1.14816	100	training/textures/1f644-texture.png
+male-1f911	male	4e6c3c7e-80c0-4d84-a43f-447f6bb02410	1f911	Lewis	0.95268	3	b	0.00392	0.07059	0.70196	0		0	0.95368	0	1.3473	100	training/textures/1f911-texture.png
+male-1f913	male	3ea4fbd9-dbae-4275-abc2-9e7b23488d3f	1f913	Peter	0.54780	3	b	0.16078	0.26275	0.78824	0		0	0.5488	0	0.7747	100	training/textures/1f913-texture.png
+male-1f914	male	802ba52b-3f11-4325-860b-dd0314f4f029	1f914	Benjamin	0.90202	3	b	0.30196	0.17255	0.98039	0		0	0.90302	0	1.27565	100	training/textures/1f914-texture.png
+male-1f917	male	e8a55a86-e489-49f4-b8c5-5fb11f32e797	1f917	Frederick	1.14870	3	b	0.12549	0.21569	0.65490	0		0	1.1497	0	1.62451	100	training/textures/1f917-texture.png
+male-1f928	male	b89c9630-68d5-477d-845a-5889e56461f9	1f928	Willie	1.05338	3	b	0.03137	0.07451	0.63529	0		0	1.05438	0	1.4897	100	training/textures/1f928-texture.png
+male-1f973	male	2a3fc331-784c-4a21-8289-bb56cd008c1e	1f973	Alfred	1.03396	3	b	0.09020	0.00784	0.73725	0		0	1.03496	0	1.46225	100	training/textures/1f973-texture.png
+male-1f974	male	e08b1cf9-171d-4dd6-b8a4-287a2efadc61	1f974	Sam	0.60963	3	b	0.08235	0.35686	0.70980	0		0	0.61063	0	0.86215	100	training/textures/1f974-texture.png
+male-1f97a	male	b0b299b5-e376-4214-b2d0-23896075e798	1f97a	Roy	0.57420	3	b	0.26667	0.34510	0.74118	0		0	0.5752	0	0.81204	100	training/textures/1f97a-texture.png
+enby-1f60a	enby	257b3f63-bac8-41c5-94d4-02f10c09cbbd	1f60a	Bailey	0.84447	3	p	0.66275	0.32157	0.69020	0	rainbow	0	0.84547	0	1.19427	100	assets/texture-1f60a-3072x512.png
+enby-1f61a	enby	8a004845-1296-4f20-aa92-baea9b90692d	1f61a	Hunter	1.12638	3	p	0.97255	0.12157	0.69804	0	rainbow	0	1.12738	0	1.59295	100	assets/texture-1f61a-3072x512.png
+enby-1f633	enby	28f66be5-59d1-4157-8a69-d9fc030ad002	1f633	Justice	0.54249	3	p	0.68627	0.01176	0.89020	0	rainbow	0	0.54349	0	0.7672	100	assets/texture-1f633-3072x512.png
+predator-1f42f	predator	3f593120-6dfd-42aa-bb71-bac73503d5a4	1f42f	Tiger	0.59568	3	r	0.98824	0.34902	0.27843	0	surface-2-confetti-512x512	0	0.59668	0	0.84242	100	training/textures/1f42f-texture.png
+predator-1f43a	predator	924006e6-2188-405e-9d5a-703417defb4a	1f43a	Wolf	0.90115	3	r	0.67451	0.29412	0.29804	0	surface-4-berber-512x512	0	0.90215	0	1.27442	100	training/textures/1f43a-texture.png
+predator-1f43b	predator	ef39ffb2-e1ef-42e1-b254-130b032446d3	1f43b	Bear	0.61949	3	r	0.94902	0.32941	0.36471	0	surface-8-snakeskin-512x512	0	0.62049	0	0.87609	100	training/textures/1f43b-texture.png
+predator-1f47f	predator	946b022e-91a2-4119-8f78-24284c7929df	1f47f	Purple Devil	0.73800	3	r	0.78039	0.13725	0.01569	0	surface-9-coarse-weave-512x512	0	0.739	0	1.04369	100	training/textures/1f47f-texture.png
+predator-1f63a	predator	860ac87f-1960-4541-a87e-0f4e5ab340fe	1f63a	Happy Lioness	0.51428	3	r	0.62745	0.22745	0.34510	0	surface-10-stucco-512x512	0	0.51528	0	0.7273	100	training/textures/1f63a-texture.png
+predator-1f63c	predator	eb7bf2a4-5504-4ccb-8e00-f197d0863887	1f63c	Hungry Lioness	0.69388	3	r	1.00000	0.23922	0.08627	0	surface-7-leaves-512x512	0	0.69488	0	0.98129	100	training/textures/1f63c-texture.png
+predator-1f63d	predator	d8e9b625-71c0-4517-8bf3-c56071cdd3a9	1f63d	Sleepy Lioness	0.99704	3	r	0.78039	0.12549	0.15294	0	surface-5-gauze-512x512	0	0.99804	0	1.41003	100	training/textures/1f63d-texture.png
+predator-1f63e	predator	0ab43cf3-1f93-4145-ac27-1004b9c38c73	1f63e	Angry Lioness	0.79107	3	r	0.74118	0.04314	0.23922	0	surface-3-driven-snow-512x512	0	0.79207	0	1.11875	100	training/textures/1f63e-texture.png
+predator-1f64a	predator	11d9b50e-eb2c-40df-ba05-88faf52e749a	1f64a	Monkey	1.03573	3	r	0.81176	0.04706	0.07451	0	surface-6-parchment-512x512	0	1.03673	0	1.46475	100	training/textures/1f64a-texture.png
+predator-1f988	predator	d1eeb7d9-d22a-492c-98ee-976de2617776	1f988	Shark	0.84751	3	r	0.74902	0.29020	0.04706	0	surface-1-screen-door-512x512	0	0.84851	0	1.19857	100	training/textures/1f988-texture.png
+predator-1f989	predator	cacb4d8e-c1a9-4ecd-a641-cff41f020c75	1f989	Owl	0.58513	3	r	0.81961	0.19608	0.26667	0	surface-10-stucco-512x512	0	0.58613	0	0.82749	100	training/textures/1f989-texture.png
+predator-1f98a	predator	9b4cc37d-0f34-4703-a0d5-74dc082c0508	1f98a	Fox	0.81827	3	r	0.67059	0.16471	0.29412	0	surface-10-stucco-512x512	0	0.81927	0	1.1572	100	training/textures/1f98a-texture.png
+predator-1f98c	predator	f6ca7a92-0f64-4916-bed0-28d89f114b25	1f98c	Buck	0.78548	3	r	0.85882	0.09020	0.13333	0	surface-4-berber-512x512	0	0.78648	0	1.11083	100	training/textures/1f98c-texture.png
+predator-1f98d	predator	2e935ec8-55e8-4a84-8a3d-ec14848d8b7e	1f98d	Gorilla	0.51177	3	r	0.93333	0.08627	0.22745	0	surface-1-screen-door-512x512	0	0.51277	0	0.72375	100	training/textures/1f98d-texture.png
+predator-1f994	predator	6bc927a1-98df-441e-973d-3f6377d47603	1f994	Beaver	0.97319	3	r	0.88627	0.12549	0.21176	0	surface-10-stucco-512x512	0	0.97419	0	1.3763	100	training/textures/1f994-texture.png
+predator-1f99d	predator	a8e43e3e-b77e-4c5b-96f7-fefae3c5373b	1f99d	Raccoon	0.96411	3	r	0.91373	0.34118	0.14118	0	surface-2-confetti-512x512	0	0.96511	0	1.36346	100	training/textures/1f99d-texture.png
+predator-1f99f	predator	488b6535-4f8f-40df-ab25-c747637c9c6b	1f99f	Wasp	0.59119	3	r	0.69020	0.18824	0.21961	0	surface-3-driven-snow-512x512	0	0.59219	0	0.83607	100	training/textures/1f99f-texture.png
+resource-1f32d	resource	3cca394d-5a76-4b19-9d67-6fb4957de755	1f32d	Hotdog	1.00000	3	g	0.09412	0.91373	0.21961	0		0	1.001	0	1.41421	2000	training/textures/1f32d-texture.png
+resource-1f32e	resource	d5944064-be76-43e0-b9b1-3e659f87ee9a	1f32e	Taco	1.00000	3	g	0.07059	0.76471	0.03922	0		0	1.001	0	1.41421	2000	training/textures/1f32e-texture.png
+resource-1f33d	resource	21e8051d-2226-4c32-8952-e50146eb7982	1f33d	Corn	1.00000	3	g	0.29412	0.65882	0.32157	0		0	1.001	0	1.41421	2000	training/textures/1f33d-texture.png
+resource-1f345	resource	5760ef44-c05a-45de-b00c-9fc81a923461	1f345	Tomato Large	1.00000	3	g	0.34510	0.74510	0.20392	0		0	1.001	0	1.41421	2000	training/textures/1f345-texture.png
+resource-1f346	resource	fda398d0-b221-4454-aa17-40f9555c7e7a	1f346	Eggplant	1.00000	3	g	0.29412	0.77647	0.00784	0		0	1.001	0	1.41421	2000	training/textures/1f346-texture.png
+resource-1f347	resource	184924c8-74a3-49c8-a0fa-63458fe85b40	1f347	Grapes	1.00000	3	g	0.12549	0.93333	0.05098	0		0	1.001	0	1.41421	2000	training/textures/1f347-texture.png
+resource-1f348	resource	27d9b375-4b3e-40e3-93ae-53d7b47c16ed	1f348	Melon	1.00000	3	g	0.25882	0.91765	0.03137	0		0	1.001	0	1.41421	2000	training/textures/1f348-texture.png
+resource-1f349	resource	bb821ac0-95e6-45cc-88ff-350831dbe31e	1f349	Watermelon	1.00000	3	g	0.31765	0.74902	0.09020	0		0	1.001	0	1.41421	2000	training/textures/1f349-texture.png
+resource-1f34a	resource	0ad900ad-1542-415b-9702-78aaacbbdb7e	1f34a	Peach	1.00000	3	g	0.05490	0.70588	0.32549	0		0	1.001	0	1.41421	2000	training/textures/1f34a-texture.png
+resource-1f34b	resource	9093a24e-78c6-4d15-a410-cdb47676a83e	1f34b	Lemon	1.00000	3	g	0.05490	0.97647	0.21961	0		0	1.001	0	1.41421	2000	training/textures/1f34b-texture.png
+resource-1f34c	resource	d6e75d1a-e152-4e44-aa5e-ab4b2c99439f	1f34c	Banana	1.00000	3	g	0.03922	0.62353	0.16863	0		0	1.001	0	1.41421	2000	training/textures/1f34c-texture.png
+resource-1f34d	resource	9dd2809e-3f82-41be-80ac-e1f0c008d3a1	1f34d	Pineapple	1.00000	3	g	0.11373	0.92941	0.27451	0		0	1.001	0	1.41421	2000	training/textures/1f34d-texture.png
+resource-1f34e	resource	272586cd-d16a-4fdd-86d6-cd815fe03963	1f34e	Apple	1.00000	3	g	0.29020	0.75294	0.06667	0		0	1.001	0	1.41421	2000	training/textures/1f34e-texture.png
+resource-1f34f	resource	96488332-fabc-4769-a635-4d688618d677	1f34f	Macintosh	1.00000	3	g	0.23529	0.95294	0.22353	0		0	1.001	0	1.41421	2000	training/textures/1f34f-texture.png
+resource-1f350	resource	d8316e7a-7b57-4475-89b7-3f8279679cdc	1f350	Pear	1.00000	3	g	0.16471	0.86275	0.03529	0		0	1.001	0	1.41421	2000	training/textures/1f350-texture.png
+resource-1f351	resource	e9db47f9-82f7-486b-871b-34443965ee82	1f351	Peach	1.00000	3	g	0.25490	0.98824	0.26275	0		0	1.001	0	1.41421	2000	training/textures/1f351-texture.png
+resource-1f352	resource	a0da3f7b-628f-4cba-b1ce-aa5f08f3d75f	1f352	Cherries	1.00000	3	g	0.00392	0.86667	0.28235	0		0	1.001	0	1.41421	2000	training/textures/1f352-texture.png
+resource-1f353	resource	699e7050-6950-4dad-928e-226be718af96	1f353	Strawberry	1.00000	3	g	0.06275	0.79216	0.32549	0		0	1.001	0	1.41421	2000	training/textures/1f353-texture.png
+resource-1f354	resource	06664956-7391-4379-9fa5-be0bf3dd2e17	1f354	Hamburger	1.00000	3	g	0.36863	0.82353	0.33333	0		0	1.001	0	1.41421	2000	training/textures/1f354-texture.png
+resource-1f355	resource	712e8398-d6c8-4b79-a3f6-3e829feeefde	1f355	Pizza	1.00000	3	g	0.20000	0.76863	0.09804	0		0	1.001	0	1.41421	2000	training/textures/1f355-texture.png
+resource-1f356	resource	cbcae2f3-652b-4f00-929f-b305fb1a27d4	1f356	Kebab	1.00000	3	g	0.18824	0.93725	0.01176	0		0	1.001	0	1.41421	2000	training/textures/1f356-texture.png
+resource-1f357	resource	0f7b6dce-5929-4e1e-a205-99366da18ba2	1f357	Drumstick	1.00000	3	g	0.06667	0.78431	0.28627	0		0	1.001	0	1.41421	2000	training/textures/1f357-texture.png
+resource-1f35a	resource	7c5d97be-8835-4c37-9c02-2ea2be295ccc	1f35a	Rice	1.00000	3	g	0.15686	0.87451	0.20000	0		0	1.001	0	1.41421	2000	training/textures/1f35a-texture.png
+resource-1f35b	resource	9cec32cc-fbd3-4ee1-be1d-d1e012aaa494	1f35b	Pancakes	1.00000	3	g	0.22353	0.90980	0.11765	0		0	1.001	0	1.41421	2000	training/textures/1f35b-texture.png
+resource-1f35c	resource	0d6288cf-cd8f-46a7-bb7f-f617bded9d64	1f35c	Rice Noodles	1.00000	3	g	0.30588	0.64314	0.08627	0		0	1.001	0	1.41421	2000	training/textures/1f35c-texture.png
+resource-1f35d	resource	46c08d58-cac7-4cc1-b0fd-13b5f28513c1	1f35d	Spaghetti	1.00000	3	g	0.08235	0.68627	0.05098	0		0	1.001	0	1.41421	2000	training/textures/1f35d-texture.png
+resource-1f35e	resource	b40279e3-375e-45a8-8841-fc8d1037394b	1f35e	Bread	1.00000	3	g	0.11373	0.79608	0.12941	0		0	1.001	0	1.41421	2000	training/textures/1f35e-texture.png
+resource-1f35f	resource	f675faff-e135-472a-8c7b-5e891cd0a3a1	1f35f	Fries	1.00000	3	g	0.07451	0.88235	0.34510	0		0	1.001	0	1.41421	2000	training/textures/1f35f-texture.png
+resource-1f360	resource	81739854-0839-4781-b419-5b80db3d46f9	1f360	Sweet Potato	1.00000	3	g	0.36078	0.68235	0.07451	0		0	1.001	0	1.41421	2000	training/textures/1f360-texture.png
+resource-1f361	resource	fb5d3769-ac5c-471f-9c0d-3e4fb787f6fb	1f361	Candy	1.00000	3	g	0.29412	0.66275	0.18824	0		0	1.001	0	1.41421	2000	training/textures/1f361-texture.png
+resource-1f362	resource	4ad32e2c-c5c8-4e22-aa9e-a003d4693995	1f362	Candystick	1.00000	3	g	0.28235	0.72549	0.22353	0		0	1.001	0	1.41421	2000	training/textures/1f362-texture.png
+resource-1f363	resource	c74e6da9-a766-481b-93ed-bdc8f2079fe9	1f363	Sushi	1.00000	3	g	0.05882	0.85490	0.17255	0		0	1.001	0	1.41421	2000	training/textures/1f363-texture.png
+resource-1f364	resource	5a4f03dd-541b-499d-a797-b43010b86426	1f364	Shrimp	1.00000	3	g	0.00000	0.99608	0.27451	0		0	1.001	0	1.41421	2000	training/textures/1f364-texture.png
+resource-1f366	resource	0c8f86e1-fe28-472d-9870-b7fd69b61cf0	1f366	Custard Cone	1.00000	3	g	0.11765	0.82353	0.33725	0		0	1.001	0	1.41421	2000	training/textures/1f366-texture.png
+resource-1f367	resource	46b2b253-e27c-4fa9-8d29-de64bb42eedb	1f367	Rice Bowl	1.00000	3	g	0.34510	0.68235	0.06667	0		0	1.001	0	1.41421	2000	training/textures/1f367-texture.png
+resource-1f368	resource	732dc5af-01b1-447d-862e-53b40f541cd0	1f368	Sundae	1.00000	3	g	0.13725	0.67843	0.12549	0		0	1.001	0	1.41421	2000	training/textures/1f368-texture.png
+resource-1f369	resource	456c9355-fa40-49e0-b3e4-8d05694b70d2	1f369	Donut	1.00000	3	g	0.12549	0.77647	0.13725	0		0	1.001	0	1.41421	2000	training/textures/1f369-texture.png
+resource-1f36a	resource	753acc58-bb97-4c31-b07b-b841c44a4349	1f36a	Cookie	1.00000	3	g	0.33725	0.64706	0.35294	0		0	1.001	0	1.41421	2000	training/textures/1f36a-texture.png
+resource-1f36b	resource	75299752-5414-495f-a6fa-45ff7afd0e19	1f36b	Chocolate	1.00000	3	g	0.26275	0.92157	0.25098	0		0	1.001	0	1.41421	2000	training/textures/1f36b-texture.png
+resource-1f36c	resource	3e8d1d46-9e55-4df1-9bd3-10b8bddfddbd	1f36c	Peppermint	1.00000	3	g	0.17647	0.68627	0.32157	0		0	1.001	0	1.41421	2000	training/textures/1f36c-texture.png
+resource-1f36d	resource	ffb83c2d-9b73-44ea-b67e-c77f56ec9e75	1f36d	Lollipop	1.00000	3	g	0.25098	0.81961	0.12157	0		0	1.001	0	1.41421	2000	training/textures/1f36d-texture.png
+resource-1f36e	resource	be55747d-5027-4be3-b625-89ac6b29add2	1f36e	Custard	1.00000	3	g	0.21176	0.78039	0.08627	0		0	1.001	0	1.41421	2000	training/textures/1f36e-texture.png
+resource-1f36f	resource	de1a73e9-9aa1-41cc-bb96-4c430d6c70cd	1f36f	Cream	1.00000	3	g	0.10196	0.89020	0.14902	0		0	1.001	0	1.41421	2000	training/textures/1f36f-texture.png
+resource-1f370	resource	2f02cc52-0836-447e-a203-658e4a237ef8	1f370	Cake	1.00000	3	g	0.33725	0.72941	0.35686	0		0	1.001	0	1.41421	2000	training/textures/1f370-texture.png
+resource-1f372	resource	47154d7b-5e0b-4ecb-be47-54d1471dced9	1f372	Soup	1.00000	3	g	0.09804	0.96078	0.09412	0		0	1.001	0	1.41421	2000	training/textures/1f372-texture.png
+resource-1f373	resource	64536dc1-fa44-485d-8724-431a4cb5b23e	1f373	Eggs	1.00000	3	g	0.10980	0.96078	0.28235	0		0	1.001	0	1.41421	2000	training/textures/1f373-texture.png
+resource-1f375	resource	785cdd6f-c9f4-4ea4-bfec-9f7ba152e7dd	1f375	Tea	1.00000	3	g	0.07843	0.65882	0.30980	0		0	1.001	0	1.41421	2000	training/textures/1f375-texture.png
+resource-1f377	resource	0bb9cf74-8c86-483a-babb-68aee253eec7	1f377	Wine	1.00000	3	g	0.23137	0.64706	0.34902	0		0	1.001	0	1.41421	2000	training/textures/1f377-texture.png
+resource-1f378	resource	dd146979-cfa3-4379-8c32-85e44e759fd4	1f378	Martini	1.00000	3	g	0.21961	0.89804	0.32549	0		0	1.001	0	1.41421	2000	training/textures/1f378-texture.png
+resource-1f379	resource	a4b7e2b1-e963-4d83-b83f-4c9011238264	1f379	Pina Colada	1.00000	3	g	0.07059	0.88627	0.11765	0		0	1.001	0	1.41421	2000	training/textures/1f379-texture.png
+resource-1f37a	resource	2be341e5-deae-4c38-932b-b66f1ab7f9eb	1f37a	Beer	1.00000	3	g	0.32941	0.86667	0.24706	0		0	1.001	0	1.41421	2000	training/textures/1f37a-texture.png
+resource-1f37b	resource	b5f27ec2-2136-4fe6-93c0-c5fe1895bb44	1f37b	Draft	1.00000	3	g	0.01569	0.69020	0.12157	0		0	1.001	0	1.41421	2000	training/textures/1f37b-texture.png
+resource-1f37c	resource	457c0ca7-3d57-4928-9661-059b60769401	1f37c	Formula	1.00000	3	g	0.15686	0.97255	0.17255	0		0	1.001	0	1.41421	2000	training/textures/1f37c-texture.png
+resource-1f37e	resource	b8a35ce6-4968-4160-a628-4ea599bae4ce	1f37e	Champagne	1.00000	3	g	0.37647	0.70980	0.30980	0		0	1.001	0	1.41421	2000	training/textures/1f37e-texture.png
+resource-1f37f	resource	5e17a414-5b8b-4c2e-9536-7a9746df1c31	1f37f	Popcorn	1.00000	3	g	0.07059	0.65490	0.27451	0		0	1.001	0	1.41421	2000	training/textures/1f37f-texture.png
+resource-1f382	resource	a59f30fa-9fe2-4935-8260-d720fe4ce540	1f382	Birthday Cake	1.00000	3	g	0.25098	0.96863	0.28235	0		0	1.001	0	1.41421	2000	training/textures/1f382-texture.png
+resource-1f38a	resource	983b58e6-1e96-436b-8868-a66d6181da14	1f38a	Passion Fruit	1.00000	3	g	0.35294	0.76471	0.03922	0		0	1.001	0	1.41421	2000	training/textures/1f38a-texture.png
+resource-1f95a	resource	2b5924c2-66b3-4f71-b74b-32d735463369	1f95a	Egg	1.00000	3	g	0.23529	0.73725	0.00392	0		0	1.001	0	1.41421	2000	training/textures/1f95a-texture.png
+resource-1f95b	resource	8c052745-51d5-4617-bca3-1b868857c01d	1f95b	Milk	1.00000	3	g	0.15686	0.98039	0.13333	0		0	1.001	0	1.41421	2000	training/textures/1f95b-texture.png
+resource-1f95c	resource	e7affd49-4ace-4e9a-9f8f-ac01ff36442d	1f95c	Peanut	1.00000	3	g	0.24314	0.76863	0.20392	0		0	1.001	0	1.41421	2000	training/textures/1f95c-texture.png
+resource-1f95d	resource	09df242f-3ee1-43c5-b1b8-09c90d0d3453	1f95d	Kiwifruit	1.00000	3	g	0.05882	0.94118	0.10980	0		0	1.001	0	1.41421	2000	training/textures/1f95d-texture.png
+resource-1f95e	resource	5a63cb6e-3fcd-4233-a451-53bfa55c9ee4	1f95e	Pancakes	1.00000	3	g	0.34118	0.71765	0.01569	0		0	1.001	0	1.41421	2000	training/textures/1f95e-texture.png
+resource-1f95f	resource	84b11f23-3dae-4214-8d1d-0d0a87439224	1f95f	Empanada	1.00000	3	g	0.21176	0.65882	0.05882	0		0	1.001	0	1.41421	2000	training/textures/1f95f-texture.png
+resource-1f96a	resource	dc3371d9-749b-4c53-b69a-055d446e9c52	1f96a	Sandwich	1.00000	3	g	0.30588	0.67843	0.03922	0		0	1.001	0	1.41421	2000	training/textures/1f96a-texture.png
+resource-1f96b	resource	16dde219-cbd0-4c43-b664-dcccc2d7b00a	1f96b	Peas	1.00000	3	g	0.13725	0.81569	0.15294	0		0	1.001	0	1.41421	2000	training/textures/1f96b-texture.png
+resource-1f96c	resource	2503f288-5e9f-4ff3-8b88-ab05a07f1de3	1f96c	Lettuce	1.00000	3	g	0.31373	0.69412	0.36863	0		0	1.001	0	1.41421	2000	training/textures/1f96c-texture.png
+resource-1f96d	resource	4ac959e6-2823-4b86-b347-2386bcf676bb	1f96d	Tomato	1.00000	3	g	0.07451	1.00000	0.16471	0		0	1.001	0	1.41421	2000	training/textures/1f96d-texture.png
+resource-1f96e	resource	564b27e5-d6e6-4c21-8f3f-9dfbd3a980df	1f96e	Sesamecake	1.00000	3	g	0.14510	0.75686	0.35294	0		0	1.001	0	1.41421	2000	training/textures/1f96e-texture.png
+resource-1f96f	resource	da9012fa-8224-4395-82cd-d98635ab55c4	1f96f	Bagel	1.00000	3	g	0.33725	0.91765	0.09804	0		0	1.001	0	1.41421	2000	training/textures/1f96f-texture.png
+resource-1f9c0	resource	078e116c-b014-47ce-bc47-c29201d7b1d5	1f9c0	Cheese	1.00000	3	g	0.30588	0.76471	0.05098	0		0	1.001	0	1.41421	2000	training/textures/1f9c0-texture.png
+resource-1f9c1	resource	dd940c8d-5c4e-4d18-98ae-92fe72c69f8d	1f9c1	Cupcake	1.00000	3	g	0.14118	0.80000	0.06275	0		0	1.001	0	1.41421	2000	training/textures/1f9c1-texture.png
+resource-1f9c3	resource	488acf7b-ce99-4f0a-8ffe-57754d26dd73	1f9c3	Juice	1.00000	3	g	0.18039	0.90196	0.11765	0		0	1.001	0	1.41421	2000	training/textures/1f9c3-texture.png
+resource-1f9c4	resource	ac4ccd55-9409-4cf9-8abe-896f94fc5053	1f9c4	Blue Squash	1.00000	3	g	0.05882	0.63137	0.18039	0		0	1.001	0	1.41421	2000	training/textures/1f9c4-texture.png
+resource-1f9c5	resource	8e4f6a76-3cc0-4627-8bee-01438bb41d14	1f9c5	Orange Squash	1.00000	3	g	0.30588	0.70980	0.03137	0		0	1.001	0	1.41421	2000	training/textures/1f9c5-texture.png
+resource-1f9c6	resource	bf55028e-00da-4ff5-ae6e-2fc77eb68a43	1f9c6	Muffins	1.00000	3	g	0.03529	0.72549	0.00000	0		0	1.001	0	1.41421	2000	training/textures/1f9c6-texture.png
+resource-1f9c7	resource	c95b5263-0362-4502-a355-950304e27994	1f9c7	Waffle	1.00000	3	g	0.25882	0.68627	0.08235	0		0	1.001	0	1.41421	2000	training/textures/1f9c7-texture.png
+resource-1f9c9	resource	bcaa7b3a-4f35-46a1-b54c-b6a1c049cd40	1f9c9	Honeypot	1.00000	3	g	0.26275	0.79608	0.09412	0		0	1.001	0	1.41421	2000	training/textures/1f9c9-texture.png
+resource-1f9cb	resource	1704e99b-46f1-4950-9359-97b5f360bfdf	1f9cb	Mocha	1.00000	3	g	0.32157	0.63137	0.10588	0		0	1.001	0	1.41421	2000	training/textures/1f9cb-texture.png
+resource-1fad3	resource	15077195-ee63-45d8-9cca-59327a2508b7	1fad3	Naan	1.00000	3	g	0.32549	0.85098	0.36471	0		0	1.001	0	1.41421	2000	training/textures/1fad3-texture.png
+resource-1fad5	resource	c3fe12cc-1267-4464-b97c-0b4d345fc065	1fad5	Fondue	1.00000	3	g	0.11373	0.90196	0.25098	0		0	1.001	0	1.41421	2000	training/textures/1fad5-texture.png
+resource-1fad6	resource	cbd7c067-9e63-4f1b-af36-1fe3b56d57c2	1fad6	British Tea	1.00000	3	g	0.27059	0.83922	0.09412	0		0	1.001	0	1.41421	2000	training/textures/1fad6-texture.png
