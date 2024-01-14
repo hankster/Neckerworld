@@ -10,7 +10,7 @@ A game space consists of a ground plane, player cubes and lighting.
 ## Usage
 
 ```
-nw.py
+./nw.py
 ```
 
 ## Summary of programs
@@ -40,7 +40,7 @@ It's designed to be used with the --cubelist=nwtest.csv option in nw.py.
 This is a wide (large width and depth) field with five objects used for testing and debugging programs.
 To control the male cube, invoke nwplay.py with its unique UUID:
 ```
-nwplay.py -c a5ba491d-85a9-4736-bc60-c39adc12a723
+./nwplay.py -c a5ba491d-85a9-4736-bc60-c39adc12a723
 ```
 
 ### tournament.csv
@@ -48,12 +48,14 @@ This is a spreadsheet file (tab separated) which may be used to create a game wi
 This allows new game datasets to be specified in a repeatable manner for tournaments.
 
 ```
-nw.py --cubelist=tournament.csv
+./nw.py --cubelist=tournament.csv
 ```
+
+Also included are some other example .csv files and the spreadsheet file (.ods) used to generate them. 
 
 ### prettyjson.py
 A utility to print JSON files in a readable format
 
 ```
-prettyjson.py jsonfile
+./prettyjson.py jsonfile
 ```

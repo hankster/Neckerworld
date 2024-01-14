@@ -9,8 +9,8 @@ The "cube" program is the runtime server and uses opengl to render images of the
 It's started by running a command with a JSON file argument describing the window and ground textures:
 
 ```
-cube ../setup/nw.json
-cube ../setup/nwtest.json <--- Default game for testing and experimentation
+./cube ../setup/nw.json
+./cube ../setup/nwtest.json <--- Default game for testing and experimentation
 ```
 This launches the game.
 Port 2020 is opened up for receipt of messages from client players.
@@ -73,7 +73,7 @@ make
 cd ~/Neckerworld/server
 make
 # Start the server with a playing-field file
-cube ~/Neckerworld/setup/nwtest.json
+./cube ~/Neckerworld/setup/nwtest.json
 # To activate predators on the playing field select the server window and type "S"
 # This will enable the server's basic strategy (control of predators and resources).
 # To put all cubes in motion for a game simulation also press "E".
