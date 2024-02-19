@@ -22,7 +22,7 @@ NOTE: If you are running client and server on the same system you
 ## Run client and server with time out
 
 1. Type `server_pause <pause port>` to start a server that binds
-   to any IP address and the pasue port you specify, but never
+   to any IP address and the pause port you specify, but never
    listens for connection requests.
 2. Type `server_timeout <time out port> [<ip>]` to start a server that 
    listens for connections and receives requests bu never replies.

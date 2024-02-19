@@ -36,5 +36,5 @@ The Neckerworld standard edition contains the following objects:
 * 81 resources
 
 Specifications for each one of these objects is in Neckerworld/training/cubedata.csv and includes details on the emoticon, size, color, surface and standard position of the object.
-The texture map, used for surface genertion in opengl, is found in Neckerworld/training/textures.
+The texture map, used for surface generation in opengl, is found in Neckerworld/training/textures.
 

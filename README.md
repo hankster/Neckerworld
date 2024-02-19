@@ -37,7 +37,7 @@ Three guiding principles of the human visual system:
 * Don't get eaten
 * Find a mate
 
-Consquently, game points are scored through three activities:
+Consequently, game points are scored through three activities:
 * Finding and reaching food/liquid resources
 * Killing off predators
 * Mating and having child cubes
@@ -100,7 +100,7 @@ make
 # This will enable the server's basic strategy (control of predators and resources).
 S
 # In a separate window start the player program
-# Make sure port 2020 is open and not firewalled
+# Make sure port 2020 is open and not fire-walled
 cd ~/Neckerworld/client
 ./nwplay.py
 
