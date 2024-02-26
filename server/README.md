@@ -45,14 +45,14 @@ Contains the main display loop to render objects in opengl.
 ### cube_objects.cpp
 
 Processes all requests for playing field objects.
-Moves and rotates cubees as requested.
+Moves and rotates cubes as requested.
 Checks for contact and conflicts in cube positions.
 Changes camera and light positions.
 Handles ground motions and positions.
 
 ### cube_simulation.cpp
 
-Accepts incoming JSON messages from all clients and intrprets them.
+Accepts incoming JSON messages from all clients and interprets them.
 Responds to clients with a JSON message update.
 
 ### cube.f.glsl
