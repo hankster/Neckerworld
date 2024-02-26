@@ -5,7 +5,7 @@
 ## Overview
 
 The "server" directory contains all the software and components needed to create the playing field server.
-The "cube" program is the runtime server and uses opengl to render images of the playing field.
+The "cube" program is the runtime server and uses OpenGL to render images of the playing field.
 It's started by running a command with a JSON file argument describing the window and ground textures:
 
 ```
@@ -40,7 +40,7 @@ Accepts and decodes JSON files to create data structures for the playing field.
 
 ### cube_engine.cpp
 
-Contains the main display loop to render objects in opengl.
+Contains the main display loop to render objects in OpenGL.
 
 ### cube_objects.cpp
 
@@ -57,11 +57,11 @@ Responds to clients with a JSON message update.
 
 ### cube.f.glsl
 
-An opengl shader program.
+An OpenGL shader program.
 
 ### cube.v.glsl
 
-An opengl shader program.
+An OpenGL shader program.
 
 ## Installation
 
