@@ -23,3 +23,7 @@ sudo python3 -m pip install tensorflow
 sudo python3 -m pip install xlib
 sudo python3 -m pip install playsound
 
+# These links are required for training programs to run
+cd ~/Neckerworld/server
+ln -s ../assets assets
+ln -s ../training training

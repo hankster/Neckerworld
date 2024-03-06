@@ -74,7 +74,7 @@ struct Cube {
   std::vector<time_t> match_times; // Times for combat.
   std::vector<GLfloat> match_energy; // Energy gained from combat.
   std::vector<bool> match_results; // Who won.
-  GLfloat bounding_box[4]; // Bounding box coordinates.
+  GLfloat bounding_box[20]; // Bounding box coordinates + 8 corner points for debugging.
   GLint paintball_count; // Experimental, not yet implemented.
   GLint paintball_type; // Experimental, not yet implemented.
   glm::vec3 paintball_color; // Experimental, not yet implemented.
@@ -302,7 +302,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 float random1();
 void screenshot(GLFWwindow* window, string filename);
 void screenview_capture(GLFWwindow* window, int i, int notify, std::vector<uint8_t>* pixels, unsigned* pixels_frame, unsigned* pixels_frame_start, std::mutex* pixels_mutex);
-void update_projection(int width, int height);
+glm::mat4 update_projection(int width, int height);
 
 // Multi-thread server
 int server_main(int workers, int port, string ip);

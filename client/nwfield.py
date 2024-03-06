@@ -59,8 +59,8 @@ from nwmessage import nwmessage_debug
 # def shutdown_socket(s)
 # def login_request(s, sequence, username, password, cube_uuid, ground_uuid)
 # def logout_request(s, sequence, cube_uuid)
-# def import_json_file(s, sequence, jsonfile, cube_uuid)
-# def import_json_object(s, sequence, jsonobject, cube_uuid)
+# def import_json_file(s, sequence, jsonfile, cube_uuid, ground_uuid)
+# def import_json_object(s, sequence, jsonobject, cube_uuid, ground_uuid)
 # def move_request(s, sequence, cube_uuid, spatial_angle, spatial_direction, spatial_direction_active, distance, velocity, gaze)
 # def status_request(s, sequence, cube_uuid)
 # def cube_view_request(s, sequence, cube_uuid, spatial_angle, gaze)
@@ -279,7 +279,7 @@ def main():
             print("nwfield.py: Sending predator %d %s named %s" % (pidx, p[3], p[4]))
             if debug:
                 print(jsonobject)
-            ijo_response = import_json_object(s, sequence, jsonobject, cube_uuid)
+            ijo_response = import_json_object(s, sequence, jsonobject, cube_uuid, "")
             if check_error("import_json_object", ijo_response):
                 break
             pidx += 1
@@ -294,7 +294,7 @@ def main():
             print("nwfield.py: Sending resource %d %s named %s" % (ridx, r[3], r[4]))
             if debug:
                 print(jsonobject)
-            ijo_response = import_json_object(s, sequence, jsonobject, cube_uuid)
+            ijo_response = import_json_object(s, sequence, jsonobject, cube_uuid, "")
             if check_error("import_json_object", ijo_response):
                 break
             ridx += 1

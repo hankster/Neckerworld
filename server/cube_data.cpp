@@ -119,7 +119,7 @@ int json_import_document() {
 
     glfwSetWindowTitle(window, window_title);
     glfwSetWindowSize(window, main_window_width, main_window_height);
-    update_projection(main_window_width, main_window_height);
+    projection = update_projection(main_window_width, main_window_height);
     glViewport(0, 0, main_window_width, main_window_height);
     
     fprintf(stdout, "cube_data.cpp: Title %s, main window width %d, height %d, window color (%4.2f, %4.2f, %4.2f, %4.2f)\n", window_title, main_window_width, main_window_height, window_background_color_r, window_background_color_g, window_background_color_b, window_background_color_a);
@@ -142,9 +142,20 @@ int json_import_document() {
     camera_target = camera_target_default;
     camera_up = camera_up_default;
     
-    /* Setup the new view */
-    view = glm::lookAt(camera_position, camera_target, camera_up);
+    /* Setup this ground's view. */
 
+    if (n_grounds > 0) {
+      grounds[0].ground_view_position = glm::vec3(camera_position_default.x, camera_position_default.y, camera_position_default.z);
+      grounds[0].ground_view_target = glm::vec3(camera_target_default.x, camera_target_default.y, camera_target_default.z);
+      grounds[0].ground_view_up = glm::vec3(camera_up_default.x, camera_up_default.y, camera_up_default.z);
+      
+      /* Setup the new view */
+      view = glm::lookAt(camera_position, camera_target, camera_up);
+
+      // Update the mvp
+      ground_update_mvp(0);
+    }
+    
     fprintf(stdout, "cube_data.cpp: Camera position x %4.2f, y %4.2f, z %4.2f\n", camera_position.x, camera_position.y, camera_position.z); 
     fprintf(stdout, "cube_data.cpp: Camera target x %4.2f, y %4.2f, z %4.2f\n", camera_target.x, camera_target.y, camera_target.z); 
     fprintf(stdout, "cube_data.cpp: Camera up x %4.2f, y %4.2f, z %4.2f\n", camera_up.x, camera_up.y, camera_up.z); 

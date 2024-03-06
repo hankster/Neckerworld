@@ -131,6 +131,7 @@ string cube_decode_message(char* message, int message_length) {
     msgImportJSONFileRequest.timestamp = timestamp;
     msgImportJSONFileRequest.JSONFilename = d["jsonfilename"].GetString();
     msgImportJSONFileRequest.cube_uuid = cube_uuid;
+    msgImportJSONFileRequest.ground_uuid = ground_uuid;
     string rsp = doImportJSONFileRequest(msgImportJSONFileRequest);
     return rsp;
   }
@@ -141,6 +142,7 @@ string cube_decode_message(char* message, int message_length) {
     msgImportJSONObjectRequest.timestamp = timestamp;
     msgImportJSONObjectRequest.JSONObject = d["jsonobject"].GetString();
     msgImportJSONObjectRequest.cube_uuid = cube_uuid;
+    msgImportJSONObjectRequest.ground_uuid = ground_uuid;
     string rsp = doImportJSONObjectRequest(msgImportJSONObjectRequest);
     return rsp;
   }
@@ -524,10 +526,9 @@ string doGroundViewRequest(GroundViewRequest msgGroundViewRequest) {
   d.AddMember("height", r.height, allocator);
   d.AddMember("channels", r.channels, allocator);
   Value bounding_box(kArrayType);
-  bounding_box.PushBack(r.bounding_box[0], allocator);
-  bounding_box.PushBack(r.bounding_box[1], allocator);
-  bounding_box.PushBack(r.bounding_box[2], allocator);
-  bounding_box.PushBack(r.bounding_box[3], allocator);
+  for (int i = 0; i < 20; ++i) {
+    bounding_box.PushBack(r.bounding_box[i], allocator);
+  }
   d.AddMember("bounding_box", bounding_box, allocator);
 
   int pixels_size = r.pixels.size();

@@ -34,6 +34,14 @@ To use it change to the server directory (/server) and type "cube ../setup/nwtes
 The json file created by running nwtest.py.
 This is a small field with five objects used for testing and debugging programs.
 
+### nwgnd.json or nwgnd-50.json
+These json files are empty playing fields used by ../train/nwtrain.py for training.
+```
+cube ../setup/nwgnd-50.json
+cd ../train
+nwtrain.py
+```
+
 ### nwtest.csv
 A tab-separated file which creates a wide playing field similar to nwtest.py.
 It's designed to be used with the --cubelist=nwtest.csv option in nw.py.

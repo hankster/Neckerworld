@@ -597,16 +597,22 @@ void cube_bounding_box(int i, int width, int height) {
   glm::mat4 model = cubes[i].cube_model;
   int gv = 0;
   glm::mat4 view = glm::lookAt(grounds[gv].ground_view_position, grounds[gv].ground_view_target, grounds[gv].ground_view_up);
-  glm::mat4 modelview = view * model; 
+  glm::mat4 modelview = view * model;
+  // Make a local copy of the projection
+  glm::mat4 p = update_projection(width, height);
   // The viewport specifies the size and position of your drawing area.
   glm::vec4 viewport(0.0f, 0.0f, float(width), float(height));
   for (int k=0; k < 8; ++k) {
     int kidx = 3 * k;
+    int corner_idx = 4 + (2 * k);
     glm::vec3 corner = glm::vec3(cube_corners[kidx], cube_corners[kidx+1], cube_corners[kidx+2]);
     // The project function does the magic of projecting the original point to the screen:
-    glm::vec3 projected = glm::project(corner, modelview, projection, viewport);
+    glm::vec3 projected = glm::project(corner, modelview, p, viewport);
     float px = projected[0];
     float py = projected[1];
+    // Save all corner projections for debugging
+    cubes[i].bounding_box[corner_idx] = px;
+    cubes[i].bounding_box[corner_idx+1] = py;
     if (debug > 1) printf("cube_objects.cpp: i %d k %d px %4.2f py %4.2f (%4.2f, %4.2f, %4.2f)\n", i, k, px, py, cube_corners[kidx], cube_corners[kidx+1], cube_corners[kidx+2]);
     // Check for minimum and maximum x and y values
     // Check if bounds are totally outside the window, too.

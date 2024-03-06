@@ -73,6 +73,7 @@ struct ImportJSONFileRequest {
   unsigned sequence;
   double timestamp;
   string cube_uuid;
+  string ground_uuid;
   string JSONFilename;
   bool add_JSON;
   bool in_line;
@@ -85,6 +86,7 @@ struct ImportJSONObjectRequest {
   unsigned sequence;
   double timestamp;
   string cube_uuid;
+  string ground_uuid;
   string JSONObject;
   bool add_JSON;
   bool in_line;
@@ -180,7 +182,7 @@ struct GroundViewResponse {
   int height;
   int channels;
   unsigned pixels_frame;
-  GLfloat bounding_box[4];
+  GLfloat bounding_box[20];
   std::vector<uint8_t> pixels;
   
 };

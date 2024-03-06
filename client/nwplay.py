@@ -76,7 +76,7 @@ from nwmessage import nwmessage_debug
 # def shutdown_socket(s)
 # def login_request(s, sequence, username, password, cube_uuid, ground_uuid)
 # def logout_request(s, sequence, cube_uuid, ground_uuid)
-# def import_json_file(s, sequence, jsonfile, cube_uuid)
+# def import_json_file(s, sequence, jsonfile, cube_uuid, ground_uuid)
 # def move_request(s, sequence, cube_uuid, spatial_angle, spatial_direction, spatial_direction_active, distance, velocity, gaze)
 # def status_request(s, sequence, cube_uuid)
 # def cube_view_request(s, sequence, cube_uuid, spatial_angle, gaze)

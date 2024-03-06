@@ -431,7 +431,7 @@ int shaders()
 }
 
 // Update the projection matrix
-void update_projection(int width, int height)
+glm::mat4 update_projection(int width, int height)
 {
   // tanHalfFovy = tan(rad / 2.0);
   // detail::tmat4x4<valType, defaultp> Result(0.0);
@@ -441,7 +441,7 @@ void update_projection(int width, int height)
   // Result[2][3] = - 1.0
   // Result[3][2] = - (2.0 * zFar * zNear) / (zFar - zNear);
 
-  projection = glm::perspective(glm::radians(perspective_fov), float(width)/float(height), 0.1f, 100.0f);
+  glm::mat4 p = glm::perspective(glm::radians(perspective_fov), float(width)/float(height), 0.1f, 100.0f);
 
   if (debug > 0) {
     printf("cube.cpp: update_projection %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f\n", \
@@ -449,6 +449,7 @@ void update_projection(int width, int height)
 	   projection[1][0], projection[1][1], projection[1][2], projection[1][3], \
 	   projection[2][0], projection[2][1], projection[2][2], projection[2][3], \
 	   projection[3][0], projection[3][1], projection[3][2], projection[3][3]);
+
   }
 
   if (matrix_test) {
@@ -469,7 +470,9 @@ void update_projection(int width, int height)
 
     matrix_test = false;
   }
-  
+
+  return p; 
+
 }
   
 /* Initialize required parameters for the scene */
@@ -830,7 +833,7 @@ int main(int argc, char* argv[]) {
 	// make sure the viewport matches the window dimensions; note that width and 
 	glViewport(0, 0, raster_width, raster_height);
 	/* Setup the view and projection */
-	update_projection(raster_width, raster_height);
+	projection = update_projection(raster_width, raster_height);
 	// Lock cube variables here while we setup for the next render
 	pixels_mutex[view_index].lock();
 	cube_update_view(view_index);
@@ -851,7 +854,7 @@ int main(int argc, char* argv[]) {
 	// make sure the viewport matches the window dimensions; note that width and 
 	glViewport(0, 0, main_window_width, main_window_height);
 	/* Setup the view and projection */
-	update_projection(main_window_width, main_window_height);
+	projection = update_projection(main_window_width, main_window_height);
 	ground_update_view(view_index-n_cubes);
 	
 	// Render a ground view
@@ -866,7 +869,7 @@ int main(int argc, char* argv[]) {
 	glViewport(0, 0, main_window_width, main_window_height);
 	/* Setup the view and projection */
 	view = glm::lookAt(camera_position, camera_target, camera_up);
-	update_projection(main_window_width, main_window_height);
+	projection = update_projection(main_window_width, main_window_height);
 
 	display(); 
 
@@ -1437,7 +1440,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
   // make sure the viewport matches the new window dimensions; note that width and 
   glViewport(0, 0, width, height);
   // Update our projection, too
-  update_projection(width, height);
+  projection = update_projection(width, height);
 }
 
 // Takes a screenshot
@@ -1564,16 +1567,22 @@ ViewResponse screenview(string uuid, float angle, float gaze_yaw, float gaze_pit
   cube_update_mvp(i);
   // Get window size
   glfwGetWindowSize(windows[i], &r.width, &r.height);
+  // This code has been moved to GroundfViewResponse
   // Get bounding box (needed for training)
-  cube_bounding_box(i, r.width, r.height);
+  // cube_bounding_box(i, r.width, r.height);
   // Flip the y coordinates upside down
   // ymin becomes ymax when flipped
-  r.bounding_box[0] = cubes[i].bounding_box[0];
-  r.bounding_box[1] = r.height - cubes[i].bounding_box[3];
-  r.bounding_box[2] = cubes[i].bounding_box[2];
-  r.bounding_box[3] = r.height - cubes[i].bounding_box[1];
-  // printf("cube.cpp: xmin %4.2f ymin %4.2f xmax %4.2f ymax %4.2f\n", cubes[i].bounding_box[0], cubes[i].bounding_box[1], cubes[i].bounding_box[2], cubes[i].bounding_box[3]);
-  // printf("cube.cpp: xmin %4.2f ymin %4.2f xmax %4.2f ymax %4.2f\n", r.bounding_box[0], r.bounding_box[1], r.bounding_box[2], r.bounding_box[3]);
+  // r.bounding_box[0] = cubes[i].bounding_box[0];
+  // r.bounding_box[1] = r.height - cubes[i].bounding_box[3];
+  // r.bounding_box[2] = cubes[i].bounding_box[2];
+  // r.bounding_box[3] = r.height - cubes[i].bounding_box[1];
+  r.bounding_box[0] = 0.0;
+  r.bounding_box[1] = 0.0;
+  r.bounding_box[2] = 0.0;
+  r.bounding_box[3] = 0.0;
+  //printf("cube.cpp: xmin %4.2f ymin %4.2f xmax %4.2f ymax %4.2f\n", cubes[i].bounding_box[0], cubes[i].bounding_box[1], cubes[i].bounding_box[2], cubes[i].bounding_box[3]);
+  //printf("cube.cpp: xmin %4.2f ymin %4.2f xmax %4.2f ymax %4.2f\n", r.bounding_box[0], r.bounding_box[1], r.bounding_box[2], r.bounding_box[3]);
+
   // Enable first-person-view (cube view) if not already on
   if (view_index < 0) view_index = i;
   
@@ -1680,10 +1689,38 @@ GroundViewResponse ground_screenview(string uuid, int gv) {
   // Unlock
   ground_pixels_mutex[gv].unlock();
 
+  // Set default box values to zero
+  r.bounding_box[0] = 0.0;
+  r.bounding_box[1] = 0.0;
+  r.bounding_box[2] = 0.0;
+  r.bounding_box[3] = 0.0;
+
   // if we have aleady captured a frame
   if (r.pixels_frame > 0) {
+    // See if any cubes are on display
+    // Use cube 0 for the calculation if we have one
+    int i = 0;
+    if ( n_cubes > 0) {
+      // Get bounding box (needed for training)
+      // printf("cube.cpp: Calling cube_bounding_box() from ground_screenview(%s)\n", uuid.c_str());
+      cube_bounding_box(i, r.width, r.height);
+      // Flip the y coordinates upside down
+      // ymin becomes ymax when flipped
+      r.bounding_box[0] = cubes[i].bounding_box[0];
+      r.bounding_box[1] = r.height - cubes[i].bounding_box[3];
+      r.bounding_box[2] = cubes[i].bounding_box[2];
+      r.bounding_box[3] = r.height - cubes[i].bounding_box[1];
+      // Transfer all cube corner projections for debugging
+      for (int k = 4; k < 20; k=k+2) {
+	r.bounding_box[k] = cubes[i].bounding_box[k];
+	r.bounding_box[k+1] = r.height - cubes[i].bounding_box[k+1];
+      }
+      // printf("cube.cpp: xmin %4.2f ymin %4.2f xmax %4.2f ymax %4.2f\n", cubes[i].bounding_box[0], cubes[i].bounding_box[1], cubes[i].bounding_box[2], cubes[i].bounding_box[3]);
+      // printf("cube.cpp: xmin %4.2f ymin %4.2f xmax %4.2f ymax %4.2f\n", r.bounding_box[0], r.bounding_box[1], r.bounding_box[2], r.bounding_box[3]);
+    }
+
     // Vertical flip
-    for(int line = 0; line != r.height/2; ++line) {
+    for (int line = 0; line != r.height/2; ++line) {
       std::swap_ranges(r.pixels.begin() + r.channels * r.width * line,
 		       r.pixels.begin() + r.channels * r.width * (line+1),
 		       r.pixels.begin() + r.channels * r.width * (r.height-line-1));

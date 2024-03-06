@@ -109,12 +109,12 @@ def logout_request(s, sequence, cube_uuid, ground_uuid):
         return {"message_type": "Error", "error": e}
     return j
 
-def import_json_file(s, sequence, jsonfile, cube_uuid):
+def import_json_file(s, sequence, jsonfile, cube_uuid, ground_uuid):
     
     message_type = "ImportJSONFileRequest"
 
     timestamp = time.time()
-    message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "jsonfilename": jsonfile, "cube_uuid": cube_uuid}
+    message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "jsonfilename": jsonfile, "cube_uuid": cube_uuid, "ground_uuid": ground_uuid}
     data = json.dumps(message)
     if debug:
         print("nwmessage.py: Sending   " + data)
@@ -140,12 +140,12 @@ def import_json_file(s, sequence, jsonfile, cube_uuid):
         return {"message_type": "Error", "error": e}
     return j
 
-def import_json_object(s, sequence, jsonobject, cube_uuid):
+def import_json_object(s, sequence, jsonobject, cube_uuid, ground_uuid):
     
     message_type = "ImportJSONObjectRequest"
 
     timestamp = time.time()
-    message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "jsonobject": jsonobject, "cube_uuid": cube_uuid}
+    message = {"message_type": message_type, "sequence": sequence, "timestamp": timestamp, "jsonobject": jsonobject, "cube_uuid": cube_uuid, "ground_uuid": ground_uuid}
     data = json.dumps(message)
     if debug:
         print("nwmessage.py: Sending   " + data)

@@ -633,7 +633,7 @@ def new_cube_from_list(cube_database, cube_index, cube_player, cube_player_index
 # Setup cubes from a .csv file
 def setup_cubelist(cubelist, ground_scale_factor, number_ground_textures):
 
-    # Read contens of cubedat.csv
+    # Read contents of cubedata.csv
     cube_database = new_cube_from_list_initialize()
 
     cubeList = []
