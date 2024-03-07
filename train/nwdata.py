@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 """
-nwdata.py -- A Python program to create the standard cube dataset.
+nwdata.py -- Python utilities for data management. 
 
 Sample usage:
 
@@ -8,15 +8,17 @@ Sample usage:
 
 Complete specification:
 
- nwdata.py -d -f filename -g -h -s -v --debug --file=filename --generate --help --show --version
+ nwdata.py -a -c -d -f filename -g -h -s -v --audit --csv --debug --file=filename --generate --help --show --version
 
  where
 
+ -a, --audit          Audit training images and training box list.
+ -c, --csv            Create a tab-separated list of training images, classes, bounding boxes and corners
  -d, --debug          Turn debug statements on
  -f, --file           Input filename (unused)
  -g, --generate       Generate cube json files from a csv list (input: cubedata.csv, output: json files in cubes)
  -h, --help           Print usage information
- -s, --show           Show bounding boxes on the images
+ -s, --show           Show bounding boxes on the images using the bounding box list
  -v, --version        Report program version
 
 Copyright (2024) H. S. Magnuski
@@ -38,6 +40,7 @@ debug = False
 generate = False
 show_boxes = False
 audit_images = False
+csv_creation = False
 
 training = "../training"
 tcubes = training + "/cubes"
@@ -45,6 +48,7 @@ tcubestest = training + "/cubestest"
 tcubedata = training + "/cubedata.csv"
 tcubedatatest = training + "/cubedatatest.csv"
 tboxall = training + "/training-bounding-box-all.txt"
+tboxcsv = training + "/training-bounding-box-all.csv"
 females_list = training + "/names/female-names.txt"
 males_list = training + "/names/male-names.txt"
 enbies_list = training + "/names/enby-names.txt"
@@ -61,8 +65,8 @@ surface_assets = assets + '/' + surface_templates
 textures = "textures"
 texture_training = training + '/' + textures
 
-bounding_box = training + "/" + "training-bounding-box.txt"
-# bounding_box = training + "/" + "training-bounding-box-tmp.txt"
+# bounding_box = training + "/" + "training-bounding-box.txt"
+bounding_box = training + "/" + "training-bounding-box-tmp.txt"
 
 # Some standard texture mappings
 # Standard face order is Front, Top, Back, Bottom, Left, Right
@@ -227,7 +231,7 @@ def image_audit():
                 edict[em] = 1
             else:
                 edict[em] += 1
-
+                
     # Needs train-pngs.txt or train-jpgs.txt.
     # Try find . -name "*.jpg" -print > train-jpgs.txt in direxctory training/trainers-jpg.
     with open("train-" + media[-3:] + "s.txt", 'r') as j:
@@ -244,6 +248,28 @@ def image_audit():
         if edict[em] != 80:
             print("nwdata.py: Image count for %s is %d" % (em, edict[em]))
     
+# Create a bounding box .csv from the bounding box dictionary file
+def create_csv():
+
+    media = ".jpg"
+    csv_lines = []
+    with open(tboxall, 'r') as f:
+        boxes = f.read().splitlines()
+        for box in boxes:
+            box = box.replace("'", '"')
+            json_box = json.loads(box)
+            filename_base = json_box["trainee_file"]
+            box_xy = json_box["bounding_box"]
+            corners = json_box["corners"]
+            p = filename_base.split("-")
+            player = p[1]
+            csv = "%s\t%s\t%s\t%s" % (filename_base + media, player, box_xy, corners)
+            csv_lines.append(csv)
+
+    with open(tboxcsv, 'w') as f:
+        for csvline in csv_lines:
+            f.write(csvline + "\n")
+
 
 # Generate cube json files from a .csv list
 def cube_generate():
@@ -361,6 +387,10 @@ def main():
         image_audit()
         sys.exit()
         
+    if csv_creation:
+        create_csv()
+        sys.exit()
+        
     females = []
     males = []
     enbies = []
@@ -460,12 +490,16 @@ if __name__=='__main__':
     #                                                                                            
 
     try:
-        options, args = getopt.getopt(sys.argv[1:], 'df:ghsv', ['debug', 'file=', 'generate', 'help', 'show', 'version'])
+        options, args = getopt.getopt(sys.argv[1:], 'acdf:ghsv', ['audit', 'csv', 'debug', 'file=', 'generate', 'help', 'show', 'version'])
     except getopt.GetoptError:
         Usage()
         sys.exit(-1)
 
     for o, a in options:
+        if o in ("-a", "--audit"):
+            audit_images = True
+        if o in ("-c", "--csv"):
+            csv_creation = True
         if o in ("-d", "--debug"):
             debug = True
         if o in ("-f", "--file"):
