@@ -212,12 +212,10 @@ def main():
 
     # Process all the cubes in the system
     for trainee in json_trainers:
-        # if not "enby" in trainee:
-        #     continue
         if restart:
             if restart_emoticon in trainee:
                 restart = False
-                continue
+                #continue
             else:
                 continue
 

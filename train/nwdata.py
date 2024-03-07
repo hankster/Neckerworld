@@ -37,12 +37,14 @@ import cv2
 debug = False
 generate = False
 show_boxes = False
+audit_images = False
 
 training = "../training"
 tcubes = training + "/cubes"
 tcubestest = training + "/cubestest"
 tcubedata = training + "/cubedata.csv"
 tcubedatatest = training + "/cubedatatest.csv"
+tboxall = training + "/training-bounding-box-all.txt"
 females_list = training + "/names/female-names.txt"
 males_list = training + "/names/male-names.txt"
 enbies_list = training + "/names/enby-names.txt"
@@ -204,6 +206,42 @@ def show_box_images():
             
     return
 
+# Audit files in the training directories
+# Verify that each image in the trainer directories have a match in the bounding box list
+def image_audit():
+
+    jpegs = []
+    edict = {}
+    with open(tboxall, 'r') as f:
+        boxes = f.read().splitlines()
+        for box in boxes:
+            box = box.replace("'", '"')
+            json_box = json.loads(box)
+            filename_base = json_box["trainee_file"]
+            jpegs.append(filename_base + ".jpg")
+
+            # training-enby-1f60a-ln-5.9509-512x512
+            em = filename_base[-23:-18]
+            if not em in edict:
+                edict[em] = 1
+            else:
+                edict[em] += 1
+                
+    with open("train-jpgs.txt", 'r') as j:
+        images = j.read().splitlines()
+        for i in images:
+            im = i.split("/")
+            fn = im[2]
+            if not fn in jpegs:
+                print("# nwdata.py: %s not in box file" % fn)
+                print("rm -f %s" % (im[1] + "/" + fn))
+    print("nwdata.py: Found %d box dictionaries" % len(jpegs))
+    print("nwdata.py: Found %d jpg images" % len(images))
+    for em in edict:
+        if edict[em] != 80:
+            print("nwdata.py: Image count for %s is %d" % (em, edict[em]))
+    
+
 # Generate cube json files from a .csv list
 def cube_generate():
 
@@ -314,6 +352,10 @@ def main():
         
     if show_boxes:
         show_box_images()
+        sys.exit()
+        
+    if audit_images:
+        image_audit()
         sys.exit()
         
     females = []

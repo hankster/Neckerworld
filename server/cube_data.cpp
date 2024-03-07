@@ -89,8 +89,7 @@ int json_import(char* jsonfile) {
 
 // Argument is a JSON character string
 int json_import(string jsonobject) {
-  fprintf(stdout, "cube_data.cpp: Importing JSON object\n");
-  fprintf(stdout, "%s\n", jsonobject.c_str());
+  fprintf(stdout, "cube_data.cpp: Importing JSON object -- %s\n", jsonobject.c_str());
 
   // Document d;
   d.Parse(jsonobject.c_str());
