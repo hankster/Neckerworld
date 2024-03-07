@@ -210,7 +210,8 @@ def show_box_images():
 # Verify that each image in the trainer directories have a match in the bounding box list
 def image_audit():
 
-    jpegs = []
+    media = ".png"
+    images = []
     edict = {}
     with open(tboxall, 'r') as f:
         boxes = f.read().splitlines()
@@ -218,7 +219,7 @@ def image_audit():
             box = box.replace("'", '"')
             json_box = json.loads(box)
             filename_base = json_box["trainee_file"]
-            jpegs.append(filename_base + ".jpg")
+            images.append(filename_base + media)
 
             # training-enby-1f60a-ln-5.9509-512x512
             em = filename_base[-23:-18]
@@ -226,17 +227,19 @@ def image_audit():
                 edict[em] = 1
             else:
                 edict[em] += 1
-                
-    with open("train-jpgs.txt", 'r') as j:
-        images = j.read().splitlines()
-        for i in images:
+
+    # Needs train-pngs.txt or train-jpgs.txt.
+    # Try find . -name "*.jpg" -print > train-jpgs.txt in direxctory training/trainers-jpg.
+    with open("train-" + media[-3:] + "s.txt", 'r') as j:
+        imgs = j.read().splitlines()
+        for i in imgs:
             im = i.split("/")
             fn = im[2]
-            if not fn in jpegs:
+            if not fn in images:
                 print("# nwdata.py: %s not in box file" % fn)
                 print("rm -f %s" % (im[1] + "/" + fn))
-    print("nwdata.py: Found %d box dictionaries" % len(jpegs))
-    print("nwdata.py: Found %d jpg images" % len(images))
+    print("nwdata.py: Found %d box dictionaries" % len(images))
+    print("nwdata.py: Found %d %s images" % (len(imgs), media))
     for em in edict:
         if edict[em] != 80:
             print("nwdata.py: Image count for %s is %d" % (em, edict[em]))
