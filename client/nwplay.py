@@ -84,16 +84,19 @@ from nwmessage import nwmessage_debug
 # def snapshot(filename, image)
 # def nwmessage_debug(debug)
 
-nweffdet_active = False
 gvision_active = False
+nweffdet_active = False
 nwvision_active = True
+nwyolo_active = False
 
-if nweffdet_active:
-    from nweffdet import predict
 if gvision_active:
     from gvision import predict
+if nweffdet_active:
+    from nweffdet import predict
 if nwvision_active:
     from nwvision import predict
+if nwyolo_active:
+    from nwyolo import predict
 
 debug = False
 matrix_test = False
@@ -528,7 +531,7 @@ def execute_strategy(state):
         print("nwplay.py: Current state %s" % state)
         p_filename = "p_files/prediction-%05d.jpg" % sequence
         snapshot(p_filename, view_response["image"])
-        if nweffdet_active or gvision_active or nwvision_active:
+        if gvision_active or nweffdet_active or nwvision_active or nwyolo_active:
             predictions = predict(p_filename)
         else:
             predictions = predict_test(p_filename)
@@ -615,7 +618,7 @@ def execute_strategy(state):
             spatial_direction_active_control = False
             p_filename = "p_files/prediction-%05d.jpg" % sequence
             snapshot(p_filename, view_response["image"])
-            if nweffdet_active or gvision_active or nwvision_active:
+            if gvision_active or nweffdet_active or nwvision_active or nwyolo_active:
                 predictions = predict(p_filename)
             else:
                 predictions = predict_test_one(p_filename)
@@ -656,9 +659,9 @@ def move_to_target(tclass):
         classname = player_field_list[current_target]["classname"]
         score = player_field_list[current_target]["score"]
         distance, angle = player_distance(current_location, player_field_list[current_target]["target_location"])
-        if distance < 0.1:
-            return "NoTargets"
-        if score > 0.60 or score > 0.05:
+        #if distance < 0.1:
+        #    return "NoTargets"
+        if score > 0.60:
             spatial_angle_control = angle
             spatial_distance_control = distance
             spatial_direction_control = spatial_angle_control
@@ -958,6 +961,10 @@ def main():
     if debug :
         print('Display: width = %d, height = %d' % (displayWidth, displayHeight))
 
+    # Get rid of any old prediction files
+    cmd = "rm -f p_files/*.jpg"
+    os.system(cmd)
+
     # Create an inet, streaming socket with blocking
     s = create_socket(address, port, True)
 
@@ -1081,7 +1088,7 @@ def main():
                 play_thread.start()
                          
         if debug:
-            time.sleep(5)
+            time.sleep(1.5)
         
     sequence += 1
     logout_request(s, sequence, cube_uuid, "")
