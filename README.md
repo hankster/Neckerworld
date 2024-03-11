@@ -119,7 +119,7 @@ The models run out-of-the-box with a Tensorflow-2 programming environment.
 Training a neural network on cube objects is a non-trivial undertaking and requires substantial computer resources.
 A YOLOv5 model using PyTorch for training is documented in the "train" directory. This runs well on an NVidia GPU system using CUDA.
 There are multiple utilities for setting up the required image and label files with annotations and bounding boxes.
-image samples and a label dataset suitable for training is contained within the training directory and provides an accelerated start to developing a preferred neural network model.
+Image samples and a label dataset suitable for training is contained within the training directory and provides an accelerated start to developing a preferred neural network model.
 
 ## Requirements
 
