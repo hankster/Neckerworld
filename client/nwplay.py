@@ -84,6 +84,7 @@ from nwmessage import nwmessage_debug
 # def snapshot(filename, image)
 # def nwmessage_debug(debug)
 
+# There are different ways to do image inference and object identification. These switch what method is used.
 gvision_active = False
 nweffdet_active = False
 nwvision_active = True
@@ -125,8 +126,8 @@ ground_scale_factor = 10.0
 # imagea we are retrieving from the server
 image = []
 
-# probability density function weighting
-
+# Probability density function weighting.
+# This adds a neutral density filter to the image for experimentation.
 pdf_filter = False
 u_mean = 0.0
 std_dev = 0.6
@@ -136,7 +137,7 @@ y_max = 0.665
 sound = False
 sounds = "../sounds"
 
-# Options
+# Options for type of game play desired. Buttons on panel control these.
 FindPredator = False
 FindResource = False
 FindMate = False
@@ -145,10 +146,8 @@ vrloop = False
 sequence = 0
 
 # This is a small delay to insure we have the correct image.
-# It's a temporary fixup
+# It's a temporary fixup and hack
 scan_delay = 2
-
-# Window variables
 
 # Cube state variables from status call
 # These are updated from the playing field server
@@ -294,8 +293,8 @@ def display_window_closing():
 
     global vrloop
     
-    #if messagebox.askokcancel("Quit", "Do you want to quit?"):
-    #    vrloop = False
+    # if messagebox.askokcancel("Quit", "Do you want to quit?"):
+    #     vrloop = False
     vrloop = False
     
 # Action routines from button pushes
@@ -341,7 +340,10 @@ def update_field(angle, state):
     global ground_scale_factor
     global field
     
-    scale = 2.0 * ground_scale_factor
+    # scale = 2.0 * ground_scale_factor
+    # Make field plot bigger
+    if ground_scale_factor > 10.0:
+        scale = 1.0 * ground_scale_factor
     xw = float(window_width)
     yw = float(window_height)
     xwc = xw/2.0
@@ -416,6 +418,15 @@ def check_error(msg, response):
 def cube_move(s, sequence, cube_uuid, spatial_angle, spatial_direction, spatial_direction_active, distance):
 
     velocity = 1.0
+    if distance > 5.0:
+        velocity = 2.0
+    if distance > 10.0:
+        velocity = 3.0
+    if distance > 15.0:
+        velocity = 4.0
+    if distance > 20.0:
+        velocity = 5.0
+        
     gaze = [0.0, 0.0]
 
     response = move_request(s, sequence, cube_uuid, spatial_angle, spatial_direction, spatial_direction_active, distance, velocity, gaze)
@@ -638,6 +649,7 @@ def execute_strategy(state):
         FindMate = False
         FindPredator = False
         FindResource = False
+        player_field_list = []
         return "Idle"
 
     print("Unknown state %s" % state)
@@ -658,9 +670,8 @@ def move_to_target(tclass):
     if current_target >= 0:
         classname = player_field_list[current_target]["classname"]
         score = player_field_list[current_target]["score"]
-        distance, angle = player_distance(current_location, player_field_list[current_target]["target_location"])
-        #if distance < 0.1:
-        #    return "NoTargets"
+        target_location = player_field_list[current_target]["target_location"]
+        distance, angle = player_distance(current_location, target_location)
         if score > 0.60:
             spatial_angle_control = angle
             spatial_distance_control = distance
@@ -668,8 +679,11 @@ def move_to_target(tclass):
             spatial_direction_active_control = False
             starting_location = current_location[:]
             sequence += 1
+            print("nwplay.py: move_to_target class %s distance %0.2f, angle %0.2f, current_location (%0.2f, %0.2f), target_location (%0.2f, %0.2f)" %
+                  (classname, distance, angle, current_location[0], current_location[2], target_location[0], target_location[2]))
+            if distance < 0.5:
+                return "NoTargets"
             status_message = "Move to target %s distance %0.2f" % (classname, distance)
-            print("nwplay.py: move_to_target class %s distance %0.2f, angle %0.2f" % (classname, distance, angle))
             move_response = cube_move(s, sequence, cube_uuid, spatial_angle_control, spatial_direction_control, spatial_direction_active_control, distance)
             return "Moving"
 
@@ -696,9 +710,9 @@ def get_nearest(location, player):
     for i in range(len(player_field_list)):
         if player_field_list[i]["classname"] != player:
             continue
-        dx, a  =  player_distance(location, player_field_list[i]["target_location"])
-        if dx < d:
-            d = dx
+        distance, a  =  player_distance(location, player_field_list[i]["target_location"])
+        if distance < d:
+            d = distance
             nearest = i
     
     return nearest

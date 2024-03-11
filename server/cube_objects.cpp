@@ -660,6 +660,7 @@ void cube_update_position(int i) {
     float x = cubes[i].spatial_position.x;
     float z = cubes[i].spatial_position.z;
     float a = cubes[i].spatial_rotation.y;
+
     if (cubes[i].spatial_direction_active) a = cubes[i].spatial_direction;
 
     int gscale = grounds[0].ground_scale_factor;
@@ -676,7 +677,7 @@ void cube_update_position(int i) {
     }
 
     // Compute unit distance moved per frame
-    float udpf = 1.0 / frames_per_second;
+    float udpf = v / frames_per_second;
     float d = udpf;
     
     // See if there is a distance limit on our travels
@@ -685,12 +686,15 @@ void cube_update_position(int i) {
       // Move either the distance that remains or the distance per frame
       d = min(sd, udpf);
       cubes[i].spatial_distance -= d;
+      // Throttle speed down if we are getting close
+      if (sd < 5.0) cubes[i].spatial_velocity = 1.0;
+      
       // If we've travelled the distance, halt.
       if (cubes[i].spatial_distance <= 0.0) cubes[i].spatial_velocity = 0.0;
     }
 
-    float dx = v * d * sin(a);
-    float dz = v * d * cos(a);
+    float dx = d * sin(a);
+    float dz = d * cos(a);
 
     // Move our position
     cubes[i].spatial_position.x = x + dx;
