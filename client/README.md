@@ -41,6 +41,13 @@ A module that implements an object detection neural net pre-trained on Neckerwor
 Tensorflow 2 is used for the implementation.
 The model creation and training was completed on Google Cloud Services auto-ml.
 
+### nwyolo.py
+
+A module that implements an object detection neural net pre-trained on Neckerworld cubes.
+This module initializes a YOLOv5 network with custom training (see ../train).
+The training was done on an NVidia CUDA GPU using 13,920 training images.
+This module is activated by editing nwplay.py and setting "nwyolo_active = True" and the other values False.
+
 ### nweffdet.py
 
 A module that implements an object detection neural net pre-trained on Neckerworld cubes.
