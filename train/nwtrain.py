@@ -85,7 +85,7 @@ trainer_assets = training + "/" + trainers
 trainer_assets_png = training + "/" + trainers + "-png"
 trainer_assets_jpg = training + "/" + trainers + "-jpg"
 groundview_assets = training + "/" + groundviews
-bounding_box_list_asset = training + "/" + "training-bounding-box-list.txt"
+bounding_box_txt_file = training + "/" + "training-bounding-box.txt"
 bounding_box_tmp_file = training + "/" + "training-bounding-box-tmp.txt"
 
 # views to be processed for training
@@ -184,6 +184,11 @@ def main():
 
     if debug :
         print('Display: width = %d, height = %d' % (displayWidth, displayHeight))
+
+    # Check if the output file already exists
+    if os.path.exists(bounding_box_txt_file):
+        print("nwtrain.py: Output file %s already exists. Delete it if you wish to overwrite." % bounding_box_txt_file)
+        sys.exit(-1)
 
     # Check our directories
     if not restart:
@@ -351,11 +356,11 @@ def main():
 
     # Write out the bounding box list for each image
 
-    with open(bounding_box_list_asset, 'w') as bbfile:
+    with open(bounding_box_txt_file, 'w') as bbfile:
         for box in bounding_box_list:
             bbfile.write(str(box)+"\n")
     
-    print("nwtrain.py: All training images created")
+    print("nwtrain.py: All training images created.")
     
     
 if __name__=='__main__':
