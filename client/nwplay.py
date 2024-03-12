@@ -340,7 +340,7 @@ def update_field(angle, state):
     global ground_scale_factor
     global field
     
-    # scale = 2.0 * ground_scale_factor
+    scale = 2.0 * ground_scale_factor
     # Make field plot bigger
     if ground_scale_factor > 10.0:
         scale = 1.0 * ground_scale_factor
