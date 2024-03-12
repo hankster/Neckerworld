@@ -74,7 +74,15 @@ nvidia-smi
 
 ls -al runs/exp/*
 
+# Go to the client directory
+
+cd ~/Neckerworld/client
+
 # Edit ~/Neckerworld/client/nwplay.py
 # Set "nwyolo_active = True" and all others False
+# Then start game play
+
+./nwplay.py
+
 
 ```

@@ -172,5 +172,5 @@ There is, to the author's knowledge, only one similar effort to build a game whe
 Future efforts to continue and enhance this game concept will, in part, depend on the feedback received.
 
 * Cube intersection errors -- The display of cubes that are in close proximity sometimes shows unwanted overlap and incorrect physical display.
-* When cubes run into an obstacle their backup and recovery strategy needs work.
-* Object Identification examples and training are not provided.
+* The client player (nwplay.py) needs improvement: When cubes run into an obstacle their backup and recovery strategy needs work, better route planning, NoTargets recovery, etc.
+
