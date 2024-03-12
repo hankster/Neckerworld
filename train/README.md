@@ -38,9 +38,11 @@ There is no neural net in this universe that can properly identify Neckerworld C
 
 cd
 git clone https://github.com/ultralytics/yolov5
+cd yolov5
+pip3 install -r requirements.txt
 
-# Run one of the example programs to check if all requirements have been met.
-# See, for example, "https://docs.ultralytics.com/models/yolov5/#supported-tasks-and-modes"
+# Run one of the tutorial programs to check if all requirements have been met.
+# Try the simple or detailed example at "https://docs.ultralytics.com/yolov5/tutorials/pytorch_hub_model_loading/"
 
 # Setup necessary components for our training run
 
@@ -64,6 +66,7 @@ cd ~/yolov5
 ./trainnw.sh
 
 # Training should now begin using 13,920 images.
+# If you get an "Out of Memory Error", try a smaller model in "trainnw.sh"
 # A useful tool for checking on your GPU from NVidia
 
 nvidia-smi
@@ -74,7 +77,7 @@ nvidia-smi
 
 ls -al runs/exp/*
 
-# Go to the client directory
+# Go to the client directory and activate the YOLOv5 model
 
 cd ~/Neckerworld/client
 
@@ -83,6 +86,5 @@ cd ~/Neckerworld/client
 # Then start game play
 
 ./nwplay.py
-
 
 ```
