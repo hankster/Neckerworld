@@ -174,7 +174,7 @@ total_predators = 0.0
 status_message = ""
 
 # Cube state variables needed for stategy execution
-# These are set and controller locally
+# These are set and controlled locally
 cube_state = "Idle"
 current_location = [0.0, 0.0, 0.0]
 starting_location = [0.0, 0.0, 0.0]
@@ -192,8 +192,8 @@ target_class = ""
 # Field state
 
 player_colors = {"female": "white", "male": "blue", "enby": "purple", "predator": "red", "resource": "green"}
-class_colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green"}
-bounding_box__colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green"}
+class_colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green", "removed": "black"}
+bounding_box__colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green", "removed": "black"}
 
 def Usage():
     print("Usage: nwplay.py -a addr -c cube_uuid -d -f filename -g -h -i -m -p password -s -u username -v --address=address --cube=cube_uuid --debug --file=filename --game --help --image --move --pswd=password --sound --user=username --version")
@@ -430,6 +430,8 @@ def cube_move(s, sequence, cube_uuid, spatial_angle, spatial_direction, spatial_
     gaze = [0.0, 0.0]
 
     response = move_request(s, sequence, cube_uuid, spatial_angle, spatial_direction, spatial_direction_active, distance, velocity, gaze)
+    if check_error("cube_move", response):
+        sys.exit(-1)
     return response
 
 # Get the current status
@@ -476,6 +478,9 @@ def cube_status(s, sequence, cube_uuid):
     resource_energy = response["resource_energy"]
     total_points = response["total_points"]
 
+    if debug:
+        print("nwplay.py: Status - spatial distance %0.2f, spatial_angle %0.2f, spatial_velocity %0.2f" % (spatial_distance, spatial_angle, spatial_velocity))
+    
     resource_energy_field.set("Energy = %0.2f" % resource_energy)
     total_points_field.set("Points = %0.2f" % total_points[0])
     spatial_angle_field.set("Angle = %0.2f" % (math.degrees(spatial_angle)))
@@ -563,27 +568,41 @@ def execute_strategy(state):
         print("nwplay.py: Current state %s" % state)
 
         player_field_list_merge()
+
+        if debug:
+            for p in player_field_list:
+                print("nwplay.py: plist ScanDone %s" % p)
+
         target_class = ""
+        target_mates = ""
+        target_resources = ""
+        target_predators = ""
 
         if FindPredator:
             target_class = "predators"
         if FindResource:
             target_class = "resources"
-        if cube_player == "male"  and FindMate:
+        if FindMate and cube_player == "male":
             target_class = "females"
-        if cube_player == "female" and FindMate:
+        if FindMate and cube_player == "female":
             target_class = "males"
 
         if GameOn and target_class == "":
             for p in player_field_list:
-                if target_class == "" and p["classname"] == "males" and cube_player == "female":
-                    target_class = "males"
-                if target_class == "" and p["classname"] == "females" and cube_player == "male":
-                    target_class = "females"
+                if p["classname"] == "males" and cube_player == "female":
+                    target_mates = "males"
+                if p["classname"] == "females" and cube_player == "male":
+                    target_mates = "females"
                 if p["classname"] == "resources" and resource_energy < 1000.0:
-                    target_class = "resources"
+                    target_resources = "resources"
                 if p["classname"] == "predators":
-                    target_class = "predators"
+                    target_predators = "predators"
+
+            # Setup our priorities
+            target_priorities = [target_predators, target_resources, target_mates] 
+            for t in target_priorities:
+                if t != "":
+                    target_class = t
                     break
                 
         # Find the nearest target
@@ -593,6 +612,9 @@ def execute_strategy(state):
 
         update_location()
 
+        if debug:
+            print("nwplay.py: current location update (%0.2f, %0.2f)" % (current_location[0], current_location[2]))
+        
         if debug:
             print("nwplay.py: Current state %s, spatial_distance = %0.2f sdc %0.2f x %0.2f z %0.2f (%0.2f, %0.2f)"
               % (state, spatial_distance, spatial_distance_control, current_location[0], current_location[2], starting_location[0], starting_location[2]))
@@ -634,10 +656,15 @@ def execute_strategy(state):
             else:
                 predictions = predict_test_one(p_filename)
             plist = analyze_scene(predictions)
-            update_bounding_boxes(plist)
             for p in plist:
                 player_field_list.append(p)
             player_field_list_merge()
+            update_bounding_boxes(plist)
+
+            if debug:
+                print("nwplay.py: EndMove at (%0.2f, %0.2f)" % (current_location[0], current_location[2]))
+                for p in player_field_list:
+                    print("nwplay.py: plist EndMov %s" % p)
 
             return move_to_target(target_class)
 
@@ -649,6 +676,12 @@ def execute_strategy(state):
         FindMate = False
         FindPredator = False
         FindResource = False
+
+        if debug:
+            print("nwplay.py: NoTargets at (%0.2f, %0.2f)" % (current_location[0], current_location[2]))
+            for p in player_field_list:
+                print("nwplay.py: plist NoTargets %s" % p)
+
         return "Idle"
 
     print("Unknown state %s" % state)
@@ -671,21 +704,28 @@ def move_to_target(tclass):
         score = player_field_list[current_target]["score"]
         target_location = player_field_list[current_target]["target_location"]
         distance, angle = player_distance(current_location, target_location)
-        if score > 0.60:
+        if score > 0.50:
             spatial_angle_control = angle
-            spatial_distance_control = distance
             spatial_direction_control = spatial_angle_control
             spatial_direction_active_control = False
             starting_location = current_location[:]
             sequence += 1
+
+            if distance < 0.01:
+                print("nwplay.py: distance is too short = %0.2f, returning 'NoTargets'" % distance)
+                return "NoTargets"
+            if distance > 25.0:
+                print("nwplay.py: Distance was %0.2f, reducing to %0.2f" % (distance, distance-2.0))
+                distance -= 2.0
+            spatial_distance_control = distance
             print("nwplay.py: move_to_target class %s distance %0.2f, angle %0.2f, current_location (%0.2f, %0.2f), target_location (%0.2f, %0.2f)" %
                   (classname, distance, angle, current_location[0], current_location[2], target_location[0], target_location[2]))
-            if distance < 0.5:
-                return "NoTargets"
             status_message = "Move to target %s distance %0.2f" % (classname, distance)
             move_response = cube_move(s, sequence, cube_uuid, spatial_angle_control, spatial_direction_control, spatial_direction_active_control, distance)
             return "Moving"
-
+        else:
+            print("nwplay.py: move_to_target - Score is too low %0.2f, returning NoTargets" % score)
+        
     return "NoTargets"
     
 # Calculate player distance and angle
@@ -696,6 +736,7 @@ def player_distance(me, target):
 
     distance = math.sqrt(dx*dx + dz*dz)
 
+    # atan2(Y, X)
     angle = math.atan2(dx, dz)
 
     return distance, angle
@@ -720,36 +761,52 @@ def get_nearest(location, player):
 def player_field_list_merge():
 
     global player_field_list
-    
+
+    # This will be the revised list with original and merged points.
     player_list_new = []
 
     p_index = 0
     pfl_len = len(player_field_list)
+
+    # Scan through all the players that have been identified.
     for p in player_field_list:
         classname = p["classname"]
+
+        # Skip over dead or out of action players.
         if classname == "removed":
             p_index += 1
             continue
+
         score = p["score"]
         location = p["target_location"]
         scale_factor = p["scale_factor"]
         box = p["bounding_box"]
+
+        # if there are any players remaining in the list
         if p_index + 1 < pfl_len:
+            # Start looking for possible matches
             for i in range(p_index+1, pfl_len):
                 cn = player_field_list[i]["classname"]
+                # if the player types don't match up, skip
                 if cn != classname:
                     continue
                 sc = player_field_list[i]["score"]
                 tl = player_field_list[i]["target_location"]
                 sf = player_field_list[i]["scale_factor"]
+                # Compute the distance between players
                 distance, angle = player_distance(location, tl)
+                # If the distance is less than the sum of the two different scale factors (size)
                 if distance < cube_scale_factor+sf:
+                    # Merge the two cubes (take the average of location, etc.)
+                    # If there are more than two nearby points, the last are more heavily weighted. 
                     location[0] = (location[0]+tl[0])/2.0
                     location[2] = (location[2]+tl[2])/2.0
                     score = (score+sc)/2.0
                     scale_factor = (scale_factor+sf)/2.0
+                    # Marked merged player as out of consideration
                     player_field_list[i]["classname"] = "removed"
 
+        # When all nearby points of p have been reviewed and merged, add the original or merged into a new list.
         np = {"classname": classname, "score": score, "bounding_box": box, "scale_factor": scale_factor, "target_location": location}
         player_list_new.append(np)
         p_index += 1
@@ -791,7 +848,7 @@ def analyze_scene(predictions):
         
     plist = predictions["predictions"]
 
-    player_list = []
+    analyze_player_list = []
     
     for p in plist:
         classname = p["classname"]
@@ -855,9 +912,12 @@ def analyze_scene(predictions):
 
         player = {"classname": classname, "score": score, "bounding_box": bbox, "scale_factor": sf, "target_location": target_location}
 
-        player_list.append(player)
+        if debug:
+            print("nwplay.py: Analyze scene appends player %s" % player)
+
+        analyze_player_list.append(player)
         
-    return player_list
+    return analyze_player_list
 
 def perspective_projection_matrix(fov, aspect, zNear, zFar):
 
