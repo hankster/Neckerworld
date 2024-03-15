@@ -364,7 +364,7 @@ void cube_energy_check(int i);
 void cube_energy_cost(int i);
 void cube_total_points(int i, float *total, float *mate, float *food, float *kill);
 
-GLfloat find_angle(GLfloat dz, GLfloat dx);
+GLfloat find_angle(GLfloat dx, GLfloat dz);
 int find_nearest_me(int i, string type);
 
 void ground_update_model(int i);

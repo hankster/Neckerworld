@@ -629,7 +629,7 @@ void cube_move_to_target(int me, int target) {
     float dx = cubes[target].spatial_position.x - cubes[me].spatial_position.x;
     float dz = cubes[target].spatial_position.z - cubes[me].spatial_position.z;
     float d = sqrt(dx*dx + dz*dz);
-    float angle = find_angle(dz, dx);
+    float angle = find_angle(dx, dz);
     //printf("cube.cpp: d %02f, x %0.2f, z %0.2f, tx %0.2f, tz %0.2f, dx %0.2f, dz %0.2f, a %0.2f(%0.2f)\n", d, cubes[me].spatial_position.x, cubes[me].spatial_position.z, cubes[target].spatial_position.x, cubes[target].spatial_position.z, dx, dz, angle, 360.0*angle/(2.0*pi));
     cubes[me].spatial_direction_active = false;
     cube_update_angle(me, angle);

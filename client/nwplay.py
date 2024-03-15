@@ -649,7 +649,6 @@ def execute_strategy(state):
         FindMate = False
         FindPredator = False
         FindResource = False
-        player_field_list = []
         return "Idle"
 
     print("Unknown state %s" % state)

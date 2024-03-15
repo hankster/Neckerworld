@@ -1004,7 +1004,8 @@ int find_nearest(int me, string type) {
 }
 
 // Given delta in x and z, find the angle.
-float find_angle(float dz, float dx) {
+float find_angle(float dx, float dz) {
+  // atan2(Y, X)
   return atan2(dx, dz);
 }
 
