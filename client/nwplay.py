@@ -713,6 +713,7 @@ def move_to_target(tclass):
 
             if distance < 0.01:
                 print("nwplay.py: distance is too short = %0.2f, returning 'NoTargets'" % distance)
+                player_field_list[current_target]["classname"] = "removed"
                 return "NoTargets"
             if distance > 25.0:
                 print("nwplay.py: Distance was %0.2f, reducing to %0.2f" % (distance, distance-2.0))
