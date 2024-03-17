@@ -85,7 +85,7 @@ def p_test():
         
         if len(results["predictions"]) > 0:
             r = results["predictions"][0]
-            print("nweffdet.py: Predicted class name: {0:>9s}, score {1:0.3f} {2}".format(r["classname"], r["score"], r["bounding_vertices"]))
+            print("nwvision.py: Predicted class name: {0:>9s}, score {1:0.3f} {2}".format(r["classname"], r["score"], r["bounding_vertices"]))
             classname = r["classname"]
             score = r["score"]
             if score >= threshold and cn[0:4] == classname[0:4]:
@@ -151,7 +151,11 @@ def predict(image_filename):
         predictions["predictions"].append({"classname": classname, "score": score, "bounding_vertices": bounding_vertices})
 
     if len(predictions["predictions"]) > 0:
-        print("nwvision.py: predictions %s" % predictions)
+        for p in predictions["predictions"]:
+            c = p["classname"]
+            s = p["score"]
+            b = p["bounding_vertices"]
+            print("nwvision.py: predict classname %9s score %0.3f box [%0.2f, %0.2f, %0.2f, %0.2f]" % (c, s, b[0], b[1], b[2], b[3]))
 
     return predictions
 #

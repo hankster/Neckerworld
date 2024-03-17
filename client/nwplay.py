@@ -8,7 +8,7 @@ Sample usage:
 
 Complete specification:
 
- nwplay.py -a address -c cube_uuid -d -f filename -g -h -i -k -m -p password -r -s -u username -v --address address --cube=cube_uuid --debug --file=filename --game --help --image --kill --mate --pswd=password --resource --sound --user=username --version
+ nwplay.py -a address -c cube_uuid -d -f filename -g -h -i -k -m -p password -r -s -u username -v -y --address address --cube=cube_uuid --debug --file=filename --game --help --image --kill --mate --pswd=password --resource --sound --user=username --version --yolo
 
  where
 
@@ -27,6 +27,7 @@ Complete specification:
  -s, --sound          Enable sound
  -u, --user           Username
  -v, --version        Report program version
+ -y, --yolo           Use YOLO inference
 
 Copyright (2023) H. S. Magnuski
 All rights reserved
@@ -89,15 +90,6 @@ gvision_active = False
 nweffdet_active = False
 nwvision_active = True
 nwyolo_active = False
-
-if gvision_active:
-    from gvision import predict
-if nweffdet_active:
-    from nweffdet import predict
-if nwvision_active:
-    from nwvision import predict
-if nwyolo_active:
-    from nwyolo import predict
 
 debug = False
 matrix_test = False
@@ -640,7 +632,11 @@ def execute_strategy(state):
             total_predators = total_points[3]
             near = get_nearest(current_location, "predators")
             if near >= 0:
-                print("nwplay.py: total_points removing %s" % player_field_list[near])
+                pl = player_field_list[near]
+                cn = pl["classname"]
+                sc = pl["score"]
+                tl = pl["target_location"]
+                print("nwplay.py: total_points remove classname %9s score %0.3f at (%0.2f, %0.2f)" % (cn, sc, tl[0], tl[2]))
                 player_field_list[near]["classname"] = "removed"
 
         if spatial_position_blocked:
@@ -719,7 +715,7 @@ def move_to_target(tclass):
                 print("nwplay.py: Distance was %0.2f, reducing to %0.2f" % (distance, distance-2.0))
                 distance -= 2.0
             spatial_distance_control = distance
-            print("nwplay.py: move_to_target class %s distance %0.2f, angle %0.2f, current_location (%0.2f, %0.2f), target_location (%0.2f, %0.2f)" %
+            print("nwplay.py: move_to_target classname %s distance %0.2f, angle %0.2f, current_location (%0.2f, %0.2f), target_location (%0.2f, %0.2f)" %
                   (classname, distance, angle, current_location[0], current_location[2], target_location[0], target_location[2]))
             status_message = "Move to target %s distance %0.2f" % (classname, distance)
             move_response = cube_move(s, sequence, cube_uuid, spatial_angle_control, spatial_direction_control, spatial_direction_active_control, distance)
@@ -1228,7 +1224,7 @@ if __name__=='__main__':
     #                                                                                            
 
     try:
-        options, args = getopt.getopt(sys.argv[1:], 'a:c:df:ghikmp:rsu:v', ['address=','cube=','debug','file=','game','help','image','kill','mate','pswd=','resource','sound','user=','version'])
+        options, args = getopt.getopt(sys.argv[1:], 'a:c:df:ghikmp:rsu:vy', ['address=','cube=','debug','file=','game','help','image','kill','mate','pswd=','resource','sound','user=','version', 'yolo'])
     except getopt.GetoptError:
         Usage()
         sys.exit(2)
@@ -1265,7 +1261,20 @@ if __name__=='__main__':
         if o in ("-v", "--version"):
             print("nwplay.py Version 1.0")
             sys.exit()
+        if o in ("-y", "--yolo"):
+            nwvision_active = False
+            nwyolo_active  = True
         
+        # Select the type of inference model to use
+        if gvision_active:
+            from gvision import predict
+        if nweffdet_active:
+            from nweffdet import predict
+        if nwvision_active:
+            from nwvision import predict
+        if nwyolo_active:
+            from nwyolo import predict
+
         # If sound effects are desired
         if sound:
             from threading import Thread
