@@ -42,6 +42,10 @@ Consequently, game points are scored through three activities:
 * Killing off predators
 * Mating and having child cubes
 
+For a quick demo, checkout this video: ![Demo](https://youtu.be/79xiX2FlELk)
+
+## Game Players
+
 There are five types of players in the game.
 
 ![Neckerworld players](images/Neckerworld-players.png)
