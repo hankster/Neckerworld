@@ -42,7 +42,7 @@ Consequently, game points are scored through three activities:
 * Killing off predators
 * Mating and having child cubes
 
-For a quick demo, checkout this video: https://youtu.be/79xiX2FlELk
+For a quick demo, check out this video: https://youtu.be/79xiX2FlELk
 
 ## Game Players
 
