@@ -115,6 +115,10 @@ window_image_length = window_width * window_height * window_channels
 # ground scale factor (1/2 width of the playing field)
 ground_scale_factor = 10.0
 
+# Center points around which the field plot is formed
+xfp = 0.0
+yfp = 0.0
+
 # imagea we are retrieving from the server
 image = []
 
@@ -331,16 +335,32 @@ def update_field(angle, state):
 
     global ground_scale_factor
     global field
+    global xfp, yfp
     
     scale = 2.0 * ground_scale_factor
     # Make field plot bigger
     if ground_scale_factor > 10.0:
-        scale = 1.0 * ground_scale_factor
+        scale = 0.55 * ground_scale_factor
     xw = float(window_width)
     yw = float(window_height)
-    xwc = xw/2.0
-    ywc = yw/2.0
+    xwfd = xw/2.0
+    ywfd = yw/2.0
     
+    # See if we have to adjust the position of the field center
+    xcl = current_location[0]
+    ycl = current_location[2]
+    # wc is in world coordinates, not window coordinates
+    dxwc = xcl - xfp
+    dywc = ycl - yfp
+    wcd = math.sqrt(dxwc*dxwc+dywc*dywc)
+    # Adjust the field center position
+    if wcd > 5.0:
+        xfp += dxwc/2.0
+        yfp += dywc/2.0
+    xwfp = (xwfd * xfp / scale) + xwfd
+    ywfp = (ywfd * yfp / scale) + ywfd
+    
+
     # Erase previous icons
     field.delete("all")
 
@@ -355,16 +375,16 @@ def update_field(angle, state):
         pcolor = class_colors[classname]
         csf = p["scale_factor"]
         target_location = p["target_location"]
-        pxc = int(-xwc * (target_location[0]/scale) + xwc) 
-        pyc = int(-ywc * (target_location[2]/scale) + ywc)
-        dx = int(xwc * csf/scale)
-        dy = int(ywc * csf/scale)
+        pxc = int(-xwfd * (target_location[0]/scale) + xwfp) 
+        pyc = int(-ywfd * (target_location[2]/scale) + ywfp)
+        dx = int(xwfd * csf/scale)
+        dy = int(ywfd * csf/scale)
         player = field.create_rectangle(pxc-dx, pyc-dy, pxc+dx, pyc+dy, fill=pcolor, outline='yellow', width=1)
         
-    player_x = int(-xwc * (current_location[0]/scale) + xwc)
-    player_y = int(-ywc * (current_location[2]/scale) + ywc)
-    dx = int(xwc * cube_scale_factor/scale)
-    dy = int(ywc * cube_scale_factor/scale)
+    player_x = int(-xwfd * (current_location[0]/scale) + xwfp)
+    player_y = int(-ywfd * (current_location[2]/scale) + ywfp)
+    dx = int(xwfd * cube_scale_factor/scale)
+    dy = int(ywfd * cube_scale_factor/scale)
     r = math.sqrt(dx*dx + dy*dy)
     pi = math.pi
     x0, y0 =  box_rotate(r, angle, pi/4.0)
@@ -652,10 +672,10 @@ def execute_strategy(state):
             else:
                 predictions = predict_test_one(p_filename)
             plist = analyze_scene(predictions)
+            update_bounding_boxes(plist)
             for p in plist:
                 player_field_list.append(p)
             player_field_list_merge()
-            update_bounding_boxes(plist)
 
             if debug:
                 print("nwplay.py: EndMove at (%0.2f, %0.2f)" % (current_location[0], current_location[2]))
