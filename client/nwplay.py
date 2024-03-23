@@ -1285,20 +1285,20 @@ if __name__=='__main__':
             nwvision_active = False
             nwyolo_active  = True
         
-        # Select the type of inference model to use
-        if gvision_active:
-            from gvision import predict
-        if nweffdet_active:
-            from nweffdet import predict
-        if nwvision_active:
-            from nwvision import predict
-        if nwyolo_active:
-            from nwyolo import predict
+    # Select the type of inference model to use
+    if gvision_active:
+        from gvision import predict
+    if nweffdet_active:
+        from nweffdet import predict
+    if nwvision_active:
+        from nwvision import predict
+    if nwyolo_active:
+        from nwyolo import predict
 
-        # If sound effects are desired
-        if sound:
-            from threading import Thread
-            from playsound import playsound
+    # If sound effects are desired
+    if sound:
+        from threading import Thread
+        from playsound import playsound
 
     main()
     sys.exit()
