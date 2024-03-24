@@ -192,7 +192,7 @@ class_colors = {"females": "white", "males": "blue", "enbies": "purple", "predat
 bounding_box__colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green", "removed": "black"}
 
 def Usage():
-    print("Usage: nwplay.py -a addr -c cube_uuid -d -f filename -g -h -i -m -p password -s -u username -v --address=address --cube=cube_uuid --debug --file=filename --game --help --image --move --pswd=password --sound --user=username --version")
+    print("Usage: nwplay.py -a addr -c cube_uuid -d -f filename -g -h -i -m -p password -s -u username -v -y --address=address --cube=cube_uuid --debug --file=filename --game --help --image --move --pswd=password --sound --user=username --version --yolo")
 
 # probability density function
 
@@ -527,13 +527,18 @@ def execute_strategy(state):
     
     if state == "Idle":
         if spatial_position_blocked:
+            # We need to back up. First set backup distance and backup angle
+            # The blocked flag will be cleared by the server as soon as it recives a backup move.
+            # Set the backup distance and angle.
             spatial_distance_control = 1.0
+            # The spatial_angle_control is where the cube is looking or facing, the spatial_direction_control is where it's going.
             spatial_direction_control = spatial_angle_control-math.pi
+            # If spatial_direction_active_control = True, keep the cube facing the same way and don't turn it in the direction of travel.
             spatial_direction_active_control = True
             starting_location = current_location[:]
             sequence += 1
             status_message = "Unblock distance %0.2f, angle %0.2f" % (spatial_distance_control, spatial_direction_control)
-            print("nwplay.py: unblock distance %0.2f, angle %0.2f" % (spatial_distance_control, spatial_direction_control))
+            print("nwplay.py: Idle - unblock distance %0.2f, angle %0.2f" % (spatial_distance_control, spatial_direction_control))
             move_response = cube_move(s, sequence, cube_uuid, spatial_angle_control, spatial_direction_control, spatial_direction_active_control, spatial_distance_control)
             return "Moving"
         if resource_energy < 50.0:
@@ -660,10 +665,14 @@ def execute_strategy(state):
                 player_field_list[near]["classname"] = "removed"
 
         if spatial_position_blocked:
+            # We've run into something. We're stopped and need to back up.
+            # print("nwplay.py: Moving - spatial_position_blocked - active_control now False, return Idle")
             spatial_direction_active_control = False
             return "Idle"
 
         if spatial_velocity == 0.0:
+            # We've moved the distance requested. Take a look ahead and figure out what to do.
+            # print("nwplay.py: Moving - spatial_velocity = 0.0, active_control now False, return move_to_target()")
             spatial_direction_active_control = False
             p_filename = "p_files/prediction-%05d.jpg" % sequence
             snapshot(p_filename, view_response["image"])
@@ -713,32 +722,36 @@ def move_to_target(tclass):
     global starting_location
     global status_message
     
+    spatial_direction_active_control = False
+    starting_location = current_location[:]
     current_target = get_nearest(current_location, tclass)
 
     if current_target >= 0:
-        classname = player_field_list[current_target]["classname"]
         score = player_field_list[current_target]["score"]
-        target_location = player_field_list[current_target]["target_location"]
-        distance, angle = player_distance(current_location, target_location)
         if score > 0.50:
-            spatial_angle_control = angle
-            spatial_direction_control = spatial_angle_control
-            spatial_direction_active_control = False
-            starting_location = current_location[:]
-            sequence += 1
+            classname = player_field_list[current_target]["classname"]
+            target_location = player_field_list[current_target]["target_location"]
+            distance, angle = player_distance(current_location, target_location)
 
             if distance < 0.01:
-                print("nwplay.py: distance is too short = %0.2f, returning 'NoTargets'" % distance)
+                print("nwplay.py: move_to_target - distance is too short = %0.2f, returning 'NoTargets'" % distance)
                 player_field_list[current_target]["classname"] = "removed"
                 return "NoTargets"
             if distance > 25.0:
-                print("nwplay.py: Distance was %0.2f, reducing to %0.2f" % (distance, distance-2.0))
+                print("nwplay.py: move_to_target - Distance was %0.2f, reducing to %0.2f" % (distance, distance-2.0))
                 distance -= 2.0
-            spatial_distance_control = distance
+
+            # Plan an optimum path avoiding obstacles
+            opt_distance, opt_angle = check_path(classname, distance, angle)
+            spatial_angle_control = opt_angle
+            spatial_direction_control = opt_angle
+            spatial_distance_control = opt_distance
+            
             print("nwplay.py: move_to_target classname %s distance %0.2f, angle %0.2f, current_location (%0.2f, %0.2f), target_location (%0.2f, %0.2f)" %
-                  (classname, distance, angle, current_location[0], current_location[2], target_location[0], target_location[2]))
+                  (classname, opt_distance, opt_angle, current_location[0], current_location[2], target_location[0], target_location[2]))
             status_message = "Move to target %s distance %0.2f" % (classname, distance)
-            move_response = cube_move(s, sequence, cube_uuid, spatial_angle_control, spatial_direction_control, spatial_direction_active_control, distance)
+            sequence += 1
+            move_response = cube_move(s, sequence, cube_uuid, spatial_angle_control, spatial_direction_control, spatial_direction_active_control, opt_distance)
             return "Moving"
         else:
             print("nwplay.py: move_to_target - Score is too low %0.2f, returning NoTargets" % score)
@@ -773,6 +786,46 @@ def get_nearest(location, player):
             nearest = i
     
     return nearest
+
+# Before making a move, check for obstacles and reroute if necessary
+def check_path(cnm, dst, ang):
+
+    global player_field_list
+    global current_location
+
+    # Default results
+    opt_distance = dst
+    opt_angle = ang
+    
+    # Screen for +/- 45 degrees and closer than the check_distance
+    check_angle = math.pi/4.0
+    check_distance = 5.0
+
+    # print("nwplay.py: check_path for %s starting with d = %0.2f, a = %0.2f" % (cnm, dst, ang))
+    
+    for p in player_field_list:
+        c = p["classname"]
+        t = p["target_location"]
+        if c == cnm:
+            # print("nwplay.py: check_path ignoring %s" % (c))
+            continue
+        d, a = player_distance(current_location, p["target_location"])
+        # print("nwplay.py: check_path working on %s d = %0.2f, a = %0.2f" % (c, d, a))
+        
+        if d > check_distance:
+            continue
+        if a >= ang+check_angle or a <= ang-check_angle:
+            continue
+        if a < ang:
+            opt_angle = ang+check_angle
+            opt_distance = dst/5.0
+            # print("nwplay.py: check_path less opt_distance %0.2f opt_angle %0.2f" % (opt_distance, opt_angle))
+        if a > ang:
+            opt_angle = ang-check_angle
+            opt_distance = dst/5.0
+            # print("nwplay.py: check_path more opt_distance %0.2f opt_angle %0.2f" % (opt_distance, opt_angle))
+    
+    return opt_distance, opt_angle
 
 # Merge possible duplicate entries in the player field list
 def player_field_list_merge():

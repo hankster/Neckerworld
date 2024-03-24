@@ -777,6 +777,7 @@ int cube_remote_move(int i, float angle, float direction, bool direction_active,
   cube_update_waypoints(i, MOVEMENT);
 
   // Now make our move
+  // Need to review possible conflict with "cube_update_position(i)" call from cube.cpp (multi-thread overlap?).
   cube_update_position(i);
   
   return 0;
