@@ -788,6 +788,8 @@ def get_nearest(location, player):
     return nearest
 
 # Before making a move, check for obstacles and reroute if necessary
+# Current version scans for players within "check_distance" units and within "+/- check_angle" radians.
+# It doesn't handle cases where there are more than one obstacles in that range.
 def check_path(cnm, dst, ang):
 
     global player_field_list
