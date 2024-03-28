@@ -145,18 +145,26 @@ sequence = 0
 # It's a temporary fixup and hack
 scan_delay = 2
 
-# Cube state variables from status call
-# These are updated from the playing field server
-cube_player = ""
+# Cube uuid login options
 cube_uuid = ""
 cube_uuid_option = ""
 cube_uuid_list = []
 cube_uuid_favorites = ['1354b75f-9ca5-4da5-80b2-8f0056f9e08e', 'a5ba491d-85a9-4736-bc60-c39adc12a723']
+
+# Cube state variables from status call
+# These are updated from the playing field server
+cube_player = ""
+cube_uuid_status = ""
 cube_firstname = ""
 cube_active = True
+cube_display = True
+cube_remote = True
+cube_scale_factor = 1.0
 spatial_angle = 0.0
 spatial_direction = 0.0
 spatial_direction_active = False
+spatial_gaze = [0.0, 0.0]
+spatial_radius = 1.414
 spatial_distance = 0.0
 spatial_velocity = 0.0
 spatial_position_blocked = False
@@ -174,12 +182,14 @@ status_message = ""
 cube_state = "Idle"
 current_location = [0.0, 0.0, 0.0]
 starting_location = [0.0, 0.0, 0.0]
+scan_list = None
+scan_angle_control = 0.0
 scan_state_control = 0
-spatial_angle_control = 0.0
 spatial_distance_control = 0.0
+spatial_angle_control = 0.0
 spatial_direction_control = 0.0
 spatial_direction_active_control = False
-gaze_control = [0.0, 0.0]
+spatial_gaze_control = [0.0, 0.0]
 
 # List of all objects detected in scanning tasks
 player_field_list = []
@@ -331,7 +341,7 @@ def update_bounding_boxes(plist):
 
 
 # Update our field plot
-def update_field(angle, state):
+def update_field(angle, gaze, state):
 
     global ground_scale_factor
     global field
@@ -393,10 +403,10 @@ def update_field(angle, state):
     x3, y3 =  box_rotate(r, angle, 7.0*pi/4.0)
     rv0 = dx * 1.05
     rv1 = dx * 2.5
-    vlx0, vly0 = box_rotate(rv0, angle, 0.0)
-    vlx1, vly1 = box_rotate(rv1, angle, pi/12.0)
-    vrx0, vry0 = box_rotate(rv0, angle, 0.0)
-    vrx1, vry1 = box_rotate(rv1, angle, -pi/12.0)
+    vlx0, vly0 = box_rotate(rv0, angle+gaze[0] , 0.0)
+    vlx1, vly1 = box_rotate(rv1, angle+gaze[0], pi/12.0)
+    vrx0, vry0 = box_rotate(rv0, angle+gaze[0], 0.0)
+    vrx1, vry1 = box_rotate(rv1, angle+gaze[0], -pi/12.0)
     
     player = field.create_polygon(player_x+x0, player_y+y0, player_x+x1, player_y+y1, player_x+x2, player_y+y2, player_x+x3, player_y+y3, fill=player_colors[cube_player], outline='white', width=1)
     if state == "Scanning":
@@ -450,13 +460,17 @@ def cube_move(s, sequence, cube_uuid, spatial_angle, spatial_direction, spatial_
 def cube_status(s, sequence, cube_uuid):
 
     global cube_player
+    global cube_uuid_status
     global cube_firstname
-    global cube_active
+    global cube_active, cube_display, cube_remote
     global cube_scale_factor
     global spatial_angle
-    global spatial_direction, spatial_direction_active
-    global spatial_distance, spatial_velocity
+    global spatial_direction
+    global spatial_direction_active
     global spatial_gaze
+    global spatial_radius
+    global spatial_distance
+    global spatial_velocity
     global spatial_position_blocked
     global resource_energy
     global total_points
@@ -512,10 +526,11 @@ def execute_strategy(state):
 
     global s
     global sequence
-    global scan_state_control, scan_delay
+    global scan_list, scan_angle_control, scan_state_control, scan_delay
     global spatial_angle_control
     global spatial_distance_control
     global spatial_direction_control, spatial_direction_active_control
+    global spatial_gaze_control
     global current_location
     global starting_location
     global view_response
@@ -524,23 +539,12 @@ def execute_strategy(state):
     global target_class
     global total_points, total_mates, total_resources, total_predators, resource_energy
     global status_message
+
+    scan_360 = [0.0, math.pi/4.0, 2.0 * math.pi/4.0, 3.0 * math.pi/4.0, math.pi, 5.0 * math.pi/4.0, 6.0 * math.pi/4.0, 7.0 * math.pi/4.0]
+    scan_120 = [2.0 * math.pi/6.0, 1.0 * math.pi/6.0, 0.0, -1.0 * math.pi/6.0, -2.0 * math.pi/6.0]
     
     if state == "Idle":
-        if spatial_position_blocked:
-            # We need to back up. First set backup distance and backup angle
-            # The blocked flag will be cleared by the server as soon as it recives a backup move.
-            # Set the backup distance and angle.
-            spatial_distance_control = 1.0
-            # The spatial_angle_control is where the cube is looking or facing, the spatial_direction_control is where it's going.
-            spatial_direction_control = spatial_angle_control-math.pi
-            # If spatial_direction_active_control = True, keep the cube facing the same way and don't turn it in the direction of travel.
-            spatial_direction_active_control = True
-            starting_location = current_location[:]
-            sequence += 1
-            status_message = "Unblock distance %0.2f, angle %0.2f" % (spatial_distance_control, spatial_direction_control)
-            print("nwplay.py: Idle - unblock distance %0.2f, angle %0.2f" % (spatial_distance_control, spatial_direction_control))
-            move_response = cube_move(s, sequence, cube_uuid, spatial_angle_control, spatial_direction_control, spatial_direction_active_control, spatial_distance_control)
-            return "Moving"
+
         if resource_energy < 50.0:
                 FindResource = True
         if resource_energy > 1000.0:
@@ -548,13 +552,41 @@ def execute_strategy(state):
         if cube_player == "male" or cube_player == "female" or cube_player == "enby":
             if FindMate or FindPredator or FindResource or GameOn:
                 scan_state_control = 0
+                scan_list = scan_360
+                scan_angle_control = spatial_angle_control
+                spatial_angle_control = scan_list[scan_state_control]
                 # This is a hack, needs fixing.
                 scan_delay = 2
-                spatial_angle_control = 0.0
                 return "Scanning"
             return state
         return state
         
+    if state == "Blocked":
+
+        # We need to back up. First set backup distance and backup angle
+        # The blocked flag will be cleared by the server as soon as it recives a backup move.
+
+        if debug:
+            print("nwplay.py: Blocked %s distance_control %0.2f distance %0.2f" % (target_class, spatial_distance_control, spatial_distance))
+
+        # Set the backup distance and angle. If we are munching on a resource, only backup 1.0 units
+        if target_class == "resources" and (spatial_distance < 2.0):
+            spatial_distance_control = 1.0
+        else:
+            spatial_distance_control = 4.0
+
+        # The spatial_angle_control is where the cube is looking or facing, the spatial_direction_control is where it's going.
+        spatial_direction_control = spatial_angle_control-math.pi
+        # If spatial_direction_active_control = True, keep the cube facing the same way and don't turn it in the direction of travel.
+        spatial_direction_active_control = True
+
+        starting_location = current_location[:]
+        sequence += 1
+        status_message = "Unblock distance %0.2f, angle %0.2f" % (spatial_distance_control, spatial_direction_control)
+        print("nwplay.py: execute_strategy - state is Blocked - unblock distance %0.2f, angle %0.2f" % (spatial_distance_control, spatial_direction_control))
+        move_response = cube_move(s, sequence, cube_uuid, spatial_angle_control, spatial_direction_control, spatial_direction_active_control, spatial_distance_control)
+        return "Moving"
+
     if state == "Scanning":
         # This is a hack, fix it
         if scan_delay > 0:
@@ -572,12 +604,24 @@ def execute_strategy(state):
         update_bounding_boxes(plist)
         for p in plist:
             player_field_list.append(p)
-        scan_state_control = (scan_state_control + 1) % 8
-        spatial_angle_control -= math.pi/4.0
+
+        use_gaze = len(scan_list) == len(scan_120)
+
+        scan_state_control += 1
+        if scan_state_control == len(scan_list):
+            if use_gaze:
+                spatial_gaze_control = [scan_angle_control, 0.0]
+            else:
+                spatial_angle_control = scan_angle_control
+            return "ScanDone"
+
+        if use_gaze:
+            spatial_gaze_control = [scan_list[scan_state_control] + scan_angle_control, 0.0]
+        else:
+            spatial_angle_control = scan_list[scan_state_control] + scan_angle_control
+
         # This is a hack. Needs to be fixed
         scan_delay = 2
-        if scan_state_control == 0:
-            return "ScanDone"
         return "Scanning"
     
     if state == "ScanDone":
@@ -666,14 +710,24 @@ def execute_strategy(state):
 
         if spatial_position_blocked:
             # We've run into something. We're stopped and need to back up.
-            # print("nwplay.py: Moving - spatial_position_blocked - active_control now False, return Idle")
-            spatial_direction_active_control = False
-            return "Idle"
+            # print("nwplay.py: Moving - spatial_position_blocked - return Blocked")
+            return "Blocked"
 
         if spatial_velocity == 0.0:
             # We've moved the distance requested. Take a look ahead and figure out what to do.
+            # But,if we were backing up, take another look at our pathway forward.
+            if spatial_direction_active_control and spatial_distance_control > 1.0:
+                spatial_direction_active_control = False
+                scan_state_control = 0
+                scan_list = scan_120
+                scan_angle_control = spatial_gaze_control[0]
+                spatial_gaze_control = [scan_list[scan_state_control], 0.0]
+                # This is a hack, needs fixing.
+                scan_delay = 2
+                return "Scanning"
+
+            # Update information from the image and go to the desired target
             # print("nwplay.py: Moving - spatial_velocity = 0.0, active_control now False, return move_to_target()")
-            spatial_direction_active_control = False
             p_filename = "p_files/prediction-%05d.jpg" % sequence
             snapshot(p_filename, view_response["image"])
             if gvision_active or nweffdet_active or nwvision_active or nwyolo_active:
@@ -744,8 +798,8 @@ def move_to_target(tclass):
             # Plan an optimum path avoiding obstacles
             opt_distance, opt_angle = check_path(classname, distance, angle)
             spatial_angle_control = opt_angle
-            spatial_direction_control = opt_angle
             spatial_distance_control = opt_distance
+            spatial_direction_control = opt_angle
             
             print("nwplay.py: move_to_target classname %s distance %0.2f, angle %0.2f, current_location (%0.2f, %0.2f), target_location (%0.2f, %0.2f)" %
                   (classname, opt_distance, opt_angle, current_location[0], current_location[2], target_location[0], target_location[2]))
@@ -789,45 +843,121 @@ def get_nearest(location, player):
 
 # Before making a move, check for obstacles and reroute if necessary
 # Current version scans for players within "check_distance" units and within "+/- check_angle" radians.
-# It doesn't handle cases where there are more than one obstacles in that range.
-def check_path(cnm, dst, ang):
+# We start with zero degrees and increasing look left and right
+def check_path(class_name, distance, angle):
 
     global player_field_list
     global current_location
 
     # Default results
-    opt_distance = dst
-    opt_angle = ang
+    radian_step = 2.0 * math.pi / 360.0
+    radian_offset = 2.0 * math.pi
     
-    # Screen for +/- 45 degrees and closer than the check_distance
-    check_angle = math.pi/4.0
+    # Screen for +/- 60 degrees and closer than the check_distance
+    check_angle = math.pi/3.0
+    check_degrees = int(check_angle/radian_step)
     check_distance = 5.0
 
-    # print("nwplay.py: check_path for %s starting with d = %0.2f, a = %0.2f" % (cnm, dst, ang))
+    print("nwplay.py: check_path for %s starting with d = %0.2f, a = %0.2f" % (class_name, distance, angle))
+
+    for th in range(check_degrees):
+
+        theta = radian_step * float(th)
+
+        # Try a path to the left
+        test_angle = angle + theta
+
+        # There is a discontinuity at +/- Pi. Not sure this is handled correctly.
+        if test_angle > math.pi or test_angle < -math.pi:
+            continue
+    
+        conflict = check_conflict(class_name, distance, test_angle, check_distance, check_angle)
+        if not conflict:
+            if th > 0:
+                # We had a conflict, proceed with caution
+                return distance/4.0, test_angle
+            else:
+                # Path is clear, on the first try
+                return distance, angle
+            
+        # Now try a path to the right
+        test_angle = angle - theta
+
+        # There is a discontinuity at +/- Pi. Not sure this is handled correctly.
+        if test_angle > math.pi or test_angle < -math.pi:
+            continue
+        
+        conflict = check_conflict(class_name, distance, test_angle, check_distance, check_angle)
+        if not conflict:
+            # We had a conflict earlier but found a way forward. Proceed with caution
+            return distance/4.0, test_angle
+
+    # No clear path was found. We're in deep doodoo.
+    print("nwplay.py: check_path failed to find a path for %s, distance=%0.2f, angle=%0.2f" % (class_name, distance, angle))
+    return distance, angle
+    
+def check_conflict(class_name, distance, angle, check_distance, check_angle):
+
+    global current_location
+    global spatial_radius
     
     for p in player_field_list:
+
         c = p["classname"]
-        t = p["target_location"]
-        if c == cnm:
-            # print("nwplay.py: check_path ignoring %s" % (c))
-            continue
-        d, a = player_distance(current_location, p["target_location"])
-        # print("nwplay.py: check_path working on %s d = %0.2f, a = %0.2f" % (c, d, a))
         
-        if d > check_distance:
+        if c == class_name:
+            # print("nwplay.py: check_conflict ignoring %s" % (c))
             continue
-        if a >= ang+check_angle or a <= ang-check_angle:
+
+        # Estimated size of the blocking cube
+        s = p["scale_factor"]
+        # Estimate of its spatial radius
+        r = math.sqrt(2.0 * s * s)
+        # Estimated position in world coordinates
+        t = p["target_location"]
+        # Estimated distance and angle
+        d, a = player_distance(current_location, t)
+        # Offset angle
+        aa = math.atan2(r, d)
+        # Bounding angle with 20% margin added
+        al = a + aa * 1.2
+        ar = a - aa * 1.2
+
+        # This is the angle required for me at distance d
+        ac = math.atan2(spatial_radius, d)
+        
+        # See if obstruction is too far away or we won't reach it on our path.
+        if d > check_distance or (max(d-r, 0.0)) > (distance+spatial_radius):
             continue
-        if a < ang:
-            opt_angle = ang+check_angle
-            opt_distance = dst/5.0
-            # print("nwplay.py: check_path less opt_distance %0.2f opt_angle %0.2f" % (opt_distance, opt_angle))
-        if a > ang:
-            opt_angle = ang-check_angle
-            opt_distance = dst/5.0
-            # print("nwplay.py: check_path more opt_distance %0.2f opt_angle %0.2f" % (opt_distance, opt_angle))
+
+        # See if obstruction is out of our immediate view.
+        if a > angle+check_angle or a <  angle-check_angle:
+            continue
+
+        if debug:
+            print("nwplay.py: check_conflict working on %s distance %0.2f, angle %0.2f d=%0.2f, a=%0.2f, r=%0.2f, aa=%0.2f, ac=%0.2f, target [%0.3f, %0.3f]" % (c, distance, angle, d, a, r, aa, ac, t[0], t[2]))
+
+        # Add to blocked directions
+        angle_left = angle + ac
+        angle_right = angle - ac
+        block_left = False
+        block_center = False
+        block_right = False
+        if angle_left <= al and angle_left >= ar:
+            block_left = True
+        if angle_right <= al and angle_right >= ar:
+            block_right = True
+        if angle_left >= al and angle_right <= ar:
+            block_center = True
+
+        if block_left or block_center or block_right:
+            if debug:
+                print("nwplay.py: check_conflict %s at (%0.2f, %0.2f) blocks path" % (c, t[0], t[2]))
+            return True
+        
+    print("nwplay.py: check_conflict %s clear path found with distance %0.2f, angle %0.2f" % (class_name, distance, angle))
     
-    return opt_distance, opt_angle
+    return False
 
 # Merge possible duplicate entries in the player field list
 def player_field_list_merge():
@@ -969,7 +1099,7 @@ def analyze_scene(predictions):
         # Add the estimated scale factor to the computed distance to get a final estimate of the cube's position.  
         distance = -z + sf
         angle = math.atan(-x/distance)
-        target_angle = spatial_angle + angle
+        target_angle = spatial_angle + spatial_gaze[0] + angle
         # Figure out the world coordinates of the target
         target_location_x = current_location[0] + distance * math.sin(target_angle)
         target_location_y = sf
@@ -979,8 +1109,8 @@ def analyze_scene(predictions):
         if debug:
             print("nwplay.py: analyze_scene Box coordinate: xcbb %0.2f, ymbb %0.2f, csf %0.2f, px %0.2f, py %0.2f, x %0.2f, z %0.2f, a00 %0.2f, a11 %0.2f" % (xcbb, ymbb, csf, px, py, x, z, a00, a11))
             print("nwplay.py: analyze_scene View coordinate: x %0.2f, y %0.2f, z %0.2f, distance %0.2f angle %0.2f" % (x, 0.0, z, distance, angle))
-            print("nwplay.py: analyze_scene %s xmin %0.2f ymin %0.2f xmax %0.2f  ymax %0.2f xc %0.2f xw %0.2f sf %0.2f distance %0.2f angle %0.2f spatial_angle %0.2f target_angle %0.2f tx %0.2f tz %0.2f" %
-                  (classname, xmin, ymin, xmax, ymax, xc, xw, sf, distance, angle, spatial_angle, target_angle, target_location_x, target_location_z))
+            print("nwplay.py: analyze_scene %s xmin %0.2f ymin %0.2f xmax %0.2f  ymax %0.2f xc %0.2f xw %0.2f sf %0.2f distance %0.2f angle %0.2f spatial_angle %0.2f target_angle %0.2f tx %0.2f tz %0.2f gaze [%0.2f, %0.2f]" %
+                  (classname, xmin, ymin, xmax, ymax, xc, xw, sf, distance, angle, spatial_angle, target_angle, target_location_x, target_location_z, spatial_gaze[0], spatial_gaze[1]))
 
         player = {"classname": classname, "score": score, "bounding_box": bbox, "scale_factor": sf, "target_location": target_location}
 
@@ -1086,7 +1216,7 @@ def main():
     global cube_state
     global scan_state_control
     global spatial_angle_control
-    global gaze_control
+    global spatial_gaze_control
     
     # Find display size from X
     displayNumber = os.getenv('DISPLAY', ':0')
@@ -1156,7 +1286,7 @@ def main():
 
         # Get the latest view for our cube
         sequence += 1
-        view_response = cube_view_request(s, sequence, cube_uuid, spatial_angle_control, gaze_control)
+        view_response = cube_view_request(s, sequence, cube_uuid, spatial_angle_control, spatial_gaze_control)
         if check_error("cube_view_request", view_response):
             vrloop = False
             continue
@@ -1220,7 +1350,7 @@ def main():
         update_panel()
 
         # Update the playing field diagram
-        update_field(spatial_angle, cube_state)
+        update_field(spatial_angle, spatial_gaze, cube_state)
 
         # Update the control panel window
         window.update()
