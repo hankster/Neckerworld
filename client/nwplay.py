@@ -919,9 +919,9 @@ def check_conflict(class_name, distance, angle, check_distance, check_angle):
         d, a = player_distance(current_location, t)
         # Offset angle
         aa = math.atan2(r, d)
-        # Bounding angle with 20% margin added
-        al = a + aa * 1.2
-        ar = a - aa * 1.2
+        # Bounding angle with 50% margin added
+        al = a + aa * 1.5
+        ar = a - aa * 1.5
 
         # This is the angle required for me at distance d
         ac = math.atan2(spatial_radius, d)
