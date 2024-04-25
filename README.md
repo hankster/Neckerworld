@@ -166,7 +166,7 @@ Discussion and citations about Neckerworld:
 * YouTube Channel - https://www.youtube.com/channel/UC7W_wVS25ecsUs-GOCOQ3QA
 * Discord Server - Neckerworld
 * Neckerworld was selected to be a participant in Backdrop Build V3 - https://backdropbuild.com/builds/v3/neckerworld
-* Citation in **"Quantum Mechanics of Human Perception"** by Ivan S. Maksymov - https://arxiv.org/abs/2404.10554. PDF: https://arxiv.org/pdf/2404.10554
+* Citation in **"Quantum Mechanics of Human Perception"** by Ivan S. Maksymov - https://arxiv.org/abs/2404.10554 pdf: https://arxiv.org/pdf/2404.10554
 
 ## Acknowledgement and Credits
 
