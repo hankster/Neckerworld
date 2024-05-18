@@ -1090,7 +1090,7 @@ def analyze_scene(predictions):
         xleft = -(z * pxleft) / a00
         xright = -(z * pxright) / a00
         xwidth = xright - xleft
-        if xwidth > 3.0 and score < 0.8:
+        if xwidth > 3.0 and score < 0.5:
             if debug:
                 print("nwplay.py: analyze_scene Discarding suspect player %s detection width %0.2f score %0.2f" % (classname, xwidth, score))
             continue
