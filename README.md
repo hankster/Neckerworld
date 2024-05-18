@@ -107,6 +107,12 @@ S
 # Make sure port 2020 is open and not fire-walled
 cd ~/Neckerworld/client
 ./nwplay.py
+# For a more advanced game, try playing California, where Cubes have to travel through a wilderness filled with predators to reach the Golden State.
+cd ~/Neckerworld/server
+./cube ~/Neckerworld/setup/california.json
+# This playing field requires the use of the YoloV5 inference engine (install PyTorch).
+cd ~/Neckerworld/client
+./nwplay.py -y
 
 ```
 
