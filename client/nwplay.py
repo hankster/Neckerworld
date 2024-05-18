@@ -199,7 +199,7 @@ target_class = ""
 
 player_colors = {"female": "white", "male": "blue", "enby": "purple", "predator": "red", "resource": "green"}
 class_colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green", "removed": "black"}
-bounding_box__colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green", "removed": "black"}
+bounding_box_colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green", "removed": "black"}
 
 def Usage():
     print("Usage: nwplay.py -a addr -c cube_uuid -d -f filename -g -h -i -m -p password -s -u username -v -y --address=address --cube=cube_uuid --debug --file=filename --game --help --image --move --pswd=password --sound --user=username --version --yolo")

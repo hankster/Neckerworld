@@ -8,13 +8,14 @@ Sample usage:
 
 Complete specification:
 
- nwyolo.py -d -f filename -h -v --debug --file=filename --help --version
+ nwyolo.py -d -f filename -h -s -v --debug --file=filename --help --show --version
 
  where
 
  -d, --debug          Turn debug statements on
  -f, --file           Input filename
  -h, --help           Print usage information
+ -s, --show           Show bounding boxes
  -v, --version        Report program version
 
 Copyright (2024) H. S. Magnuski
@@ -36,6 +37,7 @@ import torch
 
 debug = False
 precision_test = False
+show_boxes = False
 
 filename = "test.png"
 
@@ -66,7 +68,7 @@ model = torch.hub.load('ultralytics/yolov5', 'custom', path='../nwmodel/yolov5/n
 #       amp = False  # Automatic Mixed Precision (AMP) inference
       
 def Usage():
-    print("Usage: nwyolo.py -d -f filename -h -v --debug --file=filename --help --version")
+    print("Usage: nwyolo.py -d -f filename -h -s -v --debug --file=filename --help --show --version")
 
 # Run through all images to check precision
 def p_test():
@@ -169,22 +171,50 @@ def main():
         p_test()
         return
 
+    player_colors = {"female": "white", "male": "blue", "enby": "purple", "predator": "red", "resource": "green"}
+    class_colors = {"females": "white", "males": "blue", "enbies": "purple", "predators": "red", "resources": "green", "removed": "black"}
+    bounding_box_colors = {"females": (255, 255, 255), "males": (255, 0, 0), "enbies": (240, 32, 160), "predators": (0, 0, 255), "resources": (0, 255, 0), "removed": (0, 0, 0)}
+    res = 512.0
+    
     results = predict(filename)
 
+    if show_boxes:
+        img = cv2.imread(filename)
+    
     for r in results["predictions"]:
-        print("nwyolo.py: Predicted class name: {}".format(r["classname"]))
-        print("nwyolo.py: Predicted class score: {}".format(r["score"]))
+        classname = r["classname"]
+        score = r["score"]
         bounding_box = r["bounding_vertices"]
+        print("nwyolo.py: Predicted class name: {}".format(classname))
+        print("nwyolo.py: Predicted class score: {}".format(score))
         print("nwyolo.py: Normalized Vertices: %s" % bounding_box)
+
+        if show_boxes:
+            color = bounding_box_colors[classname]
+            thickness = 1
+        
+            x1 = int(res * bounding_box[0]) 
+            y1 = int(res * bounding_box[1]) 
+            x2 = int(res * bounding_box[2]) 
+            y2 = int(res * bounding_box[3]) 
+            if x1 < 0 or y1 < 0 or x2 > 512 or y2 > 512:
+                print("nwyolo.py: Bounding box error (%3d, %3d), (%3d, %3d)" % (x1, y1, x2, y2))
+
+            cv2.rectangle(img, (x1, y1), (x2, y2), color, thickness)
+            print("nwyolo.py: Bounding box for %s (%d, %d), (%d, %d)" % (classname, x1, y1, x2, y2))
+            
+    if show_boxes:
+        cv2.imshow(filename, img)
+        cv2.waitKey(0)
+        cv2.destroyWindow(filename)
 
 if __name__=='__main__':
 
     #
     # Get options and call the main program
     #                                                                                            
-
     try:
-        options, args = getopt.getopt(sys.argv[1:], 'df:hpv', ['debug', 'file=', 'help', 'precision', 'version'])
+        options, args = getopt.getopt(sys.argv[1:], 'df:hpsv', ['debug', 'file=', 'help', 'precision', 'show', 'version'])
     except getopt.GetoptError:
         Usage()
         sys.exit(-1)
@@ -199,6 +229,8 @@ if __name__=='__main__':
             sys.exit()
         if o in ("-p", "--precision"):
             precision_test = True
+        if o in ("-s", "--show"):
+            show_boxes = True
         if o in ("-v", "--version"):
             print("nwyolo.py: Version 1.0")
             sys.exit()
