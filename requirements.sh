@@ -22,6 +22,8 @@ sudo apt-get -y install imagemagick
 sudo python3 -m pip install tensorflow
 sudo python3 -m pip install xlib
 sudo python3 -m pip install playsound
+sudo python3 -m pip install torch
+sudo python3 -m pip install torchvision
 
 # These links are required for training programs to run
 cd ~/Neckerworld/server

@@ -109,6 +109,8 @@ cd ~/Neckerworld/client
 ./nwplay.py
 # For a more advanced game, try playing California.
 # Cubes have to travel through a wilderness filled with predators to reach the Golden State.
+cd ~/Neckerworld/setup
+nw.py --cubelist=california.csv
 cd ~/Neckerworld/server
 ./cube ~/Neckerworld/setup/california.json
 # This playing field requires the use of the YoloV5 inference engine (install PyTorch).
@@ -154,6 +156,7 @@ The following packages are needed to compile and run these programs:
 * xlib
 * playsound
 * torch (for custom model training with YOLOv5)
+* torchvision
 
 See script "requirements.sh" for details.
 
