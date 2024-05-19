@@ -25,6 +25,7 @@ sudo python3 -m pip install playsound
 sudo python3 -m pip install torch
 sudo python3 -m pip install torchvision
 sudo python3 -m pip install pandas
+sudo python3 -m pip install dill
 
 # These links are required for training programs to run
 cd ~/Neckerworld/server

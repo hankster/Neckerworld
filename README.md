@@ -155,9 +155,10 @@ The following packages are needed to compile and run these programs:
 * tensorflow
 * xlib
 * playsound
-* torch (for custom model training with YOLOv5)
+* torch (for custom model training and inference with YOLOv5)
 * torchvision
 * pandas
+# dill
 
 See script "requirements.sh" for details.
 
