@@ -158,7 +158,7 @@ The following packages are needed to compile and run these programs:
 * torch (for custom model training and inference with YOLOv5)
 * torchvision
 * pandas
-# dill
+* dill
 
 See script "requirements.sh" for details.
 
