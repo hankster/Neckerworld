@@ -157,6 +157,7 @@ The following packages are needed to compile and run these programs:
 * playsound
 * torch (for custom model training with YOLOv5)
 * torchvision
+* pandas
 
 See script "requirements.sh" for details.
 
