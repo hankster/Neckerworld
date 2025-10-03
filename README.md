@@ -136,7 +136,7 @@ Image samples and a label dataset suitable for training is contained within the 
 
 ## Requirements
 
-The server has only been tested on Ubuntu 20.04.6 LTS and Ubuntu 22.04.3 LTS. The desktop edition is required as both the server code and player will open a graphical window to function. 
+The server has been tested on Ubuntu 20.04.6 LTS, Ubuntu 22.04.3 LTS and Ubuntu 24.04.3 LTS. The desktop edition is required as both the server code and player will open a graphical window to function. Note that Ubuntu 22.04 LTS requires a Python virtual environment to function.
 
 The following packages are needed to compile and run these programs:
 * python3
