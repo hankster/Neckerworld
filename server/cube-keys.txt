@@ -41,6 +41,6 @@
    Equal -- Light Z += 1.0
    Semicolon -- Ambient -= 0.1
    Apostrophe -- Ambient += 0.1
-   Accent Grave -- Exit
+   Grave Accent -- Exit
    ESC -- Exit
    ? -- Print Help screen
