@@ -42,6 +42,11 @@ sudo apt install python3-venv
 cd ~/Neckerworld
 python3 -m venv nw
 
+# For Tensorflow to work this environment variable might be needed
+# To add it automatically, edit ".profile" and add this export statement
+# Restart your shell session
+export XLA_FLAGS="--xla_gpu_cuda_data_dir=/usr/lib/cuda"
+
 # Activate the virtual environment after every login for each client
 cd ~/Neckerworld
 source nw/bin/activate
