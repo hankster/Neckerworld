@@ -37,6 +37,7 @@ import tensorflow as tf
 
 debug = False
 precision_test = False
+players = {'male': 'males', 'female': 'females', 'enby': 'enbies', 'predator': 'predators', 'resource': 'resources'}
 
 filename = "test.png"
 
@@ -60,10 +61,10 @@ def Usage():
 # Run through all images to check precision
 def p_test():
 
-    print("nweffdet.py: Calculating precision")
+    print("nwvision.py: Calculating precision")
     
-    bbcsv = "../training/training-bounding-box-set2.csv"
-    dir = "../training/trainers-set2-jpg"
+    bbcsv = "../training/training-bounding-box.csv"
+    dir = "../training/trainers-jpg"
     threshold = 0.5
     samples = 0.0
     p = 0.0
@@ -71,13 +72,16 @@ def p_test():
     
     with open(bbcsv, 'r') as f:
         lines = f.readlines()
+
+    start_time = time.time()
+
     for line in lines:
         idx += 1
         if not ((idx % 10) == 0):
             continue
-        fields = line.split(',')
+        fields = line.split('\t')
         imfn = fields[0]
-        cn = fields[1]
+        cn = players[fields[1]]
         image_file = dir + '/' + cn + '/' + imfn
 
         results = predict(image_file)
@@ -85,7 +89,8 @@ def p_test():
         
         if len(results["predictions"]) > 0:
             r = results["predictions"][0]
-            print("nwvision.py: Predicted class name: {0:>9s}, score {1:0.3f} {2}".format(r["classname"], r["score"], r["bounding_vertices"]))
+            if debug:
+                print("nwvision.py: Predicted class name: {0:>9s}, score {1:0.3f} {2}".format(r["classname"], r["score"], r["bounding_vertices"]))
             classname = r["classname"]
             score = r["score"]
             if score >= threshold and cn[0:4] == classname[0:4]:
@@ -94,13 +99,18 @@ def p_test():
         if samples > 999.9:
             break
 
-        print("nweffdet.py: Precision %0.3f using threshold %0.2f with %d samples" % (p/samples, threshold, int(samples)))
-
-        
+        if debug:
+            print("nwvision.py: Precision %0.3f using threshold %0.2f with %d samples" % (p/samples, threshold, int(samples)))
+    
     precision = p/samples
 
-    print("nweffdet.py: Precision %0.3f using threshold %0.2f with %d samples" % (precision, threshold, int(samples)))
-          
+    end_time = time.time()
+    test_time = end_time - start_time
+    prediction_time_ms = (test_time/samples) * 1000.0
+
+    print("nwyolo.py: Precision %0.3f using threshold %0.2f with %d samples" % (precision, threshold, int(samples)))
+    print("nwyolo.py: Prediction time per sample %0.3f milliseconds." % prediction_time_ms)
+
     return
 
 #
@@ -155,7 +165,8 @@ def predict(image_filename):
             c = p["classname"]
             s = p["score"]
             b = p["bounding_vertices"]
-            print("nwvision.py: predict classname %9s score %0.3f box [%0.2f, %0.2f, %0.2f, %0.2f]" % (c, s, b[0], b[1], b[2], b[3]))
+            if debug:
+                print("nwvision.py: predict classname %9s score %0.3f box [%0.2f, %0.2f, %0.2f, %0.2f]" % (c, s, b[0], b[1], b[2], b[3]))
 
     return predictions
 #
