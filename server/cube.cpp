@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <random>
 #include <vector>
 #include <thread>
@@ -357,11 +358,15 @@ int shaders()
     }
 
     /* This is actually the camera position */
-    uniform_name = "view_position";
-    uniform_view_position = glGetUniformLocation(program, uniform_name);
-    if (uniform_view_position == -1) {
-      fprintf(stderr, "cube.cpp: Could not bind uniform %s\n", uniform_name);
-      return -1;
+    if (isRaspberryPiOS()) {
+      // TODO: This code fails on Raspberry Pi, have no idea why.
+    } else {
+      uniform_name = "view_position";
+      uniform_view_position = glGetUniformLocation(program, uniform_name);
+      if (uniform_view_position == -1) {
+	fprintf(stderr, "cube.cpp: Could not bind uniform %s\n", uniform_name);
+	return -1;
+      }
     }
 
     /* uniforms for structure Light */
@@ -548,11 +553,11 @@ void free_resources()
     glDeleteBuffers(1, &cubes[i].ibo_cube_elements);
   }
   for (int i = 0; i < n_grounds; ++i) {
-      glDeleteBuffers(1, &grounds[i].vbo_ground_vertices);
-      glDeleteBuffers(1, &grounds[i].vbo_ground_normals);
-      glDeleteBuffers(1, &grounds[i].vbo_ground_texture_map_coords);
-      glDeleteBuffers(1, &grounds[i].ibo_ground_elements);
-    }
+    glDeleteBuffers(1, &grounds[i].vbo_ground_vertices);
+    glDeleteBuffers(1, &grounds[i].vbo_ground_normals);
+    glDeleteBuffers(1, &grounds[i].vbo_ground_texture_map_coords);
+    glDeleteBuffers(1, &grounds[i].ibo_ground_elements);
+  }
   for (int i = 0; i < n_wires; ++i) {
     glDeleteBuffers(1, &wires[i].vbo_wire_vertices);
   }
@@ -562,6 +567,23 @@ void free_resources()
   glDeleteVertexArrays(1, &VertexArrayObject);
 }
 
+// Check if we are on a Raspberry Pi
+bool isRaspberryPiOS() {
+  std::ifstream os_release_file("/proc/cpuinfo");
+  if (!os_release_file.is_open()) {
+    // File not found, likely not Linux or a very old distribution
+    return false;
+  }
+
+  std::string line;
+  while (std::getline(os_release_file, line)) {
+    if (line.find("Raspberry") != std::string::npos) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 int main(int argc, char* argv[]) {
 
@@ -650,6 +672,9 @@ int main(int argc, char* argv[]) {
   printf("cube.cpp: options -  debug=%d, filename=%s, display_cubes=%d, display_grounds=%d, display_normals=%d\ncube.cpp: options -  position=%d, display_rotation=%d display_wires=%d, main_window_width=%d, main_window_height=%d, waypoints=%d\n",
 	 debug, filename, display_cubes, display_grounds, display_normals, position, display_rotation, display_wires, main_window_width, main_window_height, waypoints);
 
+  // Setup error callback
+  glfwSetErrorCallback(window_error);
+
   // glfw: initialize and configure
   if (!glfwInit())
     {
@@ -657,9 +682,15 @@ int main(int argc, char* argv[]) {
       glfwTerminate();
       return -1;
     }
+
+  if (isRaspberryPiOS()) {
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+  } else {
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  
+  }
+
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_DEPTH_BITS, 32);
   glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
     
@@ -685,9 +716,6 @@ int main(int argc, char* argv[]) {
   glEnable(GL_BLEND);
   glEnable(GL_DEPTH_TEST);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  // Setup error callback
-  glfwSetErrorCallback(window_error);	
 
   // Setup keyboard key callback
   glfwSetKeyCallback(window, key_callback);
@@ -1428,7 +1456,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 // glfw window error callback
 void window_error(int error, const char* message) {
-  printf("GLFW enountered error %d: %s\n", error, message);
+  printf("cube.cpp: GLFW enountered error %d: %s\n", error, message);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

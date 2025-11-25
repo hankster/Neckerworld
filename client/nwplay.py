@@ -8,7 +8,7 @@ Sample usage:
 
 Complete specification:
 
- nwplay.py -a address -c cube_uuid -d -f filename -g -h -i -k -m -p password -r -s -u username -v -y --address address --cube=cube_uuid --debug --file=filename --game --help --image --kill --mate --pswd=password --resource --sound --user=username --version --yolo
+ nwplay.py -a address -c cube_uuid -d -f filename -g -h -i -k -m -p password -r -s -t -u username -v -y --address address --cube=cube_uuid --debug --file=filename --game --hailo --help --image --kill --mate --pswd=password --resource --sound --tensorflow --user=username --version --yolo
 
  where
 
@@ -18,6 +18,7 @@ Complete specification:
  -f, --file           Input filename
  -g, --game           Game play
  -h, --help           Print usage information
+     --hailo          Use Hailo object detection (Raspberry Pi 5 with Hailo AI chip)
  -i, --image          Image snapshot
  -k, --kill           Find a predator and kill it
  -m, --mate           Find a mate
@@ -25,11 +26,12 @@ Complete specification:
  -p, --pswd           Password
  -r, --resource       Find a resource
  -s, --sound          Enable sound
+ -t, --tensorflow     Use Tensorflow inference
  -u, --user           Username
  -v, --version        Report program version
  -y, --yolo           Use YOLO inference
 
-Copyright (2023) H. S. Magnuski
+Copyright (2025) H. S. Magnuski
 All rights reserved
 
 """
@@ -86,10 +88,16 @@ from nwmessage import nwmessage_debug
 # def nwmessage_debug(debug)
 
 # There are different ways to do image inference and object identification. These switch what method is used.
+# Google cloud
 gvision_active = False
+# Efficient detector
 nweffdet_active = False
-nwvision_active = True
-nwyolo_active = False
+# Hailo-8L Accelerator (for Raspberry Pi AI Hat)
+nwhailo_active = False
+# Tensorflow
+nwvision_active = False
+# YOLO models
+nwyolo_active = True
 
 debug = False
 matrix_test = False
@@ -1429,7 +1437,7 @@ if __name__=='__main__':
     #                                                                                            
 
     try:
-        options, args = getopt.getopt(sys.argv[1:], 'a:c:df:ghikmp:rsu:vy', ['address=','cube=','debug','file=','game','help','image','kill','mate','pswd=','resource','sound','user=','version', 'yolo'])
+        options, args = getopt.getopt(sys.argv[1:], 'a:c:df:ghikmp:rstu:vy', ['address=','cube=','debug','file=','game','help','hailo','image','kill','mate','pswd=','resource','sound', 'tensorflow', 'user=','version', 'yolo'])
     except getopt.GetoptError:
         Usage()
         sys.exit(2)
@@ -1446,6 +1454,10 @@ if __name__=='__main__':
             filename = a
         if o in ("-g", "--game"):
             GameOn = True
+        if o in ("--hailo"):
+            nwhailo_active = True
+            nwvision_active = False
+            nwyolo_active  = False
         if o in ("-h", "--help"):
             Usage()
             sys.exit()
@@ -1461,12 +1473,17 @@ if __name__=='__main__':
             FindResource = True
         if o in ("-s", "--sound"):
             sound = True
+        if o in ("-t", "--tensorflow"):
+            nwhailo_active = False
+            nwvision_active = True
+            nwyolo_active  = False
         if o in ("-u", "--user"):
             username = a
         if o in ("-v", "--version"):
             print("nwplay.py Version 1.0")
             sys.exit()
         if o in ("-y", "--yolo"):
+            nwhailo_active = False
             nwvision_active = False
             nwyolo_active  = True
         
@@ -1475,6 +1492,8 @@ if __name__=='__main__':
         from gvision import predict
     if nweffdet_active:
         from nweffdet import predict
+    if nwhailo_active:
+        from nwhailo import predict
     if nwvision_active:
         from nwvision import predict
     if nwyolo_active:

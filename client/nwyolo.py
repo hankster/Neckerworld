@@ -8,17 +8,20 @@ Sample usage:
 
 Complete specification:
 
- nwyolo.py -d -f filename -h -s -v --debug --file=filename --help --show --version
+ nwyolo.py -d -f filename -h -r repo -s -v -w weights --debug --file=filename --help --repo=repo --show --source=source --version --weights=weights
 
  where
 
  -d, --debug          Turn debug statements on
  -f, --file           Input filename
  -h, --help           Print usage information
+ -r, --repo           Repository or local directory
  -s, --show           Show bounding boxes
+     --source         Source of model ('github' or 'local')
  -v, --version        Report program version
+ -w, --weights        Trained model and weights (usually a .pt file)
 
-Copyright (2024) H. S. Magnuski
+Copyright (2025) H. S. Magnuski
 All rights reserved
 
 """
@@ -31,16 +34,41 @@ import getopt
 import string
 import math
 import random
-
+import json
 import cv2
 import torch
+from ultralytics import YOLO
 
 debug = False
 precision_test = False
 show_boxes = False
 
+players = {'male': 'males', 'female': 'females', 'enby': 'enbies', 'predator': 'predators', 'resource': 'resources'}
+classes = ['males', 'females', 'enbies', 'predators', 'resources']
+resolution = 512.0
+
+# Image file for testing
 filename = "test.png"
 
+#repo = '../nwmodel/yolov5/nw_weights'
+#weights = 'yolov5l-nw.pt'
+repo = '../nwmodel/yolov11/nw_weights'
+# weights = 'yolov11x-nw.pt'
+# weights = 'yolov11l-nw.pt'
+# weights = 'yolov11m-nw.pt'
+weights = 'yolov11s-nw.pt'
+# weights = 'yolov11n-nw.pt'
+source = 'local'
+
+# Github repositories
+# repo = 'ultralytics/yolov3'
+# repo = 'ultralytics/yolov5'
+# repo = 'ultralytics/ultralytics'
+# model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # official model
+# model = torch.hub.load('ultralytics/yolov5:master', 'yolov5s')  # from branch
+# model = torch.hub.load('ultralytics/yolov5', 'custom', 'yolov5s.pt')  # custom/local model
+# model = torch.hub.load('.', 'custom', 'yolov5s.pt', source='local')  # local repo
+# models
 yolo_nano = "yolov5n.pt"
 yolo_small = "yolov5s.pt"
 yolo_medium = "yolov5m.pt"
@@ -56,27 +84,16 @@ else:
     print('nwyolo.py: GPU not available, CPU only')
     nw_device = torch.device('cpu')
 
-# Load a local model
-model = torch.hub.load('ultralytics/yolov5', 'custom', path='../nwmodel/yolov5/nw_weights/best.pt')
-
-# model.conf = 0.25  # NMS confidence threshold
-#       iou = 0.45  # NMS IoU threshold
-#       agnostic = False  # NMS class-agnostic
-#       multi_label = False  # NMS multiple labels per box
-#       classes = None  # (optional list) filter by class, i.e. = [0, 15, 16] for COCO persons, cats and dogs
-#       max_det = 1000  # maximum number of detections per image
-#       amp = False  # Automatic Mixed Precision (AMP) inference
-      
 def Usage():
-    print("Usage: nwyolo.py -d -f filename -h -s -v --debug --file=filename --help --show --version")
+    print("Usage: nwyolo.py -d -f filename -h -r repo -s -v -w weights --debug --file=filename --help --repo=repo --show --source=source --version --weights=weights")
 
 # Run through all images to check precision
 def p_test():
 
     print("nwyolo.py: Calculating precision")
     
-    bbcsv = "../training/training-bounding-box-set2.csv"
-    dir = "../training/trainers-set2-jpg"
+    bbcsv = "../training/training-bounding-box.csv"
+    dir = "../training/trainers-jpg"
     threshold = 0.5
     samples = 0.0
     p = 0.0
@@ -84,13 +101,16 @@ def p_test():
     
     with open(bbcsv, 'r') as f:
         lines = f.readlines()
+
+    start_time = time.time()
+
     for line in lines:
         idx += 1
         if not ((idx % 10) == 0):
             continue
-        fields = line.split(',')
+        fields = line.split('\t')
         imfn = fields[0]
-        cn = fields[1]
+        cn = players[fields[1]]
         image_file = dir + '/' + cn + '/' + imfn
 
         results = predict(image_file)
@@ -98,7 +118,8 @@ def p_test():
         
         if len(results["predictions"]) > 0:
             r = results["predictions"][0]
-            print("nwyolo.py: Predicted class name: {0:>9s}, score {1:0.3f} {2}".format(r["classname"], r["score"], r["bounding_vertices"]))
+            if debug:
+                print("nwyolo.py: Predicted class name: {0:>9s}, score {1:0.3f} {2}".format(r["classname"], r["score"], r["bounding_vertices"]))
             classname = r["classname"]
             score = r["score"]
             if score >= threshold and cn[0:4] == classname[0:4]:
@@ -107,12 +128,18 @@ def p_test():
         if samples > 999.9:
             break
 
-        print("nwyolo.py: Precision %0.3f using threshold %0.2f with %d samples" % (p/samples, threshold, int(samples)))
+        if debug:
+            print("nwyolo.py: Precision %0.3f using threshold %0.2f with %d samples" % (p/samples, threshold, int(samples)))
 
         
     precision = p/samples
 
+    end_time = time.time()
+    test_time = end_time - start_time
+    prediction_time_ms = (test_time/samples) * 1000.0
+
     print("nwyolo.py: Precision %0.3f using threshold %0.2f with %d samples" % (precision, threshold, int(samples)))
+    print("nwyolo.py: Prediction time per sample %0.3f milliseconds." % prediction_time_ms)
           
     return
 
@@ -122,34 +149,56 @@ def p_test():
 
 def predict(image_filename):
     
-    players = {'male': 'males', 'female': 'females', 'enby': 'enbies', 'predator': 'predators', 'resource': 'resources'}
-    classes = ['males', 'females', 'enbies', 'predators', 'resources']
-    resolution = 512.0
-    
     # Inference
-    results = model([image_filename], size=512)
+    # results = model([image_filename], size=resolution)
+    results = model(source=image_filename, imgsz=int(resolution), max_det=15, verbose=debug)
     
-    # Convert to our bounding box format an move to CPU memory.
-    r = results.xyxy[0].cpu()
+    labels = []
+    scores = []
+    boxes = []
     
-    labels = r[:, 5].numpy()
-    boxes =  r[:, 0:4].numpy() / resolution
-    scores = r[:, 4].numpy()
-
     if debug:
-        print(labels)
-        print(boxes)
-        print(scores)
+        print("nwyolo.py: Found %d results. Type of results is %s." % (len(results), type(results)))
+        # print(results)
+        
+    for result in results:
+
+        lines = result.to_csv().split('\n')
+        if not 'name' in lines[0]:
+            continue
+        for i in range(1, len(lines)-1):
+            details = lines[i].split(',')
+            if debug:
+                print(details)
+            label = classes[int(details[1])]
+            labels.append(label)
+            score = float(details[2])
+            scores.append(score)
+            bounds_index = lines[i].index('"')
+            bounds = lines[i][bounds_index:]
+            bounds = bounds[1:-1].replace("'",'"')
+            boxes_dict = json.loads(bounds)
+            box_list = []
+            box_list.append(boxes_dict['x1']/resolution)
+            box_list.append(boxes_dict['y1']/resolution)
+            box_list.append(boxes_dict['x2']/resolution)
+            box_list.append(boxes_dict['y2']/resolution)
+            boxes.append(box_list)
+            
+        if debug:
+            print(labels)
+            print(scores)
+            print(boxes)
         
     predictions = {"predictions": []}
     threshold = 0.5
     
-    for i in range(labels.shape[0]):
+    for i in range(len(labels)):
         score = scores[i]
         if score < threshold:
             continue
-        classname = classes[int(labels[i])]
-        bounding_vertices = boxes[i].tolist()
+        classname = labels[i]
+        bounding_vertices = boxes[i]
         predictions["predictions"].append({"classname": classname, "score": score, "bounding_vertices": bounding_vertices})
 
     if len(predictions["predictions"]) > 0:
@@ -157,7 +206,8 @@ def predict(image_filename):
             c = p["classname"]
             s = p["score"]
             b = p["bounding_vertices"]
-            print("nwyolo.py: predict classname %9s score %0.3f box [%0.2f, %0.2f, %0.2f, %0.2f]" % (c, s, b[0], b[1], b[2], b[3]))
+            if debug:
+                print("nwyolo.py: predict classname %9s score %0.3f box [%0.2f, %0.2f, %0.2f, %0.2f]" % (c, s, b[0], b[1], b[2], b[3]))
 
     return predictions
 
@@ -166,6 +216,11 @@ def predict(image_filename):
 #
 
 def main():
+
+    global model
+    
+    # Load a local model
+    model = YOLO(repo + '/' + weights)
 
     if precision_test:
         p_test()
@@ -185,9 +240,11 @@ def main():
         classname = r["classname"]
         score = r["score"]
         bounding_box = r["bounding_vertices"]
-        print("nwyolo.py: Predicted class name: {}".format(classname))
-        print("nwyolo.py: Predicted class score: {}".format(score))
-        print("nwyolo.py: Normalized Vertices: %s" % bounding_box)
+
+        if debug:
+            print("nwyolo.py: Predicted class name: {}".format(classname))
+            print("nwyolo.py: Predicted class score: {}".format(score))
+            print("nwyolo.py: Predicted normalized vertices: %s" % bounding_box)
 
         if show_boxes:
             color = bounding_box_colors[classname]
@@ -214,7 +271,7 @@ if __name__=='__main__':
     # Get options and call the main program
     #                                                                                            
     try:
-        options, args = getopt.getopt(sys.argv[1:], 'df:hpsv', ['debug', 'file=', 'help', 'precision', 'show', 'version'])
+        options, args = getopt.getopt(sys.argv[1:], 'df:hpr:svw:', ['debug', 'file=', 'help', 'precision', 'repo=', 'show', 'source=', 'version', 'weights='])
     except getopt.GetoptError:
         Usage()
         sys.exit(-1)
@@ -229,12 +286,38 @@ if __name__=='__main__':
             sys.exit()
         if o in ("-p", "--precision"):
             precision_test = True
+        if o in ("-r", "--repo"):
+            repo = a
         if o in ("-s", "--show"):
             show_boxes = True
+        if o in ("--source"):
+            source = a
         if o in ("-v", "--version"):
             print("nwyolo.py: Version 1.0")
             sys.exit()
+        if o in ("-w", "--weights"):
+            weights = a
         
     main()
 
     sys.exit()
+
+else:
+
+    global model
+    
+    # Load a local model (We are running as a module, not a main program)
+
+    # model = torch.hub.load(repo_or_dir, model, *args, source='github', trust_repo=None, force_reload=False, verbose=True, skip_validation=False, **kwargs)
+    # model = torch.hub.load('ultralytics/yolov5', 'custom', path='../nwmodel/yolov5/nw_weights/yolov5l-nw.pt')
+    model = YOLO(repo + '/' + weights)
+    # model = torch.hub.load(repo, weights, source=source)
+    
+    # model.conf = 0.25  # NMS confidence threshold
+    #       iou = 0.45  # NMS IoU threshold
+    #       agnostic = False  # NMS class-agnostic
+    #       multi_label = False  # NMS multiple labels per box
+    #       classes = None  # (optional list) filter by class, i.e. = [0, 15, 16] for COCO persons, cats and dogs
+    #       max_det = 1000  # maximum number of detections per image
+    #       amp = False  # Automatic Mixed Precision (AMP) inference
+      
