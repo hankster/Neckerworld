@@ -295,6 +295,7 @@ extern glm::vec4 color_black;
 extern glm::vec4 color_white;
 
 // Function located in cube.cpp
+bool isRaspberryPiOS();
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void window_error(int error, const char* message);
 void processInput(GLFWwindow* window);
