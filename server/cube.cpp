@@ -684,6 +684,7 @@ int main(int argc, char* argv[]) {
     }
 
   if (isRaspberryPiOS()) {
+    printf("cube.cpp: Running on Raspberry Pi OS\n");
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
   } else {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -710,7 +711,6 @@ int main(int argc, char* argv[]) {
   if (debug > 0) printf("cube.cpp: Created main window with title %s, %dx%d\n", window_title, main_window_width, main_window_height);
 
   glfwMakeContextCurrent(window);
-  glfwSetWindowPos(window, 100, 50);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
   glfwSwapInterval(1);
   glEnable(GL_BLEND);
@@ -720,10 +720,11 @@ int main(int argc, char* argv[]) {
   // Setup keyboard key callback
   glfwSetKeyCallback(window, key_callback);
 
+  printf("cube.cpp: Initialize GLEW library\n");
   GLenum glew_status = glewInit();
   if (glew_status != GLEW_OK) {
-    fprintf(stderr, "cube.cpp: glew Error: %s\n", glewGetErrorString(glew_status));
-    return 1;
+    if (debug > 0) fprintf(stderr, "cube.cpp: glew Error: %s\n", glewGetErrorString(glew_status));
+    // return 1;
   }
 
   if (!GLEW_VERSION_2_0) {
@@ -731,6 +732,7 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
+  printf("cube.cpp: Initializing Vertex Array Object\n");
   /* A Vertex Array Object (VAO) has nothing to do with vertex arrays. */
   /* It's used to hold vertix attribute pointers */
   /* Program does not render without this Bind */
@@ -764,13 +766,13 @@ int main(int argc, char* argv[]) {
     // Setup opengl items that are not shared
     glfwMakeContextCurrent(windows[i]);
 
-    if (i==0) glfwSetWindowPos(windows[i], 650, 50);
-    
     GLenum glew_status = glewInit();
     if (glew_status != GLEW_OK) {
-      fprintf(stderr, "cube.cpp: glew_status window[%d] Error: %s\n", i, glewGetErrorString(glew_status));
-      return 1;
+      if (debug > 0) fprintf(stderr, "cube.cpp: glew_status window[%d] Error: %s\n", i, glewGetErrorString(glew_status));
+      // return 1;
     }
+    
+    printf("cube.cpp: Initialize Vertex Array\n");
 
     /* A Vertex Array Object (VAO) has nothing to do with vertex arrays. */
     /* It's used to hold vertex attribute pointers */
