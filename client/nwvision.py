@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
 """
 nwvision.py -- A Python program to run inference on an image.
 

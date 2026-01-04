@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
 """
 nwplay.py -- Neckerworld Play prototype
 
@@ -604,7 +604,7 @@ def execute_strategy(state):
         print("nwplay.py: Current state %s" % state)
         p_filename = "p_files/prediction-%05d.jpg" % sequence
         snapshot(p_filename, view_response["image"])
-        if gvision_active or nweffdet_active or nwvision_active or nwyolo_active:
+        if gvision_active or nweffdet_active or nwhailo_active or nwvision_active or nwyolo_active:
             predictions = predict(p_filename)
         else:
             predictions = predict_test(p_filename)

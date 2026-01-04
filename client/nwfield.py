@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
 """
 nwfield.py -- Neckerworld Field Utility. This program injects new predators and resources into the plaing field.
 

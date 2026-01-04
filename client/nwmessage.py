@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
 """
 nwmessage.py -- Utilities to send a JSON message to cube
 

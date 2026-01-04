@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#! /usr/bin/env python3
 """
 nwyolo.py -- A Python program to run inference on an image.
 
@@ -55,8 +55,8 @@ filename = "test.png"
 repo = '../nwmodel/yolov11/nw_weights'
 # weights = 'yolov11x-nw.pt'
 # weights = 'yolov11l-nw.pt'
-# weights = 'yolov11m-nw.pt'
-weights = 'yolov11s-nw.pt'
+weights = 'yolov11m-nw.pt'
+# weights = 'yolov11s-nw.pt'
 # weights = 'yolov11n-nw.pt'
 source = 'local'
 
@@ -201,12 +201,12 @@ def predict(image_filename):
         bounding_vertices = boxes[i]
         predictions["predictions"].append({"classname": classname, "score": score, "bounding_vertices": bounding_vertices})
 
-    if len(predictions["predictions"]) > 0:
-        for p in predictions["predictions"]:
-            c = p["classname"]
-            s = p["score"]
-            b = p["bounding_vertices"]
-            if debug:
+    if debug:
+        if len(predictions["predictions"]) > 0:
+            for p in predictions["predictions"]:
+                c = p["classname"]
+                s = p["score"]
+                b = p["bounding_vertices"]
                 print("nwyolo.py: predict classname %9s score %0.3f box [%0.2f, %0.2f, %0.2f, %0.2f]" % (c, s, b[0], b[1], b[2], b[3]))
 
     return predictions
