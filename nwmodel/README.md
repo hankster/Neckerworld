@@ -7,7 +7,7 @@ These models are used for object detection by client player programs.
 
 ## Usage
 
-See programs nwvision.py and nweffdet.py in the client directory.
+See programs nweffdet.py, nwhailo.py, nwyolov5.py, and nwyolo.py in the client directory.
 
 ## Summary of programs
 
@@ -19,4 +19,14 @@ A neural network model trained on Google Cloud Services Auto-ML
 
 A neural network model trained using an Efficient Detect D0 architecture.
 
+### hailo8l
 
+A YoloV11 neural network model for inference on the Hailo-8L chip for the Raspberry Pi 5 architecture.
+
+### yolov5
+
+A neural network model trained on the YoloV5 architecture.
+
+### yolov11
+
+A neural network model trained on the YoloV11 architecture.
