@@ -35,18 +35,24 @@ This program requires an object detection module to function.
 
 A utility program used to send and receive messages to the game server.
 
+### nwyolo.py
+
+A module that implements an object detection neural net inference pre-trained on Neckerworld cubes.
+This module initializes a YOLOv11 (or YOLOv5) network with custom training (see ../train).
+The training was done on an NVidia CUDA GPU using 13,920 training images.
+This module is activated by editing nwplay.py and setting "nwyolo_active = True" and the other values False.
+
 ### nwvision.py
 
 A module that implements an object detection neural net pre-trained on Neckerworld cubes.
 Tensorflow 2 is used for the implementation.
 The model creation and training was completed on Google Cloud Services auto-ml.
 
-### nwyolo.py
+### nwhailo.py
 
-A module that implements an object detection neural net pre-trained on Neckerworld cubes.
-This module initializes a YOLOv11 (or YOLOv5) network with custom training (see ../train).
-The training was done on an NVidia CUDA GPU using 13,920 training images.
-This module is activated by editing nwplay.py and setting "nwyolo_active = True" and the other values False.
+A module that implements an object detection neural net (YoloV11) inference pre-trained on Neckerworld cubes.
+This code implements support for the Hailo 8L chip attached to a Raspberry Pi 5. 
+The chip is a hardware accelerator for AI reducing the inference time from 1183.01 milliseconds (PyTorch, CPU only) to 80.38 milliseconds.
 
 ### nweffdet.py
 
